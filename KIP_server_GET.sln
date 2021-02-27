@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_GET", "KIP_server_GET\KIP_server_GET.csproj", "{ED7D1D0D-D526-43F4-95F0-610CA6CC1AAD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "json_read", "..\json_read\json_read\json_read.csproj", "{A66A5A7E-E588-4864-87DD-1C293E6E3D90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "json_read", "json_read\json_read\json_read.csproj", "{A66A5A7E-E588-4864-87DD-1C293E6E3D90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
