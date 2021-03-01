@@ -11,13 +11,16 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "health",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "KIP_server_GET": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
+      //"launchBrowser": true,
+      "launchUrl": "health",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

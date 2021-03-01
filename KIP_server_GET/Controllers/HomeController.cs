@@ -1,7 +1,10 @@
 ﻿using KIP_server_GET.Constants;
+using KIP_server_GET.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using System;
 using System.Diagnostics;
 using System.Net;
@@ -12,9 +15,11 @@ namespace KIP_server_GET.Controllers
     /// Default controller.
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
+    [Controller]
     [Route("/[controller]/[action]")]
     public class HomeController : Controller
     {
+        public IConfiguration Configuration { get; }
         private readonly ILogger<HomeController> _logger;
 
         /// <summary>
@@ -22,8 +27,9 @@ namespace KIP_server_GET.Controllers
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <exception cref="ArgumentNullException">logger</exception>
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
+            Configuration = configuration;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -33,11 +39,53 @@ namespace KIP_server_GET.Controllers
         [HttpGet]
         [Route("")]
         [Route("/")]
-        public IActionResult Index()
+        public IActionResult Home()
         {
             var info = $"{CustomNames.KIP_server_GET} version: {CustomNames.Version}";
 
             return this.Ok(info);
+        }
+
+        /// <summary>
+        /// Default action.
+        /// </summary>
+        [HttpGet]
+        [Route("/health")]
+        public IActionResult health()
+        {
+            string status = CustomNames.unhealthy_status;
+            using (NpgsqlConnection connection = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
+            {
+                try
+                {
+                    connection.Open();
+
+                    if(connection.State.ToString() == "Open")
+                        status = CustomNames.healthy_status;
+
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+
+            var response = "{\"" + $"{CustomNames.KIP_database}" + "\": " +
+                           "{\"DB system\": \"" + $"{CustomNames.PostgreSQL}" + "\", " +
+                           "\"Version\": \"" + $"{this.Configuration.GetConnectionString("PostgresVersion")}" + "\", " + 
+                           "\"status\": \"" + $"{status}" + "\", \"Connection string\": \"" + $"{this.Configuration.GetConnectionString("PostgresConnection")}" + "\"}}";
+            var json_response = JsonOutputFormat.PrettyJson(response);
+
+            var message = $"{CustomNames.KIP_database} status: {status}";
+            _logger.Log(LogLevel.Information, message);
+
+            // return JSON
+            return this.Ok(json_response);
         }
 
         /// <summary>
@@ -52,6 +100,7 @@ namespace KIP_server_GET.Controllers
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
             _logger.Log(LogLevel.Error, message);
 
+            // return JSON
             return new ObjectResult(new { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier }) { StatusCode = (int)HttpStatusCode.BadRequest };
         }
     }

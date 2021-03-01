@@ -1,9 +1,9 @@
 using KIP_server_GET.Constants;
-using KIP_server_GET.Interfaces;
-using KIP_server_GET.Mocks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,8 +27,18 @@ namespace KIP_server_GET
         {
             Console.OutputEncoding = System.Text.Encoding.Default;
 
-            services.AddControllersWithViews();
-            services.AddTransient<IFaculty, MockFaculty>();
+            /*
+            var connection = Configuration.GetConnectionString("PostgresConnection");
+            services.AddDbContext<Server_GETContext>(options => options.UseNpgsql(connection));
+            */
+
+            var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
+            var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
+
+            services.AddDbServices(pgConnectionString, pgVersionString);
+            services.AddMvcCore()
+                    .AddDataAnnotations()
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         public void Configure(IApplicationBuilder app, ILogger<Startup> logger, IWebHostEnvironment env)
@@ -61,7 +71,6 @@ namespace KIP_server_GET
             });
 
             app.UseResponseCaching();
-            //app.UseHealthChecks();
         }
     }
 }

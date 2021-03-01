@@ -1,12 +1,11 @@
-﻿using KIP_server_GET.Interfaces;
+﻿using KIP_server_GET.Constants;
+using KIP_server_GET.Interfaces;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
-using Npgsql;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Text.Unicode;
 
 namespace KIP_server_GET.Controllers
 {
@@ -14,16 +13,19 @@ namespace KIP_server_GET.Controllers
     /// Default controller.
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
+    [Controller]
     [Route("/[controller]/[action]")]
     public class FacultyController : Controller
     {
-        public IConfiguration Configuration { get; }
         private readonly IFaculty _faculty;
+        public IConfiguration Configuration { get; }
+        private readonly ILogger<HomeController> _logger;
 
-        public FacultyController(IFaculty _iFaculty, IConfiguration configuration)
+        public FacultyController(ILogger<HomeController> logger, IFaculty _iFaculty, IConfiguration configuration)
         {
             _faculty = _iFaculty;
             Configuration = configuration;
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
@@ -31,8 +33,47 @@ namespace KIP_server_GET.Controllers
         /// </summary>
         [HttpGet]
         [Route("/Faculty")]
-        public IActionResult Index()
+        public IActionResult Faculty()
         {
+            var info = $"{CustomNames.Faculty} page\n\n";
+            info += $"      \'...{CustomNames.Faculty}/All\' --> returns all faculties\n";
+            info += $"      \'...{CustomNames.Faculty}/[id]\' --> returns faculty by index\n";
+
+            // return JSON
+            return this.Ok(info);
+        }
+
+        /// <summary>
+        /// All Faculties
+        /// </summary>
+        [HttpGet]
+        [Route("/Faculty/{id:int?}")]
+        public JsonResult Faculty(int? id)
+        {
+            if (id != null)
+            {
+                var faculties = _faculty.AllFaculties;
+                foreach (var f in faculties)
+                {
+                    if (f.FacultyID == id)
+                        return Json(f);
+                }
+
+                return Json($"There isn't any faculty with id = {id}");
+            }
+
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            _logger.Log(LogLevel.Error, message);
+
+            return Json(message);
+        }
+
+        [HttpGet]
+        [Route("/Faculty/All")]
+        public JsonResult All()
+        {
+            /*
             using (NpgsqlConnection conn = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
             {
                 try
@@ -63,20 +104,11 @@ namespace KIP_server_GET.Controllers
                     conn.Close();
                 }
             }
-
-
-            var options = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
-                WriteIndented = true
-            };
+            */
 
             var faculties = _faculty.AllFaculties;
 
-            var jsonString = JsonSerializer.Serialize(faculties, options);
-            jsonString = Regex.Replace(jsonString, @"\\u([0-9A-Fa-f]{4})", m => "" + (char)Convert.ToInt32(m.Groups[1].Value, 16));
-
-            return this.Ok(jsonString);
+            return Json(faculties);
         }
     }
 }
