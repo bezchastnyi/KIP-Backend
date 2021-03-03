@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_GET", "KIP_serve
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "json_read", "json_read\json_read\json_read.csproj", "{A66A5A7E-E588-4864-87DD-1C293E6E3D90}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{67E3BDAA-7815-428C-9207-5893A9E0EDBC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F149DC10-96CD-492E-A4F7-D760CB54979E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +28,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ED7D1D0D-D526-43F4-95F0-610CA6CC1AAD} = {67E3BDAA-7815-428C-9207-5893A9E0EDBC}
+		{A66A5A7E-E588-4864-87DD-1C293E6E3D90} = {67E3BDAA-7815-428C-9207-5893A9E0EDBC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C950030-2F3A-424E-B43C-8581C3183045}

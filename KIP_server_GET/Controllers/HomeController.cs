@@ -78,7 +78,7 @@ namespace KIP_server_GET.Controllers
             var response = "{\"" + $"{CustomNames.KIP_database}" + "\": " +
                            "{\"DB system\": \"" + $"{CustomNames.PostgreSQL}" + "\", " +
                            "\"Version\": \"" + $"{this.Configuration.GetConnectionString("PostgresVersion")}" + "\", " + 
-                           "\"status\": \"" + $"{status}" + "\", \"Connection string\": \"" + $"{this.Configuration.GetConnectionString("PostgresConnection")}" + "\"}}";
+                           "\"status\": \"" + $"{status}" + "\"}}";
             var json_response = JsonOutputFormat.PrettyJson(response);
 
             var message = $"{CustomNames.KIP_database} status: {status}";
