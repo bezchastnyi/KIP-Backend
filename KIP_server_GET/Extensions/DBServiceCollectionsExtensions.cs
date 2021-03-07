@@ -1,8 +1,6 @@
-﻿using System;
-using KIP_server_GET.Interfaces;
-using KIP_server_GET.Mocks;
-using KIP_server_GET.Models;
+﻿using KIP_server_GET.DB;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -27,20 +25,17 @@ namespace Microsoft.Extensions.DependencyInjection
             if (string.IsNullOrEmpty(connectionString)) throw new ArgumentException("Connection string must be not null or empty", nameof(connectionString));
             if (string.IsNullOrEmpty(pgVersionString)) throw new ArgumentException("Postgres version string must be not null or empty", nameof(pgVersionString));
 
-            /*
+
             var pgVersion = new Version(pgVersionString);
-            services.AddDbContextPool<Server_GETContext>(contextOptions =>
+            services.AddDbContextPool<ServerContext>(contextOptions =>
             {
                 contextOptions.UseNpgsql(connectionString, npgOptions =>
                 {
-                    npgOptions.MigrationsAssembly("KIP_server_GET.Migrations")
+                    npgOptions.MigrationsAssembly("KIP_server_GET")
                         .EnableRetryOnFailure();
                     npgOptions.SetPostgresVersion(pgVersion);
                 });
             });
-            */
-
-            services.AddTransient<IFaculty, MockFaculty>();
 
             return services;
         }

@@ -1,10 +1,9 @@
-﻿using KIP_server_GET.Constants;
+﻿using KIP_server_GET.DB;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace KIP_server_GET.Controllers
 {
@@ -16,44 +15,58 @@ namespace KIP_server_GET.Controllers
     [Route("/[controller]/[action]")]
     public class CathedraController : Controller
     {
-        private readonly JsonSerializerOptions options;
-        public IConfiguration Configuration { get; }
+        private readonly ServerContext _context;
+        private readonly ILogger<HomeController> _logger;
 
-
-        public CathedraController(IConfiguration configuration)
+        public CathedraController(ILogger<HomeController> logger, ServerContext context)
         {
-            options = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic),
-                WriteIndented = true
-            };
-
-            Configuration = configuration;
+            _context = context;
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
-        /// All Cathedras
+        /// All Faculties
         /// </summary>
         [HttpGet]
         [Route("/Cathedra")]
         public IActionResult Cathedra()
         {
-            var info = $"{CustomNames.Cathedra} page\n\n";
-            info += $"      \'...{CustomNames.Cathedra}/All\' --> returns all cathedras\n";
-            info += $"      \'...{CustomNames.Cathedra}/[id]\' --> returns cathedra by index\n";
+            if (_context.Cathedra != null)
+            {
+                var cathedras = _context.Cathedra;
+                return new JsonResult(cathedras);
+            }
 
-            // return JSON
-            return this.Ok(info);
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            _logger.Log(LogLevel.Error, message);
+
+            return NotFound();
         }
 
+        /// <summary>
+        /// Faculty by <param name="id">
+        /// </summary>
         [HttpGet]
-        [Route("/Cathedra/All")]
-        public IActionResult All()
+        [Route("/Cathedra/{id:int?}")]
+        public IActionResult Cathedra(int? id)
         {
+            if (id != null)
+            {
+                var cathedras = _context.Cathedra;
+                foreach (var unit in cathedras)
+                {
+                    if (unit.CathedraID == id)
+                        return new JsonResult(unit);
+                }
+                return NotFound();
+            }
 
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            _logger.Log(LogLevel.Error, message);
 
-
-            return this.Ok("");
+            return BadRequest();
         }
     }
 }

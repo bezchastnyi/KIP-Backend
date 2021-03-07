@@ -43,6 +43,7 @@ namespace KIP_server_GET.Controllers
         {
             var info = $"{CustomNames.KIP_server_GET} version: {CustomNames.Version}";
 
+            // return JSON
             return this.Ok(info);
         }
 
@@ -51,7 +52,7 @@ namespace KIP_server_GET.Controllers
         /// </summary>
         [HttpGet]
         [Route("/health")]
-        public IActionResult health()
+        public JsonResult health()
         {
             string status = CustomNames.unhealthy_status;
             using (NpgsqlConnection connection = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
@@ -60,7 +61,7 @@ namespace KIP_server_GET.Controllers
                 {
                     connection.Open();
 
-                    if(connection.State.ToString() == "Open")
+                    if (connection.State.ToString() == "Open")
                         status = CustomNames.healthy_status;
 
                     connection.Close();
@@ -77,7 +78,7 @@ namespace KIP_server_GET.Controllers
 
             var response = "{\"" + $"{CustomNames.KIP_database}" + "\": " +
                            "{\"DB system\": \"" + $"{CustomNames.PostgreSQL}" + "\", " +
-                           "\"Version\": \"" + $"{this.Configuration.GetConnectionString("PostgresVersion")}" + "\", " + 
+                           "\"Version\": \"" + $"{this.Configuration.GetConnectionString("PostgresVersion")}" + "\", " +
                            "\"status\": \"" + $"{status}" + "\"}}";
             var json_response = JsonOutputFormat.PrettyJson(response);
 
@@ -85,7 +86,7 @@ namespace KIP_server_GET.Controllers
             _logger.Log(LogLevel.Information, message);
 
             // return JSON
-            return this.Ok(json_response);
+            return Json(json_response);
         }
 
         /// <summary>
@@ -100,7 +101,6 @@ namespace KIP_server_GET.Controllers
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
             _logger.Log(LogLevel.Error, message);
 
-            // return JSON
             return new ObjectResult(new { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier }) { StatusCode = (int)HttpStatusCode.BadRequest };
         }
     }

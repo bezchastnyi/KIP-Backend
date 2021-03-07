@@ -1,24 +1,18 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KIP_server_GET.Models
 {
-    [Keyless]
     public class Faculty
     {
-        public int FacultyID { get; }
+        [Required]
+        public int FacultyID { get; set; }
 
-        public string FacultyShortName { get; }
+        [Column(TypeName = "varchar(7)")]
+        public string FacultyShortName { get; set; }
 
-        public string FacultyName { get; }
-
-        public Faculty() { }
-
-        public Faculty(int ID, string short_name, string name)
-        {
-            FacultyID = ID;
-            FacultyShortName = short_name;
-            FacultyName = name;
-        }
+        [Required]
+        [Column(TypeName = "varchar(100)")]
+        public string FacultyName { get; set; }
     }
 }

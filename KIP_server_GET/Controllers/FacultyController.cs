@@ -1,9 +1,7 @@
-﻿using KIP_server_GET.Constants;
-using KIP_server_GET.Interfaces;
+﻿using KIP_server_GET.DB;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -17,14 +15,12 @@ namespace KIP_server_GET.Controllers
     [Route("/[controller]/[action]")]
     public class FacultyController : Controller
     {
-        private readonly IFaculty _faculty;
-        public IConfiguration Configuration { get; }
+        private readonly ServerContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public FacultyController(ILogger<HomeController> logger, IFaculty _iFaculty, IConfiguration configuration)
+        public FacultyController(ILogger<HomeController> logger, ServerContext context)
         {
-            _faculty = _iFaculty;
-            Configuration = configuration;
+            _context = context;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -35,80 +31,42 @@ namespace KIP_server_GET.Controllers
         [Route("/Faculty")]
         public IActionResult Faculty()
         {
-            var info = $"{CustomNames.Faculty} page\n\n";
-            info += $"      \'...{CustomNames.Faculty}/All\' --> returns all faculties\n";
-            info += $"      \'...{CustomNames.Faculty}/[id]\' --> returns faculty by index\n";
-
-            // return JSON
-            return this.Ok(info);
-        }
-
-        /// <summary>
-        /// All Faculties
-        /// </summary>
-        [HttpGet]
-        [Route("/Faculty/{id:int?}")]
-        public JsonResult Faculty(int? id)
-        {
-            if (id != null)
+            if (_context.Faculty != null)
             {
-                var faculties = _faculty.AllFaculties;
-                foreach (var f in faculties)
-                {
-                    if (f.FacultyID == id)
-                        return Json(f);
-                }
-
-                return Json($"There isn't any faculty with id = {id}");
+                var faculties = _context.Faculty;
+                return new JsonResult(faculties);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
             _logger.Log(LogLevel.Error, message);
 
-            return Json(message);
+            return NotFound();
         }
 
+        /// <summary>
+        /// Faculty by <param name="id">
+        /// </summary>
         [HttpGet]
-        [Route("/Faculty/All")]
-        public JsonResult All()
+        [Route("/Faculty/{id:int?}")]
+        public IActionResult Faculty(int? id)
         {
-            /*
-            using (NpgsqlConnection conn = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
+            if (id != null)
             {
-                try
+                var faculties = _context.Faculty;
+                foreach (var unit in faculties)
                 {
-                    conn.Open();
-
-
-                    NpgsqlCommand cmd = new NpgsqlCommand("SELECT * FROM \"Faculty\"", conn);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            //var faculty_id = reader.GetString(reader.GetOrdinal("FacultyID"));
-                            var faculty_name = reader.GetString(reader.GetOrdinal("FacultyName"));
-                            Console.WriteLine("faculty_id: " + " -> faculty name = " + faculty_name);
-                        }
-                    }
-
-                    conn.Close();
+                    if (unit.FacultyID == id)
+                        return new JsonResult(unit);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-                finally
-                {
-                    conn.Close();
-                }
+                return NotFound();
             }
-            */
 
-            var faculties = _faculty.AllFaculties;
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            _logger.Log(LogLevel.Error, message);
 
-            return Json(faculties);
+            return BadRequest();
         }
     }
 }
