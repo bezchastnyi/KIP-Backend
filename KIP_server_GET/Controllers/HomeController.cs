@@ -52,7 +52,7 @@ namespace KIP_server_GET.Controllers
         /// </summary>
         [HttpGet]
         [Route("/health")]
-        public JsonResult health()
+        public IActionResult health()
         {
             string status = CustomNames.unhealthy_status;
             using (NpgsqlConnection connection = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
@@ -85,7 +85,6 @@ namespace KIP_server_GET.Controllers
             var message = $"{CustomNames.KIP_database} status: {status}";
             _logger.Log(LogLevel.Information, message);
 
-            // return JSON
             return Json(json_response);
         }
 
