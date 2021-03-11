@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 
 namespace KIP_server_GET.Controllers
 {
@@ -54,14 +55,9 @@ namespace KIP_server_GET.Controllers
             if (id != null)
             {
                 var auths = _context.Auth;
-                foreach (var unit in auths)
-                {
-                    if (unit.AuthID == id)
-                        return new JsonResult(unit);
-                }
-                return NotFound();
+                var unit = auths.FirstOrDefault(auth => auth.Student.StudentID == id);
+                return unit == null ? NotFound() : new JsonResult(unit);
             }
-
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
             _logger.Log(LogLevel.Error, message);

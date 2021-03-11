@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 
 namespace KIP_server_GET.Controllers
 {
@@ -53,13 +54,9 @@ namespace KIP_server_GET.Controllers
         {
             if (id != null)
             {
-                var schedule = _context.ProfSchedule;
-                foreach (var unit in schedule)
-                {
-                    if (unit.ProfScheduleID == id)
-                        return new JsonResult(unit);
-                }
-                return NotFound();
+                var schedules = _context.ProfSchedule;
+                var schedule = schedules.FirstOrDefault(schedule => schedule.ProfScheduleID == id);
+                return schedule == null ? NotFound() : new JsonResult(schedule);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
