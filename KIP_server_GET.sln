@@ -9,10 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "json_read", "json_read\json
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{67E3BDAA-7815-428C-9207-5893A9E0EDBC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F149DC10-96CD-492E-A4F7-D760CB54979E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_server_GET.Tests", "KIP_server_GET.Tests\KIP_server_GET.Tests.csproj", "{B9B55062-E560-42D9-BBE2-71F08CC20DE4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,10 +23,6 @@ Global
 		{A66A5A7E-E588-4864-87DD-1C293E6E3D90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A66A5A7E-E588-4864-87DD-1C293E6E3D90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A66A5A7E-E588-4864-87DD-1C293E6E3D90}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9B55062-E560-42D9-BBE2-71F08CC20DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9B55062-E560-42D9-BBE2-71F08CC20DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9B55062-E560-42D9-BBE2-71F08CC20DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9B55062-E560-42D9-BBE2-71F08CC20DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,7 +30,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{ED7D1D0D-D526-43F4-95F0-610CA6CC1AAD} = {67E3BDAA-7815-428C-9207-5893A9E0EDBC}
 		{A66A5A7E-E588-4864-87DD-1C293E6E3D90} = {67E3BDAA-7815-428C-9207-5893A9E0EDBC}
-		{B9B55062-E560-42D9-BBE2-71F08CC20DE4} = {F149DC10-96CD-492E-A4F7-D760CB54979E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C950030-2F3A-424E-B43C-8581C3183045}

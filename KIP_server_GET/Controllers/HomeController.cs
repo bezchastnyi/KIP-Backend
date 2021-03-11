@@ -1,11 +1,9 @@
 ﻿using KIP_server_GET.Constants;
-using KIP_server_GET.Extensions;
 using KIP_server_GET.Json;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Npgsql;
 using System;
 using System.Diagnostics;
@@ -54,7 +52,7 @@ namespace KIP_server_GET.Controllers
         /// </summary>
         [HttpGet]
         [Route("/health")]
-        public string health()
+        public JsonResult health()
         {
             string status = CustomNames.unhealthy_status;
             using (NpgsqlConnection connection = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
@@ -83,11 +81,10 @@ namespace KIP_server_GET.Controllers
             health.Databases.Add(new Database(CustomNames.KIP_database, CustomNames.PostgreSQL, this.Configuration.GetConnectionString("PostgresVersion"), status));
 
 
-
             var message = $"{CustomNames.KIP_database} status: {status}";
             _logger.Log(LogLevel.Information, message);
 
-            return JsonConvert.SerializeObject(health);
+            return Json(health);
             // return JSON
             
         }
