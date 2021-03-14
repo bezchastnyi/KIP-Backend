@@ -134,6 +134,7 @@ namespace KIP_server_GET.DB
 /*
  * DB Entity Framework Migration script
  * 
+ * dotnet tool install --global dotnet-ef / dotnet tool update --global dotnet-ef
  * dotnet ef migrations add KIP_DB_Migration
  * dotnet ef database update
  */
