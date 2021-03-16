@@ -55,7 +55,7 @@ namespace KIP_server_GET.Controllers
             if (id != null)
             {
                 var schedules = _context.StudentSchedule;
-                var schedule = schedules.FirstOrDefault(schedule => schedule.StudentScheduleID == id);
+                var schedule = schedules.FirstOrDefault(schedule => schedule.GroupID == id);
                 return schedule == null ? NotFound() : new JsonResult(schedule);
             }
 

@@ -75,9 +75,9 @@ namespace KIP_server_GET.DB
             modelBuilder.Entity<Auth>().HasData(
                 new Auth[]
                 {
-                    new Auth { Email = "andrey24@gmail.com", Password = "qwerty1245Aw" },
-                    new Auth { Email = "alexeypavlov@gmail.com", Password = "652REF84FGd" },
-                    new Auth { Email = "mrnoizy1@gmail.com", Password = "iamNOIZY" }
+                    new Auth { StudentID = 18065, Email = "andrey24@gmail.com", Password = "qwerty1245Aw" },
+                    new Auth { StudentID = 17985, Email = "alexeypavlov@gmail.com", Password = "652REF84FGd" },
+                    new Auth { StudentID = 18112, Email = "mrnoizy1@gmail.com", Password = "iamNOIZY" }
                 });
 
             modelBuilder.Entity<News>().HasData(
@@ -107,17 +107,17 @@ namespace KIP_server_GET.DB
             modelBuilder.Entity<ProfSchedule>().HasData(
                 new ProfSchedule[]
                 {
-                    new ProfSchedule { ProfScheduleID = 123, Week = true, Time = new DateTime(2020, 2, 24, 8, 30, 0) },
-                    new ProfSchedule { ProfScheduleID = 122, Week = true, Time = new DateTime(2020, 2, 24, 10, 25, 0) },
-                    new ProfSchedule { ProfScheduleID = 121, Week = false, Time = new DateTime(2020, 2, 24, 12, 35, 0) }
+                    new ProfSchedule { ProfID = 643, SubjectID = 358, BuildingID = 7, AudienceID = 1534, Week = true, Time = new DateTime(2020, 2, 24, 8, 30, 0) },
+                    new ProfSchedule { ProfID = 12614, SubjectID = 114, BuildingID = 3, AudienceID = 1510, Week = true, Time = new DateTime(2020, 2, 24, 10, 25, 0) },
+                    new ProfSchedule { ProfID = 1277, SubjectID = 77, BuildingID = 13, AudienceID = 1684, Week = false, Time = new DateTime(2020, 2, 24, 12, 35, 0) }
                 });
 
             modelBuilder.Entity<StudentSchedule>().HasData(
                 new StudentSchedule[]
                 {
-                    new StudentSchedule { StudentScheduleID = 123, Week = false, Time = new DateTime(2020, 2, 25, 8, 30, 0) },
-                    new StudentSchedule { StudentScheduleID = 122, Week = true, Time = new DateTime(2020, 2, 25, 10, 25, 0) },
-                    new StudentSchedule { StudentScheduleID = 121, Week = false, Time = new DateTime(2020, 2, 25, 12, 35, 0) }
+                    new StudentSchedule { GroupID = 12619, SubjectID = 358, BuildingID = 13, AudienceID = 1534, Week = false, Time = new DateTime(2020, 2, 25, 8, 30, 0) },
+                    new StudentSchedule { GroupID = 12194, SubjectID = 114, BuildingID = 7, AudienceID = 1510, Week = true, Time = new DateTime(2020, 2, 25, 10, 25, 0) },
+                    new StudentSchedule { GroupID = 11114, SubjectID = 77, BuildingID = 3, AudienceID = 1684, Week = false, Time = new DateTime(2020, 2, 25, 12, 35, 0) }
                 });
 
             modelBuilder.Entity<Subject>().HasData(

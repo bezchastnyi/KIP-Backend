@@ -7,6 +7,8 @@ namespace KIP_server_GET.Models
     [Keyless]
     public class Auth
     {
+        [Required]
+        public int StudentID { get; set; }
         public Student Student { get; set; }
 
         [Required]
