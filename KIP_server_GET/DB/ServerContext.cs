@@ -7,7 +7,6 @@ namespace KIP_server_GET.DB
     public class ServerContext : DbContext
     {
         public DbSet<Audience> Audience { get; set; }
-        public DbSet<Auth> Auth { get; set; }
         public DbSet<Building> Building { get; set; }
         public DbSet<Cathedra> Cathedra { get; set; }
         public DbSet<Faculty> Faculty { get; set; }
@@ -72,14 +71,6 @@ namespace KIP_server_GET.DB
                     new Student { GroupID = 12194, StudentID = 18112, StudentName = "Жадан", StudentSurname = "Артем", StudentPatronymic = "Олександрович", StudentBDay = new DateTime(2001, 1, 18)}
                 });
 
-            modelBuilder.Entity<Auth>().HasData(
-                new Auth[]
-                {
-                    new Auth { StudentID = 18065, Email = "andrey24@gmail.com", Password = "qwerty1245Aw" },
-                    new Auth { StudentID = 17985, Email = "alexeypavlov@gmail.com", Password = "652REF84FGd" },
-                    new Auth { StudentID = 18112, Email = "mrnoizy1@gmail.com", Password = "iamNOIZY" }
-                });
-
             modelBuilder.Entity<News>().HasData(
                 new News[]
                 {
@@ -103,7 +94,7 @@ namespace KIP_server_GET.DB
                     new Prof { CathedraID = 194, ProfID = 12614, ProfName = "Тарасенко", ProfSurname = "Ірина", ProfPatronymic = "Анатоліївна" },
                     new Prof { CathedraID = 76, ProfID = 1277, ProfName = "Шабанова-Кушнаренко", ProfSurname = "Любов", ProfPatronymic = "Володимирівна" }
                 });
-
+            
             modelBuilder.Entity<ProfSchedule>().HasData(
                 new ProfSchedule[]
                 {
@@ -111,7 +102,7 @@ namespace KIP_server_GET.DB
                     new ProfSchedule { ProfID = 12614, SubjectID = 114, BuildingID = 3, AudienceID = 1510, Week = true, Time = new DateTime(2020, 2, 24, 10, 25, 0) },
                     new ProfSchedule { ProfID = 1277, SubjectID = 77, BuildingID = 13, AudienceID = 1684, Week = false, Time = new DateTime(2020, 2, 24, 12, 35, 0) }
                 });
-
+            
             modelBuilder.Entity<StudentSchedule>().HasData(
                 new StudentSchedule[]
                 {
