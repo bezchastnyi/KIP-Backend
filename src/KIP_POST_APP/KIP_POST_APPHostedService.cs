@@ -27,30 +27,12 @@ namespace KIP_POST_APP
             this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             try
             {
-                var KIPFacultyList = await MappedDataToKIPDB.GetFacultyListKIPAsync(this._logger, this._mapper, stoppingToken);
-                var KIPGroupListByFaculty = await MappedDataToKIPDB.GetGroupListByFacultyKIPAsync(KIPFacultyList, this._logger,
-                                                                                                    this._mapper, stoppingToken);
-                var KIPCathedraListByFaculty = await MappedDataToKIPDB.GetCathedraListByFacultyKIPAsync(KIPFacultyList, this._logger,
-                                                                                                        this._mapper, stoppingToken);
-                var KIPBuildingList = await MappedDataToKIPDB.GetBuildingListKIPAsync(this._logger, this._mapper, stoppingToken);
-                var KIPAudienceListByBuilding = await MappedDataToKIPDB.GetAudienceListByBuildingKIPAsync(KIPBuildingList, this._logger,
-                                                                                                    this._mapper, stoppingToken);
-                var KIPProfListByCathedra = await MappedDataToKIPDB.GetProfListByCathedraKIPAsync(KIPCathedraListByFaculty, this._logger,
-                                                                                                    this._mapper, stoppingToken);
-                var KIPScheduleByGroup = await MappedDataToKIPDB.GetScheduleListByGroupAsync(KIPGroupListByFaculty, this._logger,
-                                                                                             this._mapper, stoppingToken);
-                var KIPScheduleByProf = await MappedDataToKIPDB.GetScheduleListByProfAsync(KIPProfListByCathedra, this._logger,
-                                                                                             this._mapper, stoppingToken);
-
-                //this.SendFacultyDataToDB(KIPFacultyList);
-                //this.SendGroupDataToDB(KIPGroupListByFaculty);
-
-
-                //this._context.SaveChanges();
+                var DataList = await GetData(this._logger, this._mapper, cancellationToken);
+                //PostData.PostDataToDB(this._context, DataList);
             }
             catch (Exception e)
             {
@@ -67,68 +49,28 @@ namespace KIP_POST_APP
             this._appLifetime.StopApplication();
         }
 
-        private void SendFacultyDataToDB(List<Faculty> objects)
+        private async static Task<(List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList, 
+                              List<Building> buildingList, List<Audience> audienceList, List<Prof> profList, 
+                              List<StudentSchedule> studentScheduleList, List<ProfSchedule> profScheduleList)>
+            GetData(ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
-            foreach(var obj in objects)
-            {
-                this._context.Faculty.Add(obj);
-            }
-        }
+            var KIPFacultyList = await MappedDataToKIPDB.GetFacultyListKIPAsync(logger, mapper, cancellationToken);
+            var KIPGroupListByFaculty = await MappedDataToKIPDB.GetGroupListByFacultyKIPAsync(KIPFacultyList, logger,
+                                                                                                mapper, cancellationToken);
+            var KIPCathedraListByFaculty = await MappedDataToKIPDB.GetCathedraListByFacultyKIPAsync(KIPFacultyList, logger,
+                                                                                                    mapper, cancellationToken);
+            var KIPBuildingList = await MappedDataToKIPDB.GetBuildingListKIPAsync(logger, mapper, cancellationToken);
+            var KIPAudienceListByBuilding = await MappedDataToKIPDB.GetAudienceListByBuildingKIPAsync(KIPBuildingList, logger,
+                                                                                                mapper, cancellationToken);
+            var KIPProfListByCathedra = await MappedDataToKIPDB.GetProfListByCathedraKIPAsync(KIPCathedraListByFaculty, logger,
+                                                                                                mapper, cancellationToken);
+            var KIPScheduleByGroup = await MappedDataToKIPDB.GetScheduleListByGroupAsync(KIPGroupListByFaculty, logger,
+                                                                                         mapper, cancellationToken);
+            var KIPScheduleByProf = await MappedDataToKIPDB.GetScheduleListByProfAsync(KIPProfListByCathedra, logger,
+                                                                                         mapper, cancellationToken);
 
-        private void SendGroupDataToDB(List<Group> objects)
-        {
-            foreach (var obj in objects)
-            {
-                this._context.Group.Add(obj);
-            }
-        }
-
-        private void SendCathedraDataToDB(List<Cathedra> objects)
-        {
-            foreach (var obj in objects)
-            {
-                this._context.Cathedra.Add(obj);
-            }
-        }
-
-        private void SendBuildingDataToDB(List<Building> objects)
-        {
-            foreach (var obj in objects)
-            {
-                this._context.Building.Add(obj);
-            }
-        }
-
-        private void SendAudienceDataToDB(List<Audience> objects)
-        {
-            foreach (var obj in objects)
-            {
-                this._context.Audience.Add(obj);
-            }
-        }
-
-        private void SendProfDataToDB(List<Prof> objects)
-        {
-            foreach (var obj in objects)
-            {
-                this._context.Prof.Add(obj);
-            }
-        }
-
-        private void SendStudentScheduleDataToDB(List<StudentSchedule> objects)
-        {
-            foreach (var obj in objects)
-            {
-                this._context.StudentSchedule.Add(obj);
-            }
-        }
-
-        private void SendProfScheduleDataToDB(List<ProfSchedule> objects)
-        {
-            foreach (var obj in objects)
-            {
-                this._context.ProfSchedule.Add(obj);
-            }
+            return (KIPFacultyList, KIPGroupListByFaculty, KIPCathedraListByFaculty, KIPBuildingList, KIPAudienceListByBuilding,
+                    KIPProfListByCathedra, KIPScheduleByGroup, KIPScheduleByProf);
         }
     }
 }
