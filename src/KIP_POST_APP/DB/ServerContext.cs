@@ -1,7 +1,7 @@
-﻿using KIP_POST_APP.Models.KIPDB;
+﻿using KIP_POST_APP.Models.KIP;
 using Microsoft.EntityFrameworkCore;
 
-namespace KIP_server_GET.DB
+namespace KIP_POST_APP.DB
 {
     public class ServerContext : DbContext
     {

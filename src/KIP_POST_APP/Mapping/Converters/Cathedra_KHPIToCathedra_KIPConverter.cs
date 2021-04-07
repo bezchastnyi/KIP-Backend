@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using System;
-using KIP_POST_APP.Models.KHPIDB;
-using KIP_POST_APP.Models.KIPDB;
+using KIP_POST_APP.Models.KHPI;
+using KIP_POST_APP.Models.KIP;
 
 namespace KIP_POST_APP.Mapping.Converters
 {

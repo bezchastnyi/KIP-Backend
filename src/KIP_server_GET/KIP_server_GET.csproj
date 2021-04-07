@@ -34,4 +34,8 @@
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\KIP_POST_APP\KIP_POST_APP.csproj" />
+  </ItemGroup>
+
 </Project>

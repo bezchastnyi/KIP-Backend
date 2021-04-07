@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using System;
-using KIP_POST_APP.Models.KHPIDB;
-using KIP_POST_APP.Models.KIPDB;
+using KIP_POST_APP.Models.KHPI;
+using KIP_POST_APP.Models.KIP;
 using System.Collections.Generic;
 using KIP_POST_APP.Models;
 using KIP_POST_APP.Services;
+using KIP_POST_APP.Models.KIP.Helpers;
 
 namespace KIP_POST_APP.Mapping.Converters
 {

@@ -1,4 +1,4 @@
-﻿using KIP_server_GET.DB;
+﻿using KIP_POST_APP.DB;
 using Microsoft.EntityFrameworkCore;
 using System;
 

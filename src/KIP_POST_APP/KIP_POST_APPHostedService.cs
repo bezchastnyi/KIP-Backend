@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using KIP_POST_APP.Models.KIPDB;
+using KIP_POST_APP.Models.KIP;
 using KIP_POST_APP.Services;
-using KIP_server_GET.DB;
+using KIP_POST_APP.DB;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;

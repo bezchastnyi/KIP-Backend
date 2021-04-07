@@ -1,4 +1,4 @@
-﻿using KIP_server_GET.Secrets;
+﻿using KIP_POST_APP.Secrets;
 using Microsoft.AspNetCore.Builder;
 
 public static class TokenExtensions

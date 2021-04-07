@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KIP_server_GET.Models.KIP
+namespace KIP_POST_APP.Models.KIP
 {
     public class Faculty
     {

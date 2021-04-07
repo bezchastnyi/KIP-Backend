@@ -1,4 +1,4 @@
-﻿namespace KIP_POST_APP.Models.KHPIDB
+﻿namespace KIP_POST_APP.Models.KHPI
 {
     public class Cathedra_KHPI
     {

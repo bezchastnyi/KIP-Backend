@@ -1,6 +1,6 @@
-﻿namespace KIP_POST_APP.Models.KHPIDB
+﻿namespace KIP_POST_APP.Models.KHPI
 {
-    public class ScheduleByGroup_KHPI
+    public class ScheduleByProf_KHPI
     {
         public Monday Monday { get; set; }
         public Tuesday Tuesday { get; set; }

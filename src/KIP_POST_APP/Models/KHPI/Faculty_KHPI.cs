@@ -1,6 +1,6 @@
-﻿namespace KIP_POST_APP.Models.KHPIDB
+﻿namespace KIP_POST_APP.Models.KHPI
 {
-    public class Prof_KHPI
+    public class Faculty_KHPI
     {
         public string title { get; set; }
 

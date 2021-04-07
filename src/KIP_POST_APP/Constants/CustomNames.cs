@@ -8,12 +8,12 @@
             /// <summary>
             /// App name
             /// </summary>
-            public const string KIP_server_GET = "KIP_server_GET";
+            public const string KIP_POST_APP = "KIP_POST_APP";
 
             /// <summary>
             /// Server version
             /// </summary>
-            public const string Version = "1.0.2";
+            public const string Version = "1.0.1";
 
             /// <summary>
             /// KIP DB

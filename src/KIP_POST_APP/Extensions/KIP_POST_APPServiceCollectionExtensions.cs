@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using KIP_POST_APP.Mapping;
-using Microsoft.Extensions.Configuration;
-using KIP_server_GET.DB;
+using KIP_POST_APP.DB;
 using Microsoft.EntityFrameworkCore;
 using KIP_POST_APP.Services;
 

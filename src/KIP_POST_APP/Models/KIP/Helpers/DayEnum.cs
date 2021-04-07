@@ -1,4 +1,4 @@
-﻿namespace KIP_server_GET.Models.KIP.Helpers
+﻿namespace KIP_POST_APP.Models.KIP.Helpers
 {
     public enum Day
     {

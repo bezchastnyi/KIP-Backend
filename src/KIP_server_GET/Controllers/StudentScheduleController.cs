@@ -1,5 +1,5 @@
-﻿using KIP_server_GET.DB;
-using KIP_server_GET.Models.KIP;
+﻿using KIP_POST_APP.DB;
+using KIP_POST_APP.Models.KIP;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
-namespace KIP_server_GET.Controllers
+namespace KIP_POST_APP.Controllers
 {
     /// <summary>
     /// Default controller.

@@ -1,4 +1,4 @@
-﻿using KIP_POST_APP.Models.KHPIDB;
+﻿using KIP_POST_APP.Models.KHPI;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

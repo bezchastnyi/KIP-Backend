@@ -1,4 +1,4 @@
-﻿namespace KIP_POST_APP.Models.KIPDB
+﻿namespace KIP_POST_APP.Models.KIP.Helpers
 {
     public enum Week
     {

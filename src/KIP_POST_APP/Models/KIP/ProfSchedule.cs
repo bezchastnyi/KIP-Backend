@@ -1,9 +1,9 @@
-﻿using KIP_server_GET.Models.KIP.Helpers;
+﻿using KIP_POST_APP.Models.KIP.Helpers;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KIP_server_GET.Models.KIP
+namespace KIP_POST_APP.Models.KIP
 {
     public class ProfSchedule
     {
@@ -17,7 +17,7 @@ namespace KIP_server_GET.Models.KIP
         public string SubjectName { get; set; }
 
         [Required(ErrorMessage = "Week is required")]
-        public Week Week { get; set; }
+        public Week week { get; set; }
 
         [Required(ErrorMessage = "day is required")]
         public Day day { get; set; }

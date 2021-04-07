@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using KIP_POST_APP.Models.KIPDB;
+using KIP_POST_APP.Models.KIP;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

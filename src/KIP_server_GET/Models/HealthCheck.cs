@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KIP_server_GET.Models
+namespace KIP_POST_APP.Models
 {
     public class HealthCheck
     {

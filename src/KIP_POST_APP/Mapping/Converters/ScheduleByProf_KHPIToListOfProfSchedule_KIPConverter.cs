@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using System;
-using KIP_POST_APP.Models.KHPIDB;
-using KIP_POST_APP.Models.KIPDB;
+using KIP_POST_APP.Models.KHPI;
+using KIP_POST_APP.Models.KIP;
 using System.Collections.Generic;
 using KIP_POST_APP.Models;
 using KIP_POST_APP.Services;
+using KIP_POST_APP.Models.KIP.Helpers;
 
 namespace KIP_POST_APP.Mapping.Converters
 {
@@ -325,7 +326,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     {
                         day = Day.Monday,
                         week = Week.UnPaired,
-                        GroupId = new List<int>(groupListMonday[i]),
+                        GroupID = new List<int>(groupListMonday[i]),
                         SubjectName = SubjectListMonday[i],
                         Type = TypeListMonday[i]
                     });
@@ -340,7 +341,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     {
                         day = Day.Tuesday,
                         week = Week.UnPaired,
-                        GroupId = new List<int>(groupListTuesday[i]),
+                        GroupID = new List<int>(groupListTuesday[i]),
                         SubjectName = SubjectListTuesday[i],
                         Type = TypeListTuesday[i]
                     });
@@ -355,7 +356,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     {
                         day = Day.Wednesday,
                         week = Week.UnPaired,
-                        GroupId = new List<int>(groupListWednesday[i]),
+                        GroupID = new List<int>(groupListWednesday[i]),
                         SubjectName = SubjectListWednesday[i],
                         Type = TypeListWednesday[i]
                     });
@@ -370,7 +371,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     {
                         day = Day.Thursday,
                         week = Week.UnPaired,
-                        GroupId = new List<int>(groupListThursday[i]),
+                        GroupID = new List<int>(groupListThursday[i]),
                         SubjectName = SubjectListThursday[i],
                         Type = TypeListThursday[i]
                     });
@@ -385,7 +386,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     {
                         day = Day.Friday,
                         week = Week.UnPaired,
-                        GroupId = new List<int>(groupListFriday[i]),
+                        GroupID = new List<int>(groupListFriday[i]),
                         SubjectName = SubjectListFriday[i],
                         Type = TypeListFriday[i]
                     });
