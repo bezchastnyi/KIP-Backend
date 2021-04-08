@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace KIP_POST_APP.Controllers
+namespace KIP_server_GET.Controllers
 {
     /// <summary>
     /// Default controller.

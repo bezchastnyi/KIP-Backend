@@ -1,5 +1,5 @@
-﻿using KIP_POST_APP.Constants;
-using KIP_POST_APP.Models;
+﻿using KIP_server_GET.Constants;
+using KIP_server_GET.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +9,7 @@ using System;
 using System.Diagnostics;
 using System.Net;
 
-namespace KIP_POST_APP.Controllers
+namespace KIP_server_GET.Controllers
 {
     /// <summary>
     /// Default controller.

@@ -23,7 +23,7 @@ namespace KIP_POST_APP.Models.KIP
         public Day day { get; set; }
 
         [Required(ErrorMessage = "Type is required")]
-        [Column(TypeName = "varchar(50)")]
+        [Column(TypeName = "varchar(100)")]
         public string Type { get; set; }
 
 
@@ -44,7 +44,6 @@ namespace KIP_POST_APP.Models.KIP
 
         [Required(ErrorMessage = "GroupID is required")]
         public List<int> GroupID { get; set; }
-        [ForeignKey("GroupID")]
         public List<Group> Group { get; set; }
     }
 }

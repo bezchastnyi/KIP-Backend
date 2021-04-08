@@ -7,19 +7,23 @@ namespace KIP_POST_APP.Services
 {
     public static class PostData
     {
+        /*
         public static void PostDataToDB(ServerContext context, 
             (List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList, List<Building> buildingList,
              List<Audience> audienceList, List<Prof> profList, List<StudentSchedule> studentScheduleList, 
-             List<ProfSchedule> profScheduleList) DataList)
+             List<ProfSchedule> profScheduleList) DataList)*/
+        public static void PostDataToDB(ServerContext context,
+            (List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList, List<Building> buildingList,
+             List<Audience> audienceList, List<Prof> profList) DataList)
         {
             SendFacultyDataToDB(context, DataList.facultyList);
-            SendGroupDataToDB(context, DataList.groupList);
             SendCathedraDataToDB(context, DataList.cathedraList);
+            SendGroupDataToDB(context, DataList.groupList);
             SendBuildingDataToDB(context, DataList.buildingList);
             SendAudienceDataToDB(context, DataList.audienceList);
             SendProfDataToDB(context, DataList.profList);
-            SendStudentScheduleDataToDB(context, DataList.studentScheduleList);
-            SendProfScheduleDataToDB(context, DataList.profScheduleList);
+            //SendStudentScheduleDataToDB(context, DataList.studentScheduleList);
+            //SendProfScheduleDataToDB(context, DataList.profScheduleList);
 
             context.SaveChanges();
         }
@@ -72,6 +76,7 @@ namespace KIP_POST_APP.Services
             }
         }
 
+        /*
         public static void SendStudentScheduleDataToDB(ServerContext context, List<StudentSchedule> objects)
         {
             foreach (var obj in objects)
@@ -87,5 +92,6 @@ namespace KIP_POST_APP.Services
                 context.ProfSchedule.Add(obj);
             }
         }
+        */
     }
 }

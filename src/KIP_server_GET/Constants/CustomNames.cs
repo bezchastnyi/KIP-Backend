@@ -1,4 +1,4 @@
-﻿namespace KIP_POST_APP.Constants
+﻿namespace KIP_server_GET.Constants
 {
     /// <summary>
     /// Custom name constants

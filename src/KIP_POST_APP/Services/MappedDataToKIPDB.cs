@@ -65,7 +65,7 @@ namespace KIP_POST_APP.Services
                         var groupList = await GetDataFromKHPIDB.GetGroupListByFacultyIdAsync(faculty.FacultyID, stoppingToken);
                         if (groupList == null)
                         {
-                            logger.LogWarning(nameof(groupList) + " is null");
+                            logger.LogWarning($"{nameof(groupList)} is null: {nameof(faculty)} - {faculty.FacultyID}/{faculty.FacultyName}");
                             continue;
                         }
 
@@ -108,7 +108,7 @@ namespace KIP_POST_APP.Services
                         var cathedraList = await GetDataFromKHPIDB.GetCathedraListByFacultyIdAsync(faculty.FacultyID, stoppingToken);
                         if (cathedraList == null)
                         {
-                            logger.LogWarning(nameof(cathedraList) + " is null");
+                            logger.LogWarning($"{nameof(cathedraList)} is null: {nameof(faculty)} - {faculty.FacultyID}/{faculty.FacultyName}");
                             continue;
                         }
 
@@ -180,7 +180,7 @@ namespace KIP_POST_APP.Services
                         var audienceList = await GetDataFromKHPIDB.GetAudienceListByBuildingIdAsync(building.BuildingID, stoppingToken);
                         if (audienceList == null)
                         {
-                            logger.LogWarning(nameof(audienceList) + " is null");
+                            logger.LogWarning($"{nameof(audienceList)} is null: {nameof(building)} - {building.BuildingID}/{building.BuildingName}");
                             continue;
                         }
 
@@ -223,7 +223,7 @@ namespace KIP_POST_APP.Services
                         var profList = await GetDataFromKHPIDB.GetProfListByCathedraIdAsync(cathedra.CathedraID, stoppingToken);
                         if (profList == null)
                         {
-                            logger.LogWarning(nameof(profList) + " is null");
+                            logger.LogWarning($"{nameof(profList)} is null: {nameof(cathedra)} - {cathedra.CathedraID}/{cathedra.CathedraName}");
                             continue;
                         }
 
@@ -267,7 +267,7 @@ namespace KIP_POST_APP.Services
 
                         if (schedule == default)
                         {
-                            logger.LogWarning(nameof(schedule) + " is null");
+                            logger.LogWarning($"{nameof(schedule)} is null: {nameof(group)} - {group.GroupID}/{group.GroupName}");
                             continue;
                         }
 
@@ -312,7 +312,7 @@ namespace KIP_POST_APP.Services
 
                         if (schedule == default)
                         {
-                            logger.LogWarning(nameof(schedule) + " is null");
+                            logger.LogWarning($"{nameof(schedule)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
                             continue;
                         }
 

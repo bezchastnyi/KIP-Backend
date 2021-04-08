@@ -19,14 +19,10 @@ namespace KIP_POST_APP.Models.KIP
         public int Course { get; set; }
 
 
+        [Index]
         [Required(ErrorMessage = "FacultyID is required")]
         public int FacultyID { get; set; }
         [ForeignKey("FacultyID")]
         public Faculty Faculty { get; set; }
-
-        [Required(ErrorMessage = "Cathedra is required")]
-        public int CathedraID { get; set; }
-        [ForeignKey("CathedraID")]
-        public Cathedra Cathedra { get; set; }
     }
 }

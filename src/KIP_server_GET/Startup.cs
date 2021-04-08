@@ -1,4 +1,4 @@
-using KIP_POST_APP.Constants;
+using KIP_server_GET.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace KIP_POST_APP
+namespace KIP_server_GET
 {
     [ExcludeFromCodeCoverage]
     public class Startup

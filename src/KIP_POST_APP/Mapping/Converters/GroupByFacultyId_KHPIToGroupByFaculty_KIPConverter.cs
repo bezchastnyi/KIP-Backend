@@ -2,6 +2,7 @@
 using System;
 using KIP_POST_APP.Models.KHPI;
 using KIP_POST_APP.Models.KIP;
+using KIP_POST_APP.Services;
 
 namespace KIP_POST_APP.Mapping.Converters
 {

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace KIP_POST_APP.Secrets
+namespace KIP_server_GET.Secrets
 {
     public class EntryToken
     {

@@ -4,7 +4,7 @@ using Serilog;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace KIP_POST_APP
+namespace KIP_server_GET
 {
     /// <summary>
     /// </summary>

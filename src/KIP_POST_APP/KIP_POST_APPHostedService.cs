@@ -32,7 +32,7 @@ namespace KIP_POST_APP
             try
             {
                 var DataList = await GetData(this._logger, this._mapper, cancellationToken);
-                //PostData.PostDataToDB(this._context, DataList);
+                PostData.PostDataToDB(this._context, DataList); 
             }
             catch (Exception e)
             {
@@ -49,9 +49,12 @@ namespace KIP_POST_APP
             this._appLifetime.StopApplication();
         }
 
+        /*
         private async static Task<(List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList, 
                               List<Building> buildingList, List<Audience> audienceList, List<Prof> profList, 
-                              List<StudentSchedule> studentScheduleList, List<ProfSchedule> profScheduleList)>
+                              List<StudentSchedule> studentScheduleList, List<ProfSchedule> profScheduleList)>*/
+        private async static Task<(List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList,
+                              List<Building> buildingList, List<Audience> audienceList, List<Prof> profList)>
             GetData(ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
             var KIPFacultyList = await MappedDataToKIPDB.GetFacultyListKIPAsync(logger, mapper, cancellationToken);
@@ -64,13 +67,20 @@ namespace KIP_POST_APP
                                                                                                 mapper, cancellationToken);
             var KIPProfListByCathedra = await MappedDataToKIPDB.GetProfListByCathedraKIPAsync(KIPCathedraListByFaculty, logger,
                                                                                                 mapper, cancellationToken);
+
+            /*
             var KIPScheduleByGroup = await MappedDataToKIPDB.GetScheduleListByGroupAsync(KIPGroupListByFaculty, logger,
                                                                                          mapper, cancellationToken);
+            /*
             var KIPScheduleByProf = await MappedDataToKIPDB.GetScheduleListByProfAsync(KIPProfListByCathedra, logger,
                                                                                          mapper, cancellationToken);
-
+            
             return (KIPFacultyList, KIPGroupListByFaculty, KIPCathedraListByFaculty, KIPBuildingList, KIPAudienceListByBuilding,
                     KIPProfListByCathedra, KIPScheduleByGroup, KIPScheduleByProf);
+            */
+
+            return (KIPFacultyList, KIPGroupListByFaculty, KIPCathedraListByFaculty, KIPBuildingList, KIPAudienceListByBuilding,
+                    KIPProfListByCathedra);
         }
     }
 }

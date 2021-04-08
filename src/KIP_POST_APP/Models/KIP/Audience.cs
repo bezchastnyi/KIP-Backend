@@ -11,7 +11,7 @@ namespace KIP_POST_APP.Models.KIP
         public int AudienceID { get; set; }
 
         [Required(ErrorMessage = "AudienceName is required")]
-        [Column(TypeName = "varchar(7)")]
+        [Column(TypeName = "varchar(100)")]
         public string AudienceName { get; set; }
 
         [Range(0, 1000, ErrorMessage = "NumberOfSeats must be between 0 and 1000")]
