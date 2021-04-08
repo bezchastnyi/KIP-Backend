@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9A2F9FA7-014
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0AD68C06-80D6-43C5-B22A-3254245B4D55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_server_GET.Tests", "KIP_server_GET.Tests\KIP_server_GET.Tests.csproj", "{041BB436-3E59-43AC-A9EB-CFCD00C17CB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_server_GET.Tests", "test\KIP_server_GET.Tests\KIP_server_GET.Tests.csproj", "{041BB436-3E59-43AC-A9EB-CFCD00C17CB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_POST_APP.Tests", "KIP_POST_APP.Tests\KIP_POST_APP.Tests.csproj", "{1A5FFBE4-B575-45A3-B74C-10B6AE20D05F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_POST_APP.Tests", "test\KIP_POST_APP.Tests\KIP_POST_APP.Tests.csproj", "{1A5FFBE4-B575-45A3-B74C-10B6AE20D05F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

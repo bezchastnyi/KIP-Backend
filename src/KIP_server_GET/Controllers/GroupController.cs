@@ -86,39 +86,5 @@ namespace KIP_server_GET.Controllers
 
             return BadRequest();
         }
-
-        /// <summary>
-        /// Faculty by <param name="id">
-        /// </summary>
-        [HttpGet]
-        [Route("Group/Cathedra/{id:int?}")]
-        public IActionResult Cathedra(int? id)
-        {
-            if (id != null)
-            {
-                var list = new List<Group>();
-                foreach (var group in this._context.Group)
-                {
-                    if (group.CathedraID == id)
-                    {
-                        list.Add(group);
-                    }
-                }
-                if (list.Count == 0)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return new JsonResult(list);
-                }
-            }
-
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            _logger.Log(LogLevel.Error, message);
-
-            return BadRequest();
-        }
     }
 }
