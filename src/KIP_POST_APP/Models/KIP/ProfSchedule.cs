@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace KIP_POST_APP.Models.KIP
 {
     public class ProfSchedule
     {
-        [Key]
-        [Index]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, Column(Order = 0)]
         [Required(ErrorMessage = "ProfScheduleID is required")]
         public int ProfScheduleID { get; set; }
 
@@ -27,23 +28,18 @@ namespace KIP_POST_APP.Models.KIP
         public string Type { get; set; }
 
 
+        [Index]
         [Required(ErrorMessage = "ProfID is required")]
         public int ProfID { get; set; }
-        [ForeignKey("ProfID")]
         public Prof Prof { get; set; }
 
-        [Required(ErrorMessage = "BuildingID is required")]
-        public int BuildingID { get; set; }
-        [ForeignKey("BuildingID")]
+        public int? BuildingID { get; set; }
         public Building Building { get; set; }
 
-        [Required(ErrorMessage = "AudienceID is required")]
-        public int AudienceID { get; set; }
-        [ForeignKey("AudienceID")]
+        public int? AudienceID { get; set; }
         public Audience Audience { get; set; }
 
-        [Required(ErrorMessage = "GroupID is required")]
-        public List<int> GroupID { get; set; }
+        public List<int?> GroupID { get; set; }
         public List<Group> Group { get; set; }
     }
 }

@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using KIP_POST_APP.Constants;
+using KIP_POST_APP.Models.KIP.Helpers;
 
 namespace KIP_POST_APP
 {
@@ -29,9 +31,28 @@ namespace KIP_POST_APP
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            var message = $"{CustomNames.KIP_POST_APP} version: {CustomNames.Version}";
+            this._logger.Log(LogLevel.Information, message);
+
             try
             {
                 var DataList = await GetData(this._logger, this._mapper, cancellationToken);
+
+                /*
+                PostData.SendFacultyDataToDB(this._context, DataList.facultyList);
+                PostData.SendCathedraDataToDB(this._context, DataList.cathedraList);
+                PostData.SendGroupDataToDB(this._context, DataList.groupList);
+                PostData.SendBuildingDataToDB(this._context, DataList.buildingList);
+                PostData.SendAudienceDataToDB(this._context, DataList.audienceList);
+                PostData.SendProfDataToDB(this._context, DataList.profList);
+                PostData.SendStudentScheduleDataToDB(this._context, DataList.studentScheduleList);
+                PostData.SendStudentScheduleDataToDB(this._context, DataList.studentSchedule2List);
+                PostData.SendProfScheduleDataToDB(this._context, DataList.profScheduleList);
+                PostData.SendProfScheduleDataToDB(this._context, DataList.profSchedule2List);
+                
+                this._context.SaveChanges();
+                */
+
                 PostData.PostDataToDB(this._context, DataList); 
             }
             catch (Exception e)
@@ -49,13 +70,12 @@ namespace KIP_POST_APP
             this._appLifetime.StopApplication();
         }
 
-        /*
+        public static Week week;
         private async static Task<(List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList, 
                               List<Building> buildingList, List<Audience> audienceList, List<Prof> profList, 
-                              List<StudentSchedule> studentScheduleList, List<ProfSchedule> profScheduleList)>*/
-        private async static Task<(List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList,
-                              List<Building> buildingList, List<Audience> audienceList, List<Prof> profList)>
-            GetData(ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+                              List<StudentSchedule> studentScheduleList, List<StudentSchedule> studentSchedule2List,
+                              List<ProfSchedule> profScheduleList, List<ProfSchedule> profSchedule2List)>
+        GetData(ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
             var KIPFacultyList = await MappedDataToKIPDB.GetFacultyListKIPAsync(logger, mapper, cancellationToken);
             var KIPGroupListByFaculty = await MappedDataToKIPDB.GetGroupListByFacultyKIPAsync(KIPFacultyList, logger,
@@ -67,20 +87,26 @@ namespace KIP_POST_APP
                                                                                                 mapper, cancellationToken);
             var KIPProfListByCathedra = await MappedDataToKIPDB.GetProfListByCathedraKIPAsync(KIPCathedraListByFaculty, logger,
                                                                                                 mapper, cancellationToken);
-
-            /*
+            week = Week.UnPaired;
             var KIPScheduleByGroup = await MappedDataToKIPDB.GetScheduleListByGroupAsync(KIPGroupListByFaculty, logger,
                                                                                          mapper, cancellationToken);
-            /*
+            week = Week.Paired;
+            var KIPSchedule2ByGroup = await MappedDataToKIPDB.GetSchedule2ListByGroupAsync(KIPGroupListByFaculty, logger,
+                                                                                           mapper, cancellationToken);
+            week = Week.UnPaired;
             var KIPScheduleByProf = await MappedDataToKIPDB.GetScheduleListByProfAsync(KIPProfListByCathedra, logger,
+                                                                                       mapper, cancellationToken);
+            week = Week.Paired;
+            var KIPSchedule2ByProf = await MappedDataToKIPDB.GetSchedule2ListByProfAsync(KIPProfListByCathedra, logger,
                                                                                          mapper, cancellationToken);
-            
-            return (KIPFacultyList, KIPGroupListByFaculty, KIPCathedraListByFaculty, KIPBuildingList, KIPAudienceListByBuilding,
-                    KIPProfListByCathedra, KIPScheduleByGroup, KIPScheduleByProf);
-            */
 
             return (KIPFacultyList, KIPGroupListByFaculty, KIPCathedraListByFaculty, KIPBuildingList, KIPAudienceListByBuilding,
-                    KIPProfListByCathedra);
+                    KIPProfListByCathedra, KIPScheduleByGroup, KIPSchedule2ByGroup, KIPScheduleByProf, KIPSchedule2ByProf);
+        }
+
+        public static void ClearDB()
+        {
+            //this
         }
     }
 }

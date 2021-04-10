@@ -84,11 +84,39 @@ namespace KIP_POST_APP.Services
         }
 
         [Obsolete]
+        public static async Task<ScheduleByGroup_KHPI> GetSchedule2ByGroupIdAsync(int GroupId, CancellationToken stoppingToken = default)
+        {
+            try
+            {
+                return await GetJsonDataAsync<ScheduleByGroup_KHPI>(Schedule2ByGroupId + GroupId, stoppingToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+            return null;
+        }
+
+        [Obsolete]
         public static async Task<ScheduleByProf_KHPI> GetScheduleByProfIdAsync(int ProfId, CancellationToken stoppingToken = default)
         {
             try
             {
                 return await GetJsonDataAsync<ScheduleByProf_KHPI>(ProfScheduleByProfId + ProfId, stoppingToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+            return null;
+        }
+
+        [Obsolete]
+        public static async Task<ScheduleByProf_KHPI> GetSchedule2ByProfIdAsync(int ProfId, CancellationToken stoppingToken = default)
+        {
+            try
+            {
+                return await GetJsonDataAsync<ScheduleByProf_KHPI>(ProfSchedule2ByProfId + ProfId, stoppingToken);
             }
             catch (Exception e)
             {

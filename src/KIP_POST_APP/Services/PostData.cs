@@ -7,14 +7,11 @@ namespace KIP_POST_APP.Services
 {
     public static class PostData
     {
-        /*
         public static void PostDataToDB(ServerContext context, 
             (List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList, List<Building> buildingList,
-             List<Audience> audienceList, List<Prof> profList, List<StudentSchedule> studentScheduleList, 
-             List<ProfSchedule> profScheduleList) DataList)*/
-        public static void PostDataToDB(ServerContext context,
-            (List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList, List<Building> buildingList,
-             List<Audience> audienceList, List<Prof> profList) DataList)
+             List<Audience> audienceList, List<Prof> profList, List<StudentSchedule> studentScheduleList,
+             List<StudentSchedule> studentSchedule2List, List<ProfSchedule> profScheduleList,
+             List<ProfSchedule> profSchedule2List) DataList)
         {
             SendFacultyDataToDB(context, DataList.facultyList);
             SendCathedraDataToDB(context, DataList.cathedraList);
@@ -22,8 +19,10 @@ namespace KIP_POST_APP.Services
             SendBuildingDataToDB(context, DataList.buildingList);
             SendAudienceDataToDB(context, DataList.audienceList);
             SendProfDataToDB(context, DataList.profList);
-            //SendStudentScheduleDataToDB(context, DataList.studentScheduleList);
-            //SendProfScheduleDataToDB(context, DataList.profScheduleList);
+            SendStudentScheduleDataToDB(context, DataList.studentScheduleList);
+            SendStudentScheduleDataToDB(context, DataList.studentSchedule2List);
+            SendProfScheduleDataToDB(context, DataList.profScheduleList);
+            SendProfScheduleDataToDB(context, DataList.profSchedule2List);
 
             context.SaveChanges();
         }
@@ -76,7 +75,6 @@ namespace KIP_POST_APP.Services
             }
         }
 
-        /*
         public static void SendStudentScheduleDataToDB(ServerContext context, List<StudentSchedule> objects)
         {
             foreach (var obj in objects)
@@ -92,6 +90,5 @@ namespace KIP_POST_APP.Services
                 context.ProfSchedule.Add(obj);
             }
         }
-        */
     }
 }

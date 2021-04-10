@@ -10,14 +10,16 @@ namespace KIP_POST_APP.Services
 {
     public static class MappedDataToKIPDB
     {
-        public static List<Faculty> FacultyList = null;
-        public static List<Group> GroupList = null;
-        public static List<Cathedra> CathedraList = null;
-        public static List<Building> BuildingList = null;
-        public static List<Audience> AudienceList = null;
-        public static List<Prof> ProfList = null;
-        public static List<StudentSchedule> ScheduleList = null;
-        public static List<ProfSchedule> ProfScheduleList = null;
+        public static HashSet<Faculty> FacultyList = null;
+        public static HashSet<Group> GroupList = null;
+        public static HashSet<Cathedra> CathedraList = null;
+        public static HashSet<Building> BuildingList = null;
+        public static HashSet<Audience> AudienceList = null;
+        public static HashSet<Prof> ProfList = null;
+        public static HashSet<StudentSchedule> ScheduleList = null;
+        public static HashSet<ProfSchedule> ProfScheduleList = null;
+        public static HashSet<StudentSchedule> Schedule2List = null;
+        public static HashSet<ProfSchedule> ProfSchedule2List = null;
 
 
         [Obsolete]
@@ -38,7 +40,7 @@ namespace KIP_POST_APP.Services
                     KIPFacultyList = mapper.Map<List<Faculty>>(facultyList);
                 }
 
-                FacultyList = KIPFacultyList;
+                FacultyList = new HashSet<Faculty>(KIPFacultyList);
                 return KIPFacultyList;
             }
 
@@ -81,7 +83,7 @@ namespace KIP_POST_APP.Services
                     }
                 }
 
-                GroupList = KIPGroupListByFaculty;
+                GroupList = new HashSet<Group>(KIPGroupListByFaculty);
                 return KIPGroupListByFaculty;
             }
 
@@ -124,7 +126,7 @@ namespace KIP_POST_APP.Services
                     }
                 }
 
-                CathedraList = KIPCathedraListByFaculty;
+                CathedraList = new HashSet<Cathedra>(KIPCathedraListByFaculty);
                 return KIPCathedraListByFaculty;
             }
 
@@ -153,7 +155,7 @@ namespace KIP_POST_APP.Services
                     KIPBuildingList = mapper.Map<List<Building>>(buildingList);
                 }
 
-                BuildingList = KIPBuildingList;
+                BuildingList = new HashSet<Building>(KIPBuildingList);
                 return KIPBuildingList;
             }
 
@@ -196,7 +198,7 @@ namespace KIP_POST_APP.Services
                     }
                 }
 
-                AudienceList = KIPAudienceListByBuilding;
+                AudienceList = new HashSet<Audience>(KIPAudienceListByBuilding);
                 return KIPAudienceListByBuilding;
             }
 
@@ -239,7 +241,7 @@ namespace KIP_POST_APP.Services
                     }
                 }
 
-                ProfList = KIPProfListByCathedra;
+                ProfList = new HashSet<Prof>(KIPProfListByCathedra);
                 return KIPProfListByCathedra;
             }
 
@@ -284,8 +286,53 @@ namespace KIP_POST_APP.Services
                     }
                 }
 
-                ScheduleList = KIPScheduleByGroup;
+                ScheduleList = new HashSet<StudentSchedule>(KIPScheduleByGroup);
                 return KIPScheduleByGroup;
+            }
+
+            catch (Exception e)
+            {
+                logger.LogError(e.Message + ": " + e.StackTrace);
+            }
+            return null;
+        }
+
+        [Obsolete]
+        public static async Task<List<StudentSchedule>> GetSchedule2ListByGroupAsync(List<Group> KIPGroupByFaculty,
+                                                                                     ILogger<KIP_POST_APPHostedService> logger, IMapper mapper,
+                                                                                     CancellationToken stoppingToken)
+        {
+            var KIPSchedule2ByGroup = new List<StudentSchedule>();
+
+            try
+            {
+                if (KIPGroupByFaculty != null)
+                {
+                    foreach (var group in KIPGroupByFaculty)
+                    {
+                        var schedule = await GetDataFromKHPIDB.GetSchedule2ByGroupIdAsync(group.GroupID, stoppingToken);
+
+                        if (schedule == default)
+                        {
+                            logger.LogWarning($"{nameof(schedule)} is null: {nameof(group)} - {group.GroupID}/{group.GroupName}");
+                            continue;
+                        }
+
+                        var Schedule = mapper.Map<List<StudentSchedule>>(schedule);
+                        if (Schedule != null)
+                        {
+                            foreach (var lesson in Schedule)
+                            {
+                                lesson.GroupID = group.GroupID;
+                                KIPSchedule2ByGroup.Add(lesson);
+                            }
+                        }
+
+                    }
+                }
+
+                Schedule2List = new HashSet<StudentSchedule>(KIPSchedule2ByGroup);
+                return KIPSchedule2ByGroup;
             }
 
             catch (Exception e)
@@ -329,8 +376,53 @@ namespace KIP_POST_APP.Services
                     }
                 }
 
-                ProfScheduleList = KIPScheduleByProf;
+                ProfScheduleList = new HashSet<ProfSchedule>(KIPScheduleByProf);
                 return KIPScheduleByProf;
+            }
+
+            catch (Exception e)
+            {
+                logger.LogError(e.Message + ": " + e.StackTrace);
+            }
+            return null;
+        }
+
+        [Obsolete]
+        public static async Task<List<ProfSchedule>> GetSchedule2ListByProfAsync(List<Prof> KIPProfByCathedra,
+                                                                                 ILogger<KIP_POST_APPHostedService> logger, IMapper mapper,
+                                                                                 CancellationToken stoppingToken)
+        {
+            var KIPSchedule2ByProf = new List<ProfSchedule>();
+
+            try
+            {
+                if (KIPProfByCathedra != null)
+                {
+                    foreach (var prof in KIPProfByCathedra)
+                    {
+                        var schedule = await GetDataFromKHPIDB.GetSchedule2ByProfIdAsync(prof.ProfID, stoppingToken);
+
+                        if (schedule == default)
+                        {
+                            logger.LogWarning($"{nameof(schedule)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
+                            continue;
+                        }
+
+                        var Schedule = mapper.Map<List<ProfSchedule>>(schedule);
+                        if (Schedule != null)
+                        {
+                            foreach (var lesson in Schedule)
+                            {
+                                lesson.ProfID = prof.ProfID;
+                                KIPSchedule2ByProf.Add(lesson);
+                            }
+                        }
+
+                    }
+                }
+
+                ProfSchedule2List = new HashSet<ProfSchedule>(KIPSchedule2ByProf);
+                return KIPSchedule2ByProf;
             }
 
             catch (Exception e)
