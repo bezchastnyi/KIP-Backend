@@ -14,7 +14,7 @@ namespace KIP_POST_APP.Migrations
                 columns: table => new
                 {
                     BuildingID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     BuildingName = table.Column<string>(type: "varchar(100)", nullable: false),
                     BuildingShortName = table.Column<string>(type: "varchar(5)", nullable: true)
                 },
@@ -28,7 +28,7 @@ namespace KIP_POST_APP.Migrations
                 columns: table => new
                 {
                     FacultyID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     FacultyName = table.Column<string>(type: "varchar(100)", nullable: false),
                     FacultyShortName = table.Column<string>(type: "varchar(7)", nullable: true)
                 },
@@ -42,7 +42,7 @@ namespace KIP_POST_APP.Migrations
                 columns: table => new
                 {
                     AudienceID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     AudienceName = table.Column<string>(type: "varchar(100)", nullable: false),
                     NumberOfSeats = table.Column<int>(type: "integer", nullable: true),
                     BuildingID = table.Column<int>(type: "integer", nullable: false)
@@ -63,7 +63,7 @@ namespace KIP_POST_APP.Migrations
                 columns: table => new
                 {
                     CathedraID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CathedraName = table.Column<string>(type: "varchar(100)", nullable: false),
                     CathedraShortName = table.Column<string>(type: "varchar(7)", nullable: true),
                     FacultyID = table.Column<int>(type: "integer", nullable: false)
@@ -84,7 +84,7 @@ namespace KIP_POST_APP.Migrations
                 columns: table => new
                 {
                     ProfID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     ProfSurname = table.Column<string>(type: "varchar(100)", nullable: false),
                     ProfName = table.Column<string>(type: "varchar(100)", nullable: false),
                     ProfPatronymic = table.Column<string>(type: "varchar(100)", nullable: true),
@@ -106,7 +106,7 @@ namespace KIP_POST_APP.Migrations
                 columns: table => new
                 {
                     ProfScheduleID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     SubjectName = table.Column<string>(type: "varchar(200)", nullable: false),
                     week = table.Column<int>(type: "integer", nullable: false),
                     day = table.Column<int>(type: "integer", nullable: false),
@@ -144,7 +144,7 @@ namespace KIP_POST_APP.Migrations
                 columns: table => new
                 {
                     GroupID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     GroupName = table.Column<string>(type: "varchar(100)", nullable: false),
                     Course = table.Column<int>(type: "integer", nullable: false),
                     FacultyID = table.Column<int>(type: "integer", nullable: false),
@@ -172,7 +172,7 @@ namespace KIP_POST_APP.Migrations
                 columns: table => new
                 {
                     StudentScheduleID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     SubjectName = table.Column<string>(type: "varchar(200)", nullable: false),
                     week = table.Column<int>(type: "integer", nullable: false),
                     day = table.Column<int>(type: "integer", nullable: false),

@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using KIP_POST_APP.DB;
 using KIP_POST_APP.Mapping;
-using KIP_POST_APP.DB;
 using Microsoft.EntityFrameworkCore;
-using KIP_POST_APP.Services;
+using Microsoft.Extensions.Configuration;
+using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -34,11 +33,20 @@ namespace Microsoft.Extensions.DependencyInjection
             Console.OutputEncoding = System.Text.Encoding.Default;
             services.AddAutoMapper(typeof(MapperProfile));
 
-            
+
             var connectionString = config["ConnectionStrings:PostgresConnection"];
-            services.AddDbContext<ServerContext>(
-                opts => opts.UseNpgsql(connectionString), ServiceLifetime.Singleton
-            );
+            var pgVersionString = config["ConnectionStrings:PostgresVersion"];
+            var pgVersion = new Version(pgVersionString);
+            services.AddDbContext<ServerContext>(contextOptions =>
+            {
+                contextOptions.UseNpgsql(connectionString, npgOptions =>
+                {
+                    npgOptions.MigrationsAssembly("KIP_POST_APP")
+                        .EnableRetryOnFailure();
+                    npgOptions.SetPostgresVersion(pgVersion);
+                });
+
+            }, ServiceLifetime.Singleton);
 
 
             return services;
