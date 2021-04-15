@@ -1,13 +1,23 @@
-﻿using AutoMapper;
+﻿// <copyright file="MapperProfile.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+using System.Collections.Generic;
+using AutoMapper;
 using KIP_POST_APP.Mapping.Converters;
 using KIP_POST_APP.Models.KHPI;
 using KIP_POST_APP.Models.KIP;
-using System.Collections.Generic;
 
 namespace KIP_POST_APP.Mapping
 {
+    /// <summary>
+    /// Building of the profile KIP model from the KhPI.
+    /// </summary>
     public class MapperProfile : Profile
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapperProfile"/> class.
+        /// </summary>
         public MapperProfile()
         {
             this.CreateMap<Faculty_KHPI, Faculty>().ConvertUsing<Faculty_KHPIToFaculty_KIPConverter>();

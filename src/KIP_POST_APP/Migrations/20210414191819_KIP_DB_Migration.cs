@@ -1,12 +1,19 @@
-﻿using System;
+﻿// <copyright file="20210414191819_KIP_DB_Migration.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KIP_POST_APP.Migrations
 {
+    /// <summary>
+    /// Migration KIP database.
+    /// </summary>
     public partial class KIP_DB_Migration : Migration
     {
+        /// <inheritdoc/>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -16,7 +23,7 @@ namespace KIP_POST_APP.Migrations
                     BuildingID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     BuildingName = table.Column<string>(type: "varchar(100)", nullable: false),
-                    BuildingShortName = table.Column<string>(type: "varchar(5)", nullable: true)
+                    BuildingShortName = table.Column<string>(type: "varchar(5)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -30,7 +37,7 @@ namespace KIP_POST_APP.Migrations
                     FacultyID = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     FacultyName = table.Column<string>(type: "varchar(100)", nullable: false),
-                    FacultyShortName = table.Column<string>(type: "varchar(7)", nullable: true)
+                    FacultyShortName = table.Column<string>(type: "varchar(7)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -45,7 +52,7 @@ namespace KIP_POST_APP.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     AudienceName = table.Column<string>(type: "varchar(100)", nullable: false),
                     NumberOfSeats = table.Column<int>(type: "integer", nullable: true),
-                    BuildingID = table.Column<int>(type: "integer", nullable: false)
+                    BuildingID = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -66,7 +73,7 @@ namespace KIP_POST_APP.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CathedraName = table.Column<string>(type: "varchar(100)", nullable: false),
                     CathedraShortName = table.Column<string>(type: "varchar(7)", nullable: true),
-                    FacultyID = table.Column<int>(type: "integer", nullable: false)
+                    FacultyID = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -88,7 +95,7 @@ namespace KIP_POST_APP.Migrations
                     ProfSurname = table.Column<string>(type: "varchar(100)", nullable: false),
                     ProfName = table.Column<string>(type: "varchar(100)", nullable: false),
                     ProfPatronymic = table.Column<string>(type: "varchar(100)", nullable: true),
-                    CathedraID = table.Column<int>(type: "integer", nullable: false)
+                    CathedraID = table.Column<int>(type: "integer", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -114,7 +121,7 @@ namespace KIP_POST_APP.Migrations
                     ProfID = table.Column<int>(type: "integer", nullable: false),
                     BuildingID = table.Column<int>(type: "integer", nullable: true),
                     AudienceID = table.Column<int>(type: "integer", nullable: true),
-                    GroupID = table.Column<List<Nullable<int>>>(type: "integer[]", nullable: true)
+                    GroupID = table.Column<List<int?>>(type: "integer[]", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -148,7 +155,7 @@ namespace KIP_POST_APP.Migrations
                     GroupName = table.Column<string>(type: "varchar(100)", nullable: false),
                     Course = table.Column<int>(type: "integer", nullable: false),
                     FacultyID = table.Column<int>(type: "integer", nullable: false),
-                    ProfScheduleID = table.Column<int>(type: "integer", nullable: true)
+                    ProfScheduleID = table.Column<int>(type: "integer", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -180,7 +187,7 @@ namespace KIP_POST_APP.Migrations
                     GroupID = table.Column<int>(type: "integer", nullable: false),
                     BuildingID = table.Column<int>(type: "integer", nullable: true),
                     AudienceID = table.Column<int>(type: "integer", nullable: true),
-                    ProfID = table.Column<int>(type: "integer", nullable: true)
+                    ProfID = table.Column<int>(type: "integer", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -272,6 +279,7 @@ namespace KIP_POST_APP.Migrations
                 column: "ProfID");
         }
 
+        /// <inheritdoc/>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

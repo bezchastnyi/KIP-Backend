@@ -1,82 +1,82 @@
 ﻿namespace KIP_server_GET.Constants
 {
     /// <summary>
-    /// Custom name constants
+    /// Custom name constants.
     /// </summary>
     public class CustomNames
     {
             /// <summary>
-            /// App name
+            /// App name.
             /// </summary>
             public const string KIP_server_GET = "KIP_server_GET";
 
             /// <summary>
-            /// Server version
+            /// Server version.
             /// </summary>
             public const string Version = "2.0.0";
 
             /// <summary>
-            /// KIP DB
+            /// KIP DB.
             /// </summary>
             public const string KIP_database = "KIP database";
 
             /// <summary>
-            /// DB system
+            /// DB system.
             /// </summary>
             public const string PostgreSQL = "PostgreSQL";
 
             /// <summary>
-            /// healthy status
+            /// Healthy status.
             /// </summary>
-            public const string healthy_status = "healthy";
+            public const string Healthy_status = "healthy";
 
             /// <summary>
-            /// unhealthy status
+            /// Unhealthy status.
             /// </summary>
-            public const string unhealthy_status = "unhealthy";
+            public const string Unhealthy_status = "unhealthy";
 
             /// <summary>
-            /// Audience
+            /// Audience.
             /// </summary>
             public const string Audience = "Audience";
 
             /// <summary>
-            /// Authorization
+            /// Authorization.
             /// </summary>
             public const string Auth = "Authorization";
 
             /// <summary>
-            /// Building
+            /// Building.
             /// </summary>
             public const string Building = "Building";
 
             /// <summary>
-            /// Cathedra
+            /// Cathedra.
             /// </summary>
             public const string Cathedra = "Cathedra";
 
             /// <summary>
-            /// Faculty
+            /// Faculty.
             /// </summary>
             public const string Faculty = "Faculty";
 
             /// <summary>
-            /// Group
+            /// Group.
             /// </summary>
             public const string Group = "Group";
 
             /// <summary>
-            /// Prof
+            /// Prof.
             /// </summary>
             public const string Prof = "Prof";
 
             /// <summary>
-            /// Prof Schedule
+            /// Prof Schedule.
             /// </summary>
             public const string ProfSchedule = "Prof Schedule";
 
             /// <summary>
-            /// Student Schedule
+            /// Student Schedule.
             /// </summary>
             public const string StudentSchedule = "Student Schedule";
     }

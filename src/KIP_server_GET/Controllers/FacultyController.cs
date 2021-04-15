@@ -1,9 +1,8 @@
-﻿using KIP_POST_APP.DB;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using System;
+using KIP_POST_APP.DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace KIP_server_GET.Controllers
 {
@@ -17,6 +16,11 @@ namespace KIP_server_GET.Controllers
         private readonly ServerContext _context;
         private readonly ILogger<HomeController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FacultyController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="context">The context.</param>
         public FacultyController(ILogger<HomeController> logger, ServerContext context)
         {
             this._context = context;
@@ -24,8 +28,10 @@ namespace KIP_server_GET.Controllers
         }
 
         /// <summary>
-        /// Faculty by <param name="id">
+        /// Faculty.
         /// </summary>
+        /// <returns>Faculty.</returns>
+        /// <param name="id">Faculty ID.</param>
         [HttpGet]
         [Route("Faculty/{id:int?}")]
         public IActionResult Faculty(int? id)
@@ -39,7 +45,8 @@ namespace KIP_server_GET.Controllers
                         return new JsonResult(faculty);
                     }
                 }
-                return NotFound();
+
+                return this.NotFound();
             }
             else
             {
@@ -47,7 +54,8 @@ namespace KIP_server_GET.Controllers
                 {
                     return new JsonResult(this._context.Faculty);
                 }
-                return NotFound();
+
+                return this.NotFound();
             }
         }
     }

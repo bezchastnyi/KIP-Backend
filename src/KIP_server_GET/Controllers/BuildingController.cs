@@ -1,9 +1,9 @@
-﻿using KIP_POST_APP.DB;
+﻿using System;
+using KIP_POST_APP.DB;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace KIP_server_GET.Controllers
 {
@@ -18,55 +18,66 @@ namespace KIP_server_GET.Controllers
         private readonly ServerContext _context;
         private readonly ILogger<HomeController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BuildingController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="context">The context.</param>
         public BuildingController(ILogger<HomeController> logger, ServerContext context)
         {
-            _context = context;
+            this._context = context;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
-        /// All Faculties
+        /// All buildings.
         /// </summary>
+        /// <returns>All buildings.</returns>
         [HttpGet]
         [Route("/Building")]
         public IActionResult Building()
         {
-            if (_context.Building != null)
+            if (this._context.Building != null)
             {
-                var buildings = _context.Building;
+                var buildings = this._context.Building;
                 return new JsonResult(buildings);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            _logger.Log(LogLevel.Error, message);
+            this._logger.Log(LogLevel.Error, message);
 
-            return NotFound();
+            return this.NotFound();
         }
 
         /// <summary>
-        /// Faculty by <param name="id">
+        /// Building.
         /// </summary>
+        /// <returns>Building.</returns>
+        /// <param name="id">Building ID.</param>
         [HttpGet]
         [Route("/Building/{id:int?}")]
         public IActionResult Building(int? id)
         {
             if (id != null)
             {
-                var buildings = _context.Building;
+                var buildings = this._context.Building;
                 foreach (var unit in buildings)
                 {
                     if (unit.BuildingID == id)
+                    {
                         return new JsonResult(unit);
+                    }
                 }
-                return NotFound();
+
+                return this.NotFound();
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            _logger.Log(LogLevel.Error, message);
+            this._logger.Log(LogLevel.Error, message);
 
-            return BadRequest();
+            return this.BadRequest();
         }
     }
 }

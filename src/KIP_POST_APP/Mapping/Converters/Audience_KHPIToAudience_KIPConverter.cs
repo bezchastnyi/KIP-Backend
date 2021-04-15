@@ -1,13 +1,29 @@
-﻿using AutoMapper;
+﻿// <copyright file="Audience_KHPIToAudience_KIPConverter.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 using System;
+using System.Text.RegularExpressions;
+using AutoMapper;
 using KIP_POST_APP.Models.KHPI;
 using KIP_POST_APP.Models.KIP;
-using System.Text.RegularExpressions;
 
 namespace KIP_POST_APP.Mapping.Converters
 {
+    /// <summary>
+    /// Building of the KIP audience model from the KhPI audience.
+    /// </summary>
     public class Audience_KHPIToAudience_KIPConverter : ITypeConverter<Audience_KHPI, Audience>
     {
+        /// <summary>
+        /// Convert model of audience from KHPI to KIP.
+        /// </summary>
+        /// <returns>
+        /// Object of audience of model audience KIP.
+        /// </returns>
+        /// <param name="source">Model of audience KHPI.</param>
+        /// <param name = "destination">Model of audience KIP.</param>
+        /// <param name= "context">The context. </param>
         public Audience Convert(Audience_KHPI source, Audience destination, ResolutionContext context)
         {
             if (source == null)
@@ -17,9 +33,9 @@ namespace KIP_POST_APP.Mapping.Converters
 
             var obj = new Audience
             {
-                AudienceID = source.id,
-                AudienceName = FixTitle(source.title),
-                NumberOfSeats = SearchNumberOfSeats(source.title)
+                AudienceID = source.Id,
+                AudienceName = this.FixTitle(source.Title),
+                NumberOfSeats = this.SearchNumberOfSeats(source.Title),
             };
 
             return obj;
@@ -32,7 +48,7 @@ namespace KIP_POST_APP.Mapping.Converters
                 return part;
             }
 
-            return "";
+            return " ";
         }
 
         private int SearchNumberOfSeats(string title)
@@ -53,7 +69,6 @@ namespace KIP_POST_APP.Mapping.Converters
                         }
                     }
                 }
-
             }
 
             return 0;

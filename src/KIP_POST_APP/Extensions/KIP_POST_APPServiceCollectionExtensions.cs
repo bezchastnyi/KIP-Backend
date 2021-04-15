@@ -1,8 +1,12 @@
-﻿using KIP_POST_APP.DB;
+﻿// <copyright file="KIP_POST_APPServiceCollectionExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+using System;
+using KIP_POST_APP.DB;
 using KIP_POST_APP.Mapping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -17,6 +21,9 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Adds the TransferDataBQToS3 services.
         /// </summary>
+        /// <returns>
+        /// Services.
+        /// </returns>
         /// <param name="services">The service collection.</param>
         /// <param name="config">The configuration.</param>
         public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration config)
@@ -25,6 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 throw new ArgumentNullException(nameof(services));
             }
+
             if (config == null)
             {
                 throw new ArgumentNullException(nameof(config));
@@ -33,11 +41,11 @@ namespace Microsoft.Extensions.DependencyInjection
             Console.OutputEncoding = System.Text.Encoding.Default;
             services.AddAutoMapper(typeof(MapperProfile));
 
-
             var connectionString = config["ConnectionStrings:PostgresConnection"];
             var pgVersionString = config["ConnectionStrings:PostgresVersion"];
             var pgVersion = new Version(pgVersionString);
-            services.AddDbContext<ServerContext>(contextOptions =>
+            services.AddDbContext<ServerContext>(
+                contextOptions =>
             {
                 contextOptions.UseNpgsql(connectionString, npgOptions =>
                 {
@@ -45,9 +53,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         .EnableRetryOnFailure();
                     npgOptions.SetPostgresVersion(pgVersion);
                 });
-
             }, ServiceLifetime.Singleton);
-
 
             return services;
         }
