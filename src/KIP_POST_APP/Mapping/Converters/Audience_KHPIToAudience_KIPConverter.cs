@@ -1,13 +1,29 @@
-﻿using AutoMapper;
+﻿// <copyright file="Audience_KHPIToAudience_KIPConverter.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 using System;
+using System.Text.RegularExpressions;
+using AutoMapper;
 using KIP_POST_APP.Models.KHPI;
 using KIP_POST_APP.Models.KIP;
-using System.Text.RegularExpressions;
 
 namespace KIP_POST_APP.Mapping.Converters
 {
+    /// <summary>
+    /// Building of the KIP audience model from the KhPI audience.
+    /// </summary>
     public class Audience_KHPIToAudience_KIPConverter : ITypeConverter<Audience_KHPI, Audience>
     {
+        /// <summary>
+        /// Convert audience names to short form.
+        /// </summary>
+        /// <returns>
+        /// Audience name and number of seats.
+        /// </returns>
+        /// <param name="source">Building KHPI.</param>
+        /// <param name = "destination">A g</param>
+        /// <param name= "context">A </param>
         public Audience Convert(Audience_KHPI source, Audience destination, ResolutionContext context)
         {
             if (source == null)
@@ -18,8 +34,8 @@ namespace KIP_POST_APP.Mapping.Converters
             var obj = new Audience
             {
                 AudienceID = source.id,
-                AudienceName = FixTitle(source.title),
-                NumberOfSeats = SearchNumberOfSeats(source.title)
+                AudienceName = this.FixTitle(source.title),
+                NumberOfSeats = this.SearchNumberOfSeats(source.title),
             };
 
             return obj;
@@ -32,7 +48,7 @@ namespace KIP_POST_APP.Mapping.Converters
                 return part;
             }
 
-            return "";
+            return " ";
         }
 
         private int SearchNumberOfSeats(string title)
@@ -53,7 +69,6 @@ namespace KIP_POST_APP.Mapping.Converters
                         }
                     }
                 }
-
             }
 
             return 0;

@@ -1,13 +1,29 @@
-﻿using AutoMapper;
+﻿// <copyright file="Prof_KHPIToProf_KIPConverter.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 using System;
+using System.Collections.Generic;
+using AutoMapper;
 using KIP_POST_APP.Models.KHPI;
 using KIP_POST_APP.Models.KIP;
-using System.Collections.Generic;
 
 namespace KIP_POST_APP.Mapping.Converters
 {
+    /// <summary>
+    /// Building of the KIP teachers model from the KhPI teachers.
+    /// </summary>
     public class Prof_KHPIToProf_KIPConverter : ITypeConverter<Prof_KHPI, Prof>
     {
+        /// <summary>
+        /// Convert teachers names.
+        /// </summary>
+        /// <returns>
+        /// Name of teachers.
+        /// </returns>
+        /// <param name="source">Building KHPI.</param>
+        /// <param name = "destination">A g</param>
+        /// <param name= "context">A </param>
         public Prof Convert(Prof_KHPI source, Prof destination, ResolutionContext context)
         {
             if (source == null)
@@ -15,25 +31,25 @@ namespace KIP_POST_APP.Mapping.Converters
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var FIO = SearchFIO(source.title);
+            var fio = this.SearchFIO(source.title);
 
-            var profSurname = "";
-            var profName = "";
-            var profPatronymic = "";
+            var profSurname = " ";
+            var profName = " ";
+            var profPatronymic = " ";
 
-            if (FIO.Count > 0)
+            if (fio.Count > 0)
             {
-                profSurname = FIO[0];
+                profSurname = fio[0];
             }
 
-            if (FIO.Count > 1)
+            if (fio.Count > 1)
             {
-                profName = FIO[1];
+                profName = fio[1];
             }
 
-            if (FIO.Count > 2)
+            if (fio.Count > 2)
             {
-                profPatronymic = FIO[2];
+                profPatronymic = fio[2];
             }
 
             var obj = new Prof
@@ -41,7 +57,7 @@ namespace KIP_POST_APP.Mapping.Converters
                 ProfID = source.id,
                 ProfSurname = profSurname,
                 ProfName = profName,
-                ProfPatronymic = profPatronymic
+                ProfPatronymic = profPatronymic,
             };
             return obj;
         }
@@ -53,6 +69,7 @@ namespace KIP_POST_APP.Mapping.Converters
             {
                 list.Add(part);
             }
+
             return list;
         }
     }
