@@ -40,13 +40,13 @@ namespace KIP_POST_APP.Services
         /// <returns>
         /// List of faculties.
         /// </returns>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<IEnumerable<Faculty_KHPI>> GetFacultyListAsync(CancellationToken stoppingToken = default)
+        public static async Task<IEnumerable<Faculty_KHPI>> GetFacultyListAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonListDataAsync<Faculty_KHPI>(FacultyList, stoppingToken);
+                return await GetJsonListDataAsync<Faculty_KHPI>(FacultyList, cancellationToken);
             }
             catch (Exception e)
             {
@@ -63,13 +63,13 @@ namespace KIP_POST_APP.Services
         /// List of list of groups by faculty.
         /// </returns>
         /// <param name="facultyId">Faculty ID.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<IEnumerable<Group_KHPI>> GetGroupListByFacultyIdAsync(int facultyId, CancellationToken stoppingToken = default)
+        public static async Task<IEnumerable<Group_KHPI>> GetGroupListByFacultyIdAsync(int facultyId, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonListDataAsync<Group_KHPI>(GroupListByFacultyId + facultyId, stoppingToken);
+                return await GetJsonListDataAsync<Group_KHPI>(GroupListByFacultyId + facultyId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -86,13 +86,13 @@ namespace KIP_POST_APP.Services
         /// List of list of departments by faculty.
         /// </returns>
         /// <param name="facultyId">Faculty ID.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<IEnumerable<Cathedra_KHPI>> GetCathedraListByFacultyIdAsync(int facultyId, CancellationToken stoppingToken = default)
+        public static async Task<IEnumerable<Cathedra_KHPI>> GetCathedraListByFacultyIdAsync(int facultyId, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonListDataAsync<Cathedra_KHPI>(CathedrasListByFacultyId + facultyId, stoppingToken);
+                return await GetJsonListDataAsync<Cathedra_KHPI>(CathedrasListByFacultyId + facultyId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -109,13 +109,13 @@ namespace KIP_POST_APP.Services
         /// Schedule of groups for an unpaired week.
         /// </returns>
         /// <param name="groupId">Group ID.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<ScheduleByGroup_KHPI> GetScheduleByGroupIdAsync(int groupId, CancellationToken stoppingToken = default)
+        public static async Task<ScheduleByGroup_KHPI> GetScheduleByGroupIdAsync(int groupId, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonDataAsync<ScheduleByGroup_KHPI>(ScheduleByGroupId + groupId, stoppingToken);
+                return await GetJsonDataAsync<ScheduleByGroup_KHPI>(ScheduleByGroupId + groupId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -132,13 +132,13 @@ namespace KIP_POST_APP.Services
         /// Schedule of groups for a paired week.
         /// </returns>
         /// <param name="groupId">Group ID.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<ScheduleByGroup_KHPI> GetSchedule2ByGroupIdAsync(int groupId, CancellationToken stoppingToken = default)
+        public static async Task<ScheduleByGroup_KHPI> GetSchedule2ByGroupIdAsync(int groupId, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonDataAsync<ScheduleByGroup_KHPI>(Schedule2ByGroupId + groupId, stoppingToken);
+                return await GetJsonDataAsync<ScheduleByGroup_KHPI>(Schedule2ByGroupId + groupId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -155,13 +155,13 @@ namespace KIP_POST_APP.Services
         /// Schedule of teachers for an unpaired week.
         /// </returns>
         /// <param name="profId">Teacher ID.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<ScheduleByProf_KHPI> GetScheduleByProfIdAsync(int profId, CancellationToken stoppingToken = default)
+        public static async Task<ScheduleByProf_KHPI> GetScheduleByProfIdAsync(int profId, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonDataAsync<ScheduleByProf_KHPI>(ProfScheduleByProfId + profId, stoppingToken);
+                return await GetJsonDataAsync<ScheduleByProf_KHPI>(ProfScheduleByProfId + profId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -178,13 +178,13 @@ namespace KIP_POST_APP.Services
         /// Schedule of teachers for a paired week.
         /// </returns>
         /// <param name="profId">Teacher ID.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<ScheduleByProf_KHPI> GetSchedule2ByProfIdAsync(int profId, CancellationToken stoppingToken = default)
+        public static async Task<ScheduleByProf_KHPI> GetSchedule2ByProfIdAsync(int profId, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonDataAsync<ScheduleByProf_KHPI>(ProfSchedule2ByProfId + profId, stoppingToken);
+                return await GetJsonDataAsync<ScheduleByProf_KHPI>(ProfSchedule2ByProfId + profId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -200,13 +200,13 @@ namespace KIP_POST_APP.Services
         /// <returns>
         /// List of buildings.
         /// </returns>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<IEnumerable<Building_KHPI>> GetBuildingListAsync(CancellationToken stoppingToken = default)
+        public static async Task<IEnumerable<Building_KHPI>> GetBuildingListAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonListDataAsync<Building_KHPI>(BuildingList, stoppingToken);
+                return await GetJsonListDataAsync<Building_KHPI>(BuildingList, cancellationToken);
             }
             catch (Exception e)
             {
@@ -223,13 +223,13 @@ namespace KIP_POST_APP.Services
         /// List of audiences in the building.
         /// </returns>
         /// <param name="buildingId">Building Id.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<IEnumerable<Audience_KHPI>> GetAudienceListByBuildingIdAsync(int buildingId, CancellationToken stoppingToken = default)
+        public static async Task<IEnumerable<Audience_KHPI>> GetAudienceListByBuildingIdAsync(int buildingId, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonListDataAsync<Audience_KHPI>(AuditoryListByBuildingId + buildingId, stoppingToken);
+                return await GetJsonListDataAsync<Audience_KHPI>(AuditoryListByBuildingId + buildingId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -246,13 +246,13 @@ namespace KIP_POST_APP.Services
         /// List of teachers of the department.
         /// </returns>
         /// <param name="cathedraId">Cathedra Id.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        public static async Task<IEnumerable<Prof_KHPI>> GetProfListByCathedraIdAsync(int cathedraId, CancellationToken stoppingToken = default)
+        public static async Task<IEnumerable<Prof_KHPI>> GetProfListByCathedraIdAsync(int cathedraId, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonListDataAsync<Prof_KHPI>(ProfListByCathedraId + cathedraId, stoppingToken);
+                return await GetJsonListDataAsync<Prof_KHPI>(ProfListByCathedraId + cathedraId, cancellationToken);
             }
             catch (Exception e)
             {
@@ -269,9 +269,9 @@ namespace KIP_POST_APP.Services
         /// List data from json.
         /// </returns>
         /// <param name="url">Link to json.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        private static async Task<IEnumerable<T>> GetJsonListDataAsync<T>(string url, CancellationToken stoppingToken = default)
+        private static async Task<IEnumerable<T>> GetJsonListDataAsync<T>(string url, CancellationToken cancellationToken = default)
         {
             using (var web = new WebClient())
             {
@@ -294,6 +294,10 @@ namespace KIP_POST_APP.Services
             }
         }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> cad6c1c39f51137342f7257668dd1b7a3a2684cf
         /// <summary>
         /// Getting data from json using asynchrony.
         /// </summary>
@@ -301,9 +305,9 @@ namespace KIP_POST_APP.Services
         /// Data from json.
         /// </returns>
         /// <param name="url">Link to json.</param>
-        /// <param name="stoppingToken">Stop Token.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         [Obsolete]
-        private static async Task<T> GetJsonDataAsync<T>(string url, CancellationToken stoppingToken = default)
+        private static async Task<T> GetJsonDataAsync<T>(string url, CancellationToken cancellationToken = default)
         {
             using (var web = new WebClient())
             {
