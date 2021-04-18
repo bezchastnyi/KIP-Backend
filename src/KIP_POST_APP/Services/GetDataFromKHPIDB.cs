@@ -294,10 +294,6 @@ namespace KIP_POST_APP.Services
             }
         }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> cad6c1c39f51137342f7257668dd1b7a3a2684cf
         /// <summary>
         /// Getting data from json using asynchrony.
         /// </summary>
