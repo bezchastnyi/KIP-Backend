@@ -1,5 +1,5 @@
-﻿// <copyright file="KIP_POST_APPHostedService.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="KIP_POST_APPHostedService.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System;
@@ -22,12 +22,6 @@ namespace KIP_POST_APP
     /// </summary>
     public class KIP_POST_APPHostedService : BackgroundService
     {
-        /// <summary>
-        /// Gets or sets the week.
-        /// </summary>
-        /// <value>Week.</value>
-        public static Week Week { get; set; }
-
         private readonly ILogger<KIP_POST_APPHostedService> logger;
         private readonly IHostApplicationLifetime appLifetime;
         private readonly IMapper mapper;
@@ -49,8 +43,13 @@ namespace KIP_POST_APP
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        /// <summary>
+        /// Gets or sets the week.
+        /// </summary>
+        /// <value>Week.</value>
+        public static Week Week { get; set; }
+
         /// <inheritdoc/>
-        [Obsolete]
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             var message = $"{CustomNames.KIP_POST_APP} version: {CustomNames.Version}";
@@ -86,7 +85,6 @@ namespace KIP_POST_APP
             }
         }
 
-        [Obsolete]
         private static async Task<(List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList,
                               List<Building> buildingList, List<Audience> audienceList, List<Prof> profList,
                               List<StudentSchedule> studentScheduleList, List<StudentSchedule> studentSchedule2List,

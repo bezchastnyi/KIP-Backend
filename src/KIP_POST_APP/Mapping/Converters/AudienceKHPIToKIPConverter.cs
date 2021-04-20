@@ -1,5 +1,5 @@
-﻿// <copyright file="Audience_KHPIToAudience_KIPConverter.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="AudienceKHPIToKIPConverter.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System;
@@ -13,7 +13,7 @@ namespace KIP_POST_APP.Mapping.Converters
     /// <summary>
     /// Building of the KIP audience model from the KhPI audience.
     /// </summary>
-    public class Audience_KHPIToAudience_KIPConverter : ITypeConverter<Audience_KHPI, Audience>
+    public class AudienceKHPIToKIPConverter : ITypeConverter<AudienceKHPI, Audience>
     {
         /// <summary>
         /// Convert model of audience from KHPI to KIP.
@@ -24,7 +24,7 @@ namespace KIP_POST_APP.Mapping.Converters
         /// <param name="source">Model of audience KHPI.</param>
         /// <param name = "destination">Model of audience KIP.</param>
         /// <param name= "context">The context. </param>
-        public Audience Convert(Audience_KHPI source, Audience destination, ResolutionContext context)
+        public Audience Convert(AudienceKHPI source, Audience destination, ResolutionContext context)
         {
             if (source == null)
             {
@@ -33,15 +33,15 @@ namespace KIP_POST_APP.Mapping.Converters
 
             var obj = new Audience
             {
-                AudienceID = source.Id,
-                AudienceName = this.FixTitle(source.Title),
-                NumberOfSeats = this.SearchNumberOfSeats(source.Title),
+                AudienceID = source.id,
+                AudienceName = this.Fixtitle(source.title),
+                NumberOfSeats = this.SearchNumberOfSeats(source.title),
             };
 
             return obj;
         }
 
-        private string FixTitle(string title)
+        private string Fixtitle(string title)
         {
             foreach (var part in title.Split('['))
             {

@@ -30,9 +30,9 @@ namespace KIP_server_GET
         {
             string port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 
-            // string url = string.Concat("https://0.0.0.0:", port);
-            string url = string.Concat("http://0.0.0.0:", port);
+            string url = string.Concat("https://0.0.0.0:", port);
 
+            // string url = string.Concat("http://0.0.0.0:", port);
             return Host.CreateDefaultBuilder(args)
                     .UseSerilog(
                         (context, configuration) =>

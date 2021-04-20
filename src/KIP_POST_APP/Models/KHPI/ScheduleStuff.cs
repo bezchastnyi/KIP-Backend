@@ -1,5 +1,5 @@
-﻿// <copyright file="ScheduleStuff.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="ScheduleStuff.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 namespace KIP_POST_APP.Models.KHPI
@@ -7,7 +7,7 @@ namespace KIP_POST_APP.Models.KHPI
     /// <summary>
     /// Schedule on Monday.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "<KHPIDB>")]
     public class Monday
     {
         /// <summary>
@@ -241,7 +241,8 @@ namespace KIP_POST_APP.Models.KHPI
         /// Gets or sets the type of 1 para.
         /// </summary>
         /// <value>Type of 1 para.</value>
-        public string Vid { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        public string vid { get; set; }
 
         /// <summary>
         /// Gets or sets the teacher of 1 para.
@@ -272,7 +273,8 @@ namespace KIP_POST_APP.Models.KHPI
         /// Gets or sets the type of 2 para.
         /// </summary>
         /// <value>Type of 2 para.</value>
-        public string Vid { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        public string vid { get; set; }
 
         /// <summary>
         /// Gets or sets the teacher of 2 para.
@@ -303,7 +305,8 @@ namespace KIP_POST_APP.Models.KHPI
         /// Gets or sets the type of 3 para.
         /// </summary>
         /// <value>Type of 3 para.</value>
-        public string Vid { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        public string vid { get; set; }
 
         /// <summary>
         /// Gets or sets the teacher of 3 para.
@@ -334,7 +337,8 @@ namespace KIP_POST_APP.Models.KHPI
         /// Gets or sets the type of 4 para.
         /// </summary>
         /// <value>Type of 4 para.</value>
-        public string Vid { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        public string vid { get; set; }
 
         /// <summary>
         /// Gets or sets the teacher of 4 para.
@@ -365,7 +369,8 @@ namespace KIP_POST_APP.Models.KHPI
         /// Gets or sets the type of 5 para.
         /// </summary>
         /// <value>Type of 5 para.</value>
-        public string Vid { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        public string vid { get; set; }
 
         /// <summary>
         /// Gets or sets the teacher of 5 para.
@@ -396,7 +401,8 @@ namespace KIP_POST_APP.Models.KHPI
         /// Gets or sets the type of 6 para.
         /// </summary>
         /// <value>Type of 6 para.</value>
-        public string Vid { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        public string vid { get; set; }
 
         /// <summary>
         /// Gets or sets the teacher of 6 para.

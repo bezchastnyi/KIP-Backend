@@ -103,6 +103,9 @@ dotnet_diagnostic.SA1309.severity = none
 # SA1310: Field names should not begin with underscore
 dotnet_diagnostic.SA1310.severity = none
 
+# SA1502: Element should not be on a single line
+dotnet_diagnostic.SA1502.severity = none
+
 # SA1625: Field names should not begin with underscore
 dotnet_diagnostic.SA1625.severity = none
 

@@ -1,5 +1,5 @@
-﻿// <copyright file="KIP_POST_APPServiceCollectionExtensions.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="KIP_POST_APPServiceCollectionExtensions.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System;
@@ -15,9 +15,6 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class KIP_POST_APPServiceCollectionExtensions
     {
-        private const string InvalidOperationExceptionMsg = "{0} is null or empty; Application cannot be started.";
-        private const string ErrorForUnsupportedMessagePattern = "'{0}' {1} is not supported; Application cannot be started.";
-
         /// <summary>
         /// Adds the TransferDataBQToS3 services.
         /// </summary>
@@ -42,8 +39,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddAutoMapper(typeof(MapperProfile));
 
             var connectionString = config["ConnectionStrings:PostgresConnection"];
-            var pgVersionString = config["ConnectionStrings:PostgresVersion"];
-            var pgVersion = new Version(pgVersionString);
+            var pgVersion = new Version(config["ConnectionStrings:PostgresVersion"]);
+
             services.AddDbContext<ServerContext>(
                 contextOptions =>
             {

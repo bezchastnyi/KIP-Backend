@@ -1,5 +1,5 @@
-﻿// <copyright file="Cathedra_KHPIToCathedra_KIPConverter.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="CathedraKHPIToKIPConverter.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System;
@@ -12,7 +12,7 @@ namespace KIP_POST_APP.Mapping.Converters
     /// <summary>
     /// Building of the KIP department model from the KhPI departments.
     /// </summary>
-    public class Cathedra_KHPIToCathedra_KIPConverter : ITypeConverter<Cathedra_KHPI, Cathedra>
+    public class CathedraKHPIToKIPConverter : ITypeConverter<CathedraKHPI, Cathedra>
     {
         /// <summary>
         /// Convert model of department from KHPI to KIP.
@@ -23,7 +23,7 @@ namespace KIP_POST_APP.Mapping.Converters
         /// <param name="source">Model of department KHPI.</param>
         /// <param name = "destination">Model of department KIP.</param>
         /// <param name= "context">The context. </param>
-        public Cathedra Convert(Cathedra_KHPI source, Cathedra destination, ResolutionContext context)
+        public Cathedra Convert(CathedraKHPI source, Cathedra destination, ResolutionContext context)
         {
             if (source == null)
             {
@@ -32,8 +32,8 @@ namespace KIP_POST_APP.Mapping.Converters
 
             var obj = new Cathedra
             {
-                CathedraID = source.Id,
-                CathedraName = source.Title,
+                CathedraID = source.id,
+                CathedraName = source.title,
             };
 
             return obj;

@@ -13,9 +13,7 @@ namespace KIP_POST_APP.DB
         /// </summary>
         /// <param name="options">DB context options.</param>
         public ServerContext(DbContextOptions<ServerContext> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
 
         /// <summary>
         /// Gets or sets the audience.

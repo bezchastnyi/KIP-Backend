@@ -1,5 +1,5 @@
-﻿// <copyright file="Faculty_KHPIToFaculty_KIPConverter.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="FacultyKHPIToKIPConverter.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System;
@@ -13,7 +13,7 @@ namespace KIP_POST_APP.Mapping.Converters
     /// <summary>
     /// Building of the KIP faculty model from the KhPI faculty.
     /// </summary>
-    public class Faculty_KHPIToFaculty_KIPConverter : ITypeConverter<Faculty_KHPI, Faculty>
+    public class FacultyKHPIToKIPConverter : ITypeConverter<FacultyKHPI, Faculty>
     {
         /// <summary>
         /// Convert model of faculty from KHPI to KIP.
@@ -24,7 +24,7 @@ namespace KIP_POST_APP.Mapping.Converters
         /// <param name="source">Model of faculty KHPI.</param>
         /// <param name = "destination">Model of faculty KIP.</param>
         /// <param name= "context">The context. </param>
-        public Faculty Convert(Faculty_KHPI source, Faculty destination, ResolutionContext context)
+        public Faculty Convert(FacultyKHPI source, Faculty destination, ResolutionContext context)
         {
             if (source == null)
             {
@@ -34,7 +34,7 @@ namespace KIP_POST_APP.Mapping.Converters
             var shortName = string.Empty;
             foreach (var faculty in KIPFacultiesShortNames.FacultiesShortNames)
             {
-                if (faculty.Key == source.Title)
+                if (faculty.Key == source.title)
                 {
                     shortName = faculty.Value;
                 }
@@ -42,8 +42,8 @@ namespace KIP_POST_APP.Mapping.Converters
 
             var obj = new Faculty
             {
-                FacultyID = source.Id,
-                FacultyName = source.Title,
+                FacultyID = source.id,
+                FacultyName = source.title,
                 FacultyShortName = shortName,
             };
 

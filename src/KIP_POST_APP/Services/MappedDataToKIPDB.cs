@@ -1,5 +1,5 @@
-﻿// <copyright file="MappedDataToKIPDB.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="MappedDataToKIPDB.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System;
@@ -21,61 +21,61 @@ namespace KIP_POST_APP.Services
         /// Gets or sets the list of faculties.
         /// </summary>
         /// <value>List of faculties.</value>
-        public static HashSet<Faculty> FacultyList = null;
+        public static HashSet<Faculty> FacultyList { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the list of groups.
         /// </summary>
         /// <value>List of groups.</value>
-        public static HashSet<Group> GroupList = null;
+        public static HashSet<Group> GroupList { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the list of departmens.
         /// </summary>
         /// <value>List of departmens.</value>
-        public static HashSet<Cathedra> CathedraList = null;
+        public static HashSet<Cathedra> CathedraList { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the list of buildings.
         /// </summary>
         /// <value>List of buildings.</value>
-        public static HashSet<Building> BuildingList = null;
+        public static HashSet<Building> BuildingList { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the list of audiences.
         /// </summary>
         /// <value>List of audiences.</value>
-        public static HashSet<Audience> AudienceList = null;
+        public static HashSet<Audience> AudienceList { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the list of teachers.
         /// </summary>
         /// <value>List of teachers.</value>
-        public static HashSet<Prof> ProfList = null;
+        public static HashSet<Prof> ProfList { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the list of schedule of groups for an unpaired week.
         /// </summary>
         /// <value>List of schedule of groups for an unpaired week.</value>
-        public static HashSet<StudentSchedule> ScheduleList = null;
+        public static HashSet<StudentSchedule> ScheduleList { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the list of schedule of teachers for an unpaired week.
         /// </summary>
         /// <value>List of schedule of teachers for an unpaired week.</value>
-        public static HashSet<ProfSchedule> ProfScheduleList = null;
+        public static HashSet<ProfSchedule> ProfScheduleList { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the list of schedule of groups for a paired week.
         /// </summary>
         /// <value>List of schedule of groups for a paired week.</value>
-        public static HashSet<StudentSchedule> Schedule2List = null;
+        public static HashSet<StudentSchedule> Schedule2List { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the list of schedule of teachers for a paired week.
         /// </summary>
         /// <value>List of schedule of teachers for a paired week.</value>
-        public static HashSet<ProfSchedule> ProfSchedule2List = null;
+        public static HashSet<ProfSchedule> ProfSchedule2List { get; set; } = null;
 
         /// <summary>
         /// Getting list of faculty to KIP.
@@ -86,7 +86,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<Faculty>> GetFacultyListKIPAsync(ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
             var kIPFacultyList = new List<Faculty>();
@@ -124,7 +123,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<Group>> GetGroupListByFacultyKIPAsync(
             List<Faculty> kipFacultyList, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
@@ -176,7 +174,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<Cathedra>> GetCathedraListByFacultyKIPAsync(
             List<Faculty> kipFacultyList, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
@@ -227,7 +224,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<Building>> GetBuildingListKIPAsync(
             ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
@@ -266,7 +262,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<Audience>> GetAudienceListByBuildingKIPAsync(
             List<Building> kipBuildingList, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
@@ -318,7 +313,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<Prof>> GetProfListByCathedraKIPAsync(
             List<Cathedra> kipCathedraListByFaculty, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
@@ -370,7 +364,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<StudentSchedule>> GetScheduleListByGroupAsync(
             List<Group> kipGroupByFaculty, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
@@ -423,7 +416,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<StudentSchedule>> GetSchedule2ListByGroupAsync(
             List<Group> kipGroupByFaculty, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper,  CancellationToken cancellationToken)
         {
@@ -476,7 +468,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<ProfSchedule>> GetScheduleListByProfAsync(
             List<Prof> kipProfByCathedra, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {
@@ -529,7 +520,6 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        [Obsolete]
         public static async Task<List<ProfSchedule>> GetSchedule2ListByProfAsync(
             List<Prof> kipProfByCathedra, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
         {

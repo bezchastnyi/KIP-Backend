@@ -1,5 +1,5 @@
-﻿// <copyright file="Prof_KHPIToProf_KIPConverter.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="ProfKHPIToKIPConverter.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System;
@@ -13,7 +13,7 @@ namespace KIP_POST_APP.Mapping.Converters
     /// <summary>
     /// Building of the KIP teachers model from the KhPI teachers.
     /// </summary>
-    public class Prof_KHPIToProf_KIPConverter : ITypeConverter<Prof_KHPI, Prof>
+    public class ProfKHPIToKIPConverter : ITypeConverter<ProfKHPI, Prof>
     {
         /// <summary>
         /// Convert model of teachers from KHPI to KIP.
@@ -24,14 +24,14 @@ namespace KIP_POST_APP.Mapping.Converters
         /// <param name="source">Model of teachers KHPI.</param>
         /// <param name = "destination">Model of teachers KIP.</param>
         /// <param name= "context">The context. </param>
-        public Prof Convert(Prof_KHPI source, Prof destination, ResolutionContext context)
+        public Prof Convert(ProfKHPI source, Prof destination, ResolutionContext context)
         {
             if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var fio = this.SearchFIO(source.Title);
+            var fio = this.SearchFIO(source.title);
 
             var profSurname = " ";
             var profName = " ";
@@ -54,7 +54,7 @@ namespace KIP_POST_APP.Mapping.Converters
 
             var obj = new Prof
             {
-                ProfID = source.Id,
+                ProfID = source.id,
                 ProfSurname = profSurname,
                 ProfName = profName,
                 ProfPatronymic = profPatronymic,

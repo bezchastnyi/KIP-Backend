@@ -18,7 +18,7 @@
             /// <summary>
             /// KIP DB.
             /// </summary>
-            public const string KIP_database = "KIP database";
+            public const string KIP_database = "KIP_database";
 
             /// <summary>
             /// DB system.
@@ -28,22 +28,17 @@
             /// <summary>
             /// Healthy status.
             /// </summary>
-            public const string Healthy_status = "healthy";
+            public const string Healthy_status = "Healthy_status";
 
             /// <summary>
             /// Unhealthy status.
             /// </summary>
-            public const string Unhealthy_status = "unhealthy";
+            public const string Unhealthy_status = "Unhealthy_status";
 
             /// <summary>
             /// Audience.
             /// </summary>
             public const string Audience = "Audience";
-
-            /// <summary>
-            /// Authorization.
-            /// </summary>
-            public const string Auth = "Authorization";
 
             /// <summary>
             /// Building.
@@ -73,11 +68,11 @@
             /// <summary>
             /// Prof Schedule.
             /// </summary>
-            public const string ProfSchedule = "Prof Schedule";
+            public const string ProfSchedule = "ProfSchedule";
 
             /// <summary>
             /// Student Schedule.
             /// </summary>
-            public const string StudentSchedule = "Student Schedule";
+            public const string StudentSchedule = "StudentSchedule";
     }
 }

@@ -12,13 +12,11 @@ using Microsoft.Extensions.Logging;
 namespace KIP_server_GET
 {
     /// <summary>
-    /// 
+    /// KIP_server_GET startup.
     /// </summary>
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private IConfiguration Configuration { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -28,8 +26,10 @@ namespace KIP_server_GET
             this.Configuration = configuration;
         }
 
+        private IConfiguration Configuration { get; }
+
         /// <summary>
-        /// 
+        /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
@@ -44,11 +44,11 @@ namespace KIP_server_GET
         }
 
         /// <summary>
-        ///
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="logger"></param>
-        /// <param name="env"></param>
+        /// <param name="app">Application.</param>
+        /// <param name="logger">Logger.</param>
+        /// <param name="env">Environment.</param>
         public void Configure(IApplicationBuilder app, ILogger<Startup> logger, IWebHostEnvironment env)
         {
             app.UseTokens(this.Configuration["Tokens:EntryToken"]);

@@ -1,5 +1,5 @@
-﻿// <copyright file="GroupByFacultyId_KHPIToGroupByFaculty_KIPConverter.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="GroupByFacultyKHPIToKIPConverter.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System;
@@ -12,7 +12,7 @@ namespace KIP_POST_APP.Mapping.Converters
     /// <summary>
     /// Building of the KIP group model from the KhPI groups`.
     /// </summary>
-    public class GroupByFacultyId_KHPIToGroupByFaculty_KIPConverter : ITypeConverter<Group_KHPI, Group>
+    public class GroupByFacultyKHPIToKIPConverter : ITypeConverter<GroupKHPI, Group>
     {
         /// <summary>
         /// Convert model of group from KHPI to KIP.
@@ -23,7 +23,7 @@ namespace KIP_POST_APP.Mapping.Converters
         /// <param name="source">Model of group KHPI.</param>
         /// <param name = "destination">Model of group KIP.</param>
         /// <param name= "context">The context. </param>
-        public Group Convert(Group_KHPI source, Group destination, ResolutionContext context)
+        public Group Convert(GroupKHPI source, Group destination, ResolutionContext context)
         {
             if (source == null)
             {
@@ -32,9 +32,9 @@ namespace KIP_POST_APP.Mapping.Converters
 
             var obj = new Group
             {
-                GroupID = source.Id,
-                GroupName = source.Title,
-                Course = source.Course,
+                GroupID = source.id,
+                GroupName = source.title,
+                Course = source.course,
             };
 
             return obj;

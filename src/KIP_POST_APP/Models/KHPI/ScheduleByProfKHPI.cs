@@ -1,5 +1,5 @@
-﻿// <copyright file="ScheduleByProf_KHPI.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="ScheduleByProfKHPI.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 namespace KIP_POST_APP.Models.KHPI
@@ -7,7 +7,7 @@ namespace KIP_POST_APP.Models.KHPI
     /// <summary>
     /// Schedule by teachers KhPI.
     /// </summary>
-    public class ScheduleByProf_KHPI
+    public class ScheduleByProfKHPI
     {
         /// <summary>
         /// Gets or sets the Monday.

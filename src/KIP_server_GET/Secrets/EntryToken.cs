@@ -31,7 +31,7 @@ namespace KIP_server_GET.Secrets
         /// Call asynchronous mode.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
         public async Task InvokeAsync(HttpContext context)
         {
             var token = context.Request.Query["token"];

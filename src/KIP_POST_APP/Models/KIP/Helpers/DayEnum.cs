@@ -1,5 +1,5 @@
-﻿// <copyright file="DayEnum.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="DayEnum.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 namespace KIP_POST_APP.Models.KIP.Helpers

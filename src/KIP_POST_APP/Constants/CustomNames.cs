@@ -1,5 +1,5 @@
-﻿// <copyright file="CustomNames.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="CustomNames.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 namespace KIP_POST_APP.Constants
@@ -22,7 +22,7 @@ namespace KIP_POST_APP.Constants
             /// <summary>
             /// KIP DB.
             /// </summary>
-            public const string KIP_database = "KIP database";
+            public const string KIP_database = "KIP_database";
 
             /// <summary>
             /// DB system.
@@ -32,22 +32,17 @@ namespace KIP_POST_APP.Constants
             /// <summary>
             /// Healthy status.
             /// </summary>
-            public const string Healthy_status = "healthy";
+            public const string Healthy_status = "Healthy_status";
 
             /// <summary>
             /// Unhealthy status.
             /// </summary>
-            public const string Unhealthy_status = "unhealthy";
+            public const string Unhealthy_status = "Unhealthy_status";
 
             /// <summary>
             /// Audience.
             /// </summary>
             public const string Audience = "Audience";
-
-            /// <summary>
-            /// Authorization.
-            /// </summary>
-            public const string Auth = "Authorization";
 
             /// <summary>
             /// Building.
@@ -77,11 +72,11 @@ namespace KIP_POST_APP.Constants
             /// <summary>
             /// Prof Schedule.
             /// </summary>
-            public const string ProfSchedule = "Prof Schedule";
+            public const string ProfSchedule = "ProfSchedule";
 
             /// <summary>
             /// Student Schedule.
             /// </summary>
-            public const string StudentSchedule = "Student Schedule";
+            public const string StudentSchedule = "StudentSchedule";
     }
 }

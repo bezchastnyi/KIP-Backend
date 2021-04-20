@@ -19,11 +19,6 @@ namespace KIP_server_GET.Controllers
     [Route("/[controller]/[action]")]
     public class HomeController : Controller
     {
-        /// <summary>
-        /// Gets configurations of server.
-        /// </summary>
-        public IConfiguration Configuration { get; }
-
         private readonly ILogger<HomeController> _logger;
 
         /// <summary>
@@ -36,6 +31,11 @@ namespace KIP_server_GET.Controllers
             this.Configuration = configuration;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
+        /// <summary>
+        /// Gets configurations of server.
+        /// </summary>
+        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Default action.

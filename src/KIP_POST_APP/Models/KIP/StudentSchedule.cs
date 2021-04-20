@@ -1,5 +1,5 @@
-﻿// <copyright file="StudentSchedule.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="StudentSchedule.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System.ComponentModel.DataAnnotations;

@@ -1,5 +1,5 @@
-﻿// <copyright file="KIPBuildingShortNames.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+﻿// <copyright file="KIPBuildingShortNames.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ namespace KIP_POST_APP.Constants
     public class KIPBuildingShortNames
     {
         /// <summary>
-        /// Short names of building.
+        /// Gets short names of building.
         /// </summary>
-        public static Dictionary<string, string> BuildingShortNames = new Dictionary<string, string>
+        public static Dictionary<string, string> BuildingShortNames { get; } = new Dictionary<string, string>
         {
             { "Учбовий корпус 1", "У1" },
             { "Учбовий корпус 2", "У2" },
