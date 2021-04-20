@@ -15,6 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_server_GET.Tests", "tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_POST_APP.Tests", "test\KIP_POST_APP.Tests\KIP_POST_APP.Tests.csproj", "{1A5FFBE4-B575-45A3-B74C-10B6AE20D05F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{18ECED55-DC5E-4FA8-B91A-FCAF322B84CC}"
+  ProjectSection(SolutionItems) = preProject
+    .editorconfig = .editorconfig
+    stylecop.json = stylecop.json
+  EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -1,9 +1,9 @@
-﻿using KIP_POST_APP.DB;
+﻿using System;
+using KIP_POST_APP.DB;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace KIP_server_GET.Controllers
 {
@@ -18,55 +18,66 @@ namespace KIP_server_GET.Controllers
         private readonly ServerContext _context;
         private readonly ILogger<HomeController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AudienceController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="context">The context.</param>
         public AudienceController(ILogger<HomeController> logger, ServerContext context)
         {
-            _context = context;
+            this._context = context;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
-        /// All Faculties
+        /// All audiences.
         /// </summary>
+        /// <returns>All audienses.</returns>
         [HttpGet]
         [Route("/Audience")]
         public IActionResult Audience()
         {
-            if (_context.Audience != null)
+            if (this._context.Audience != null)
             {
-                var audiences = _context.Audience;
+                var audiences = this._context.Audience;
                 return new JsonResult(audiences);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            _logger.Log(LogLevel.Error, message);
+            this._logger.Log(LogLevel.Error, message);
 
-            return NotFound();
+            return this.NotFound();
         }
 
         /// <summary>
-        /// Faculty by <param name="id">
+        /// Audiences.
         /// </summary>
+        /// <returns>Audienses.</returns>
+        /// <param name="id">Audience ID.</param>
         [HttpGet]
         [Route("/Audience/{id:int?}")]
         public IActionResult Audience(int? id)
         {
             if (id != null)
             {
-                var audiences = _context.Audience;
+                var audiences = this._context.Audience;
                 foreach (var unit in audiences)
                 {
                     if (unit.AudienceID == id)
+                    {
                         return new JsonResult(unit);
+                    }
                 }
-                return NotFound();
+
+                return this.NotFound();
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            _logger.Log(LogLevel.Error, message);
+            this._logger.Log(LogLevel.Error, message);
 
-            return BadRequest();
+            return this.BadRequest();
         }
     }
 }

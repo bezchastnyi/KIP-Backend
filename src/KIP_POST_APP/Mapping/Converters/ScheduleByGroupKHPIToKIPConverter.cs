@@ -1,47 +1,61 @@
-﻿using AutoMapper;
+﻿// <copyright file="ScheduleByGroupKHPIToKIPConverter.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
+// </copyright>
+
+using System;
+using System.Collections.Generic;
+using AutoMapper;
 using KIP_POST_APP.Models.KHPI;
 using KIP_POST_APP.Models.KIP;
 using KIP_POST_APP.Models.KIP.Helpers;
 using KIP_POST_APP.Services;
-using System;
-using System.Collections.Generic;
 
 namespace KIP_POST_APP.Mapping.Converters
 {
-    public class ScheduleByProf_KHPIToListOfProfSchedule_KIPConverter : ITypeConverter<ScheduleByProf_KHPI, List<ProfSchedule>>
+    /// <summary>
+    /// Building of the KIP schedule by group model from the KhPI schedule by group.
+    /// </summary>
+    public class ScheduleByGroupKHPIToKIPConverter : ITypeConverter<ScheduleByGroupKHPI, List<StudentSchedule>>
     {
-        public List<ProfSchedule> Convert(ScheduleByProf_KHPI source, List<ProfSchedule> destination, ResolutionContext context)
+        /// <summary>
+        /// Convert model of schedule by group from KHPI to KIP.
+        /// </summary>
+        /// <returns>
+        /// Object of schedule by group of model schedule by group KIP.
+        /// </returns>
+        /// <param name="source">Model of schedule by group KHPI.</param>
+        /// <param name = "destination">Model of schedule by group KIP.</param>
+        /// <param name= "context">The context. </param>
+        public List<StudentSchedule> Convert(ScheduleByGroupKHPI source, List<StudentSchedule> destination, ResolutionContext context)
         {
             if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var obj = new List<ProfSchedule>();
+            var obj = new List<StudentSchedule>();
 
-
-
-            if (MappedDataToKIPDB.GroupList == null)
+            if (MappedDataToKIPDB.ProfList == null)
             {
                 return null;
             }
 
             try
             {
-                var week = KIP_POST_APPHostedService.week;
+                var week = KIP_POST_APPHostedService.Week;
 
-                var SubjectListMonday = new List<string>(6)
+                var subjectListMonday = new List<string>(6)
                 {
                     source.Monday.Para1.Name,
                     source.Monday.Para2.Name,
                     source.Monday.Para3.Name,
                     source.Monday.Para4.Name,
                     source.Monday.Para5.Name,
-                    source.Monday.Para6.Name
+                    source.Monday.Para6.Name,
                 };
 
                 bool exists = false;
-                foreach (var lesson in SubjectListMonday)
+                foreach (var lesson in subjectListMonday)
                 {
                     if (lesson != string.Empty)
                     {
@@ -51,57 +65,51 @@ namespace KIP_POST_APP.Mapping.Converters
 
                 if (exists)
                 {
-                    var AuditoryListMonday = new List<string>(6)
+                    var auditoryListMonday = new List<string>(6)
                     {
                         source.Monday.Para1.Aud,
                         source.Monday.Para2.Aud,
                         source.Monday.Para3.Aud,
                         source.Monday.Para4.Aud,
                         source.Monday.Para5.Aud,
-                        source.Monday.Para6.Aud
+                        source.Monday.Para6.Aud,
                     };
 
-                    var TypeListMonday = new List<string>(6)
+                    var typeListMonday = new List<string>(6)
                     {
                         source.Monday.Para1.vid,
                         source.Monday.Para2.vid,
                         source.Monday.Para3.vid,
                         source.Monday.Para4.vid,
                         source.Monday.Para5.vid,
-                        source.Monday.Para6.vid
+                        source.Monday.Para6.vid,
                     };
 
-                    var GroupListMonday = new List<string>(6)
+                    var profListMonday = new List<string>(6)
                     {
                         source.Monday.Para1.Prepod,
                         source.Monday.Para2.Prepod,
                         source.Monday.Para3.Prepod,
                         source.Monday.Para4.Prepod,
                         source.Monday.Para5.Prepod,
-                        source.Monday.Para6.Prepod
+                        source.Monday.Para6.Prepod,
                     };
 
-                    var GroupListMondayDestination = new List<List<int?>>()
-                    {
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>() };
+                    var profListMondayDestination = new List<int?>() { null, null, null, null, null, null };
 
-                    for (int i = 0; i < GroupListMonday.Count; i++)
+                    for (int i = 0; i < profListMonday.Count; i++)
                     {
-                        if (GroupListMonday[i] == string.Empty)
+                        if (profListMonday[i] == string.Empty)
                         {
                             continue;
                         }
 
-                        foreach (var group in MappedDataToKIPDB.GroupList)
+                        foreach (var prof in MappedDataToKIPDB.ProfList)
                         {
-                            if (GroupListMonday[i].Contains(group.GroupName))
+                            if (profListMonday[i].Contains(prof.ProfSurname))
                             {
-                                GroupListMondayDestination[i].Add(group.GroupID);
+                                profListMondayDestination[i] = prof.ProfID;
+                                break;
                             }
                         }
                     }
@@ -110,62 +118,63 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListMonday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < AuditoryListMonday.Count; i++)
+                        for (int i = 0; i < auditoryListMonday.Count; i++)
                         {
-                            if (AuditoryListMonday[i] == string.Empty)
+                            if (auditoryListMonday[i] == string.Empty)
                             {
                                 continue;
                             }
 
                             foreach (var building in MappedDataToKIPDB.BuildingList)
                             {
-                                if (AuditoryListMonday[i].Contains(building.BuildingShortName))
+                                if (auditoryListMonday[i].Contains(building.BuildingShortName))
                                 {
                                     buildingListMonday[i] = building.BuildingID;
                                     foreach (var audience in MappedDataToKIPDB.AudienceList)
                                     {
-                                        if (audience.AudienceName.Contains(AuditoryListMonday[i]))
+                                        if (audience.AudienceName.Contains(auditoryListMonday[i]))
                                         {
                                             audienceListMonday[i] = audience.AudienceID;
                                             break;
                                         }
                                     }
+
                                     break;
                                 }
                             }
                         }
                     }
 
-                    for (int i = 0; i < SubjectListMonday.Count; i++)
+                    for (int i = 0; i < subjectListMonday.Count; i++)
                     {
-                        if (SubjectListMonday[i] != string.Empty)
+                        if (subjectListMonday[i] != string.Empty)
                         {
-                            obj.Add(new ProfSchedule
+                            obj.Add(new StudentSchedule
                             {
-                                day = Day.Monday,
-                                week = week,
-                                GroupID = GroupListMondayDestination[i],
-                                SubjectName = SubjectListMonday[i],
+                                Day = Day.Monday,
+                                Week = week,
+                                ProfID = profListMondayDestination[i],
+                                SubjectName = subjectListMonday[i],
                                 AudienceID = audienceListMonday[i],
                                 BuildingID = buildingListMonday[i],
-                                Type = TypeListMonday[i]
+                                Type = typeListMonday[i],
                             });
                         }
                     }
                 }
 
-                var SubjectListTuesday = new List<string>(6)
+                var subjectListTuesday = new List<string>(6)
                 {
                     source.Tuesday.Para1.Name,
                     source.Tuesday.Para2.Name,
                     source.Tuesday.Para3.Name,
                     source.Tuesday.Para4.Name,
                     source.Tuesday.Para5.Name,
-                    source.Tuesday.Para6.Name
+                    source.Tuesday.Para6.Name,
                 };
 
                 exists = false;
-                foreach (var lesson in SubjectListTuesday)
+                foreach (var lesson in subjectListTuesday)
                 {
                     if (lesson != string.Empty)
                     {
@@ -175,57 +184,51 @@ namespace KIP_POST_APP.Mapping.Converters
 
                 if (exists)
                 {
-                    var AuditoryListTuesday = new List<string>(6)
+                    var auditoryListTuesday = new List<string>(6)
                     {
                         source.Tuesday.Para1.Aud,
                         source.Tuesday.Para2.Aud,
                         source.Tuesday.Para3.Aud,
                         source.Tuesday.Para4.Aud,
                         source.Tuesday.Para5.Aud,
-                        source.Tuesday.Para6.Aud
+                        source.Tuesday.Para6.Aud,
                     };
 
-                    var TypeListTuesday = new List<string>(6)
+                    var typeListTuesday = new List<string>(6)
                     {
                         source.Tuesday.Para1.vid,
                         source.Tuesday.Para2.vid,
                         source.Tuesday.Para3.vid,
                         source.Tuesday.Para4.vid,
                         source.Tuesday.Para5.vid,
-                        source.Tuesday.Para6.vid
+                        source.Tuesday.Para6.vid,
                     };
 
-                    var GroupListTuesday = new List<string>(6)
+                    var profListTuesday = new List<string>(6)
                     {
-                        source.Tuesday.Para1.Prepod,
-                        source.Tuesday.Para2.Prepod,
-                        source.Tuesday.Para3.Prepod,
-                        source.Tuesday.Para4.Prepod,
-                        source.Tuesday.Para5.Prepod,
-                        source.Tuesday.Para6.Prepod
+                    source.Tuesday.Para1.Prepod,
+                    source.Tuesday.Para2.Prepod,
+                    source.Tuesday.Para3.Prepod,
+                    source.Tuesday.Para4.Prepod,
+                    source.Tuesday.Para5.Prepod,
+                    source.Tuesday.Para6.Prepod,
                     };
 
-                    var GroupListTuesdayDestination = new List<List<int?>>()
-                    {
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>() };
+                    var profListTuesdayDestination = new List<int?>() { null, null, null, null, null, null };
 
-                    for (int i = 0; i < GroupListTuesday.Count; i++)
+                    for (int i = 0; i < profListTuesday.Count; i++)
                     {
-                        if (GroupListTuesday[i] == string.Empty)
+                        if (profListTuesday[i] == string.Empty)
                         {
                             continue;
                         }
 
-                        foreach (var group in MappedDataToKIPDB.GroupList)
+                        foreach (var prof in MappedDataToKIPDB.ProfList)
                         {
-                            if (GroupListTuesday[i].Contains(group.GroupName))
+                            if (profListTuesday[i].Contains(prof.ProfSurname))
                             {
-                                GroupListTuesdayDestination[i].Add(group.GroupID);
+                                profListTuesdayDestination[i] = prof.ProfID;
+                                break;
                             }
                         }
                     }
@@ -234,63 +237,63 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListTuesday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < AuditoryListTuesday.Count; i++)
+                        for (int i = 0; i < auditoryListTuesday.Count; i++)
                         {
-                            if (AuditoryListTuesday[i] == string.Empty)
+                            if (auditoryListTuesday[i] == string.Empty)
                             {
                                 continue;
                             }
 
                             foreach (var building in MappedDataToKIPDB.BuildingList)
                             {
-                                if (AuditoryListTuesday[i].Contains(building.BuildingShortName))
+                                if (auditoryListTuesday[i].Contains(building.BuildingShortName))
                                 {
                                     buildingListTuesday[i] = building.BuildingID;
                                     foreach (var audience in MappedDataToKIPDB.AudienceList)
                                     {
-                                        if (audience.AudienceName.Contains(AuditoryListTuesday[i]))
+                                        if (audience.AudienceName.Contains(auditoryListTuesday[i]))
                                         {
                                             audienceListTuesday[i] = audience.AudienceID;
                                             break;
                                         }
                                     }
+
                                     break;
                                 }
                             }
                         }
                     }
 
-                    for (int i = 0; i < SubjectListTuesday.Count; i++)
+                    for (int i = 0; i < subjectListTuesday.Count; i++)
                     {
-                        if (SubjectListTuesday[i] != string.Empty)
+                        if (subjectListTuesday[i] != string.Empty)
                         {
-                            obj.Add(new ProfSchedule
+                            obj.Add(new StudentSchedule
                             {
-                                day = Day.Tuesday,
-                                week = week,
-                                GroupID = GroupListTuesdayDestination[i],
-                                SubjectName = SubjectListTuesday[i],
+                                Day = Day.Tuesday,
+                                Week = week,
+                                ProfID = profListTuesdayDestination[i],
+                                SubjectName = subjectListTuesday[i],
                                 AudienceID = audienceListTuesday[i],
                                 BuildingID = buildingListTuesday[i],
-                                Type = TypeListTuesday[i]
+                                Type = typeListTuesday[i],
                             });
                         }
                     }
                 }
 
-
-                var SubjectListWednesday = new List<string>(6)
+                var subjectListWednesday = new List<string>(6)
                 {
                     source.Wednesday.Para1.Name,
                     source.Wednesday.Para2.Name,
                     source.Wednesday.Para3.Name,
                     source.Wednesday.Para4.Name,
                     source.Wednesday.Para5.Name,
-                    source.Wednesday.Para6.Name
+                    source.Wednesday.Para6.Name,
                 };
 
                 exists = false;
-                foreach (var lesson in SubjectListWednesday)
+                foreach (var lesson in subjectListTuesday)
                 {
                     if (lesson != string.Empty)
                     {
@@ -300,57 +303,51 @@ namespace KIP_POST_APP.Mapping.Converters
 
                 if (exists)
                 {
-                    var AuditoryListWednesday = new List<string>(6)
+                    var auditoryListWednesday = new List<string>(6)
                     {
                         source.Wednesday.Para1.Aud,
                         source.Wednesday.Para2.Aud,
                         source.Wednesday.Para3.Aud,
                         source.Wednesday.Para4.Aud,
                         source.Wednesday.Para5.Aud,
-                        source.Wednesday.Para6.Aud
+                        source.Wednesday.Para6.Aud,
                     };
 
-                    var TypeListWednesday = new List<string>(6)
+                    var typeListWednesday = new List<string>(6)
                     {
-                        source.Wednesday.Para1.vid,
-                        source.Wednesday.Para2.vid,
-                        source.Wednesday.Para3.vid,
-                        source.Wednesday.Para4.vid,
-                        source.Wednesday.Para5.vid,
-                        source.Wednesday.Para6.vid
+                    source.Wednesday.Para1.vid,
+                    source.Wednesday.Para2.vid,
+                    source.Wednesday.Para3.vid,
+                    source.Wednesday.Para4.vid,
+                    source.Wednesday.Para5.vid,
+                    source.Wednesday.Para6.vid,
                     };
 
-                    var GroupListWednesday = new List<string>(6)
+                    var profListWednesday = new List<string>(6)
                     {
-                        source.Wednesday.Para1.Prepod,
-                        source.Wednesday.Para2.Prepod,
-                        source.Wednesday.Para3.Prepod,
-                        source.Wednesday.Para4.Prepod,
-                        source.Wednesday.Para5.Prepod,
-                        source.Wednesday.Para6.Prepod
+                    source.Wednesday.Para1.Prepod,
+                    source.Wednesday.Para2.Prepod,
+                    source.Wednesday.Para3.Prepod,
+                    source.Wednesday.Para4.Prepod,
+                    source.Wednesday.Para5.Prepod,
+                    source.Wednesday.Para6.Prepod,
                     };
 
-                    var GroupListWednesdayDestination = new List<List<int?>>()
-                    {
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>() };
+                    var profListWednesdayDestination = new List<int?>() { null, null, null, null, null, null };
 
-                    for (int i = 0; i < GroupListWednesday.Count; i++)
+                    for (int i = 0; i < profListWednesday.Count; i++)
                     {
-                        if (GroupListWednesday[i] == string.Empty)
+                        if (profListWednesday[i] == string.Empty)
                         {
                             continue;
                         }
 
-                        foreach (var group in MappedDataToKIPDB.GroupList)
+                        foreach (var prof in MappedDataToKIPDB.ProfList)
                         {
-                            if (GroupListWednesday[i].Contains(group.GroupName))
+                            if (profListWednesday[i].Contains(prof.ProfSurname))
                             {
-                                GroupListWednesdayDestination[i].Add(group.GroupID);
+                                profListWednesdayDestination[i] = prof.ProfID;
+                                break;
                             }
                         }
                     }
@@ -359,63 +356,63 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListWednesday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < AuditoryListWednesday.Count; i++)
+                        for (int i = 0; i < auditoryListWednesday.Count; i++)
                         {
-                            if (AuditoryListWednesday[i] == string.Empty)
+                            if (auditoryListWednesday[i] == string.Empty)
                             {
                                 continue;
                             }
 
                             foreach (var building in MappedDataToKIPDB.BuildingList)
                             {
-                                if (AuditoryListWednesday[i].Contains(building.BuildingShortName))
+                                if (auditoryListWednesday[i].Contains(building.BuildingShortName))
                                 {
                                     buildingListWednesday[i] = building.BuildingID;
                                     foreach (var audience in MappedDataToKIPDB.AudienceList)
                                     {
-                                        if (audience.AudienceName.Contains(AuditoryListWednesday[i]))
+                                        if (audience.AudienceName.Contains(auditoryListWednesday[i]))
                                         {
                                             audienceListWednesday[i] = audience.AudienceID;
                                             break;
                                         }
                                     }
+
                                     break;
                                 }
                             }
                         }
                     }
 
-                    for (int i = 0; i < SubjectListWednesday.Count; i++)
+                    for (int i = 0; i < subjectListWednesday.Count; i++)
                     {
-                        if (SubjectListWednesday[i] != string.Empty)
+                        if (subjectListWednesday[i] != string.Empty)
                         {
-                            obj.Add(new ProfSchedule
+                            obj.Add(new StudentSchedule
                             {
-                                day = Day.Wednesday,
-                                week = week,
-                                GroupID = GroupListWednesdayDestination[i],
-                                SubjectName = SubjectListWednesday[i],
+                                Day = Day.Wednesday,
+                                Week = week,
+                                ProfID = profListWednesdayDestination[i],
+                                SubjectName = subjectListWednesday[i],
                                 AudienceID = audienceListWednesday[i],
                                 BuildingID = buildingListWednesday[i],
-                                Type = TypeListWednesday[i]
+                                Type = typeListWednesday[i],
                             });
                         }
                     }
                 }
 
-
-                var SubjectListThursday = new List<string>(6)
+                var subjectListThursday = new List<string>(6)
                 {
                     source.Thursday.Para1.Name,
                     source.Thursday.Para2.Name,
                     source.Thursday.Para3.Name,
                     source.Thursday.Para4.Name,
                     source.Thursday.Para5.Name,
-                    source.Thursday.Para6.Name
+                    source.Thursday.Para6.Name,
                 };
 
                 exists = false;
-                foreach (var lesson in SubjectListThursday)
+                foreach (var lesson in subjectListTuesday)
                 {
                     if (lesson != string.Empty)
                     {
@@ -425,57 +422,51 @@ namespace KIP_POST_APP.Mapping.Converters
 
                 if (exists)
                 {
-                    var AuditoryListThursday = new List<string>(6)
+                    var auditoryListThursday = new List<string>(6)
                     {
                         source.Thursday.Para1.Aud,
                         source.Thursday.Para2.Aud,
                         source.Thursday.Para3.Aud,
                         source.Thursday.Para4.Aud,
                         source.Thursday.Para5.Aud,
-                        source.Thursday.Para6.Aud
+                        source.Thursday.Para6.Aud,
                     };
 
-                    var TypeListThursday = new List<string>(6)
+                    var typeListThursday = new List<string>(6)
                     {
-                        source.Thursday.Para1.vid,
-                        source.Thursday.Para2.vid,
-                        source.Thursday.Para3.vid,
-                        source.Thursday.Para4.vid,
-                        source.Thursday.Para5.vid,
-                        source.Thursday.Para6.vid
+                    source.Thursday.Para1.vid,
+                    source.Thursday.Para2.vid,
+                    source.Thursday.Para3.vid,
+                    source.Thursday.Para4.vid,
+                    source.Thursday.Para5.vid,
+                    source.Thursday.Para6.vid,
                     };
 
-                    var GroupListThursday = new List<string>(6)
+                    var profListThursday = new List<string>(6)
                     {
-                        source.Thursday.Para1.Prepod,
-                        source.Thursday.Para2.Prepod,
-                        source.Thursday.Para3.Prepod,
-                        source.Thursday.Para4.Prepod,
-                        source.Thursday.Para5.Prepod,
-                        source.Thursday.Para6.Prepod
+                    source.Thursday.Para1.Prepod,
+                    source.Thursday.Para2.Prepod,
+                    source.Thursday.Para3.Prepod,
+                    source.Thursday.Para4.Prepod,
+                    source.Thursday.Para5.Prepod,
+                    source.Thursday.Para6.Prepod,
                     };
 
-                    var GroupListThursdayDestination = new List<List<int?>>()
-                    {
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>() };
+                    var profListThursdayDestination = new List<int?>() { null, null, null, null, null, null };
 
-                    for (int i = 0; i < GroupListThursday.Count; i++)
+                    for (int i = 0; i < profListThursday.Count; i++)
                     {
-                        if (GroupListThursday[i] == string.Empty)
+                        if (profListThursday[i] == string.Empty)
                         {
                             continue;
                         }
 
-                        foreach (var group in MappedDataToKIPDB.GroupList)
+                        foreach (var prof in MappedDataToKIPDB.ProfList)
                         {
-                            if (GroupListThursday[i].Contains(group.GroupName))
+                            if (profListThursday[i].Contains(prof.ProfSurname))
                             {
-                                GroupListThursdayDestination[i].Add(group.GroupID);
+                                profListThursdayDestination[i] = prof.ProfID;
+                                break;
                             }
                         }
                     }
@@ -484,63 +475,63 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListThursday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < AuditoryListThursday.Count; i++)
+                        for (int i = 0; i < auditoryListThursday.Count; i++)
                         {
-                            if (AuditoryListThursday[i] == string.Empty)
+                            if (auditoryListThursday[i] == string.Empty)
                             {
                                 continue;
                             }
 
                             foreach (var building in MappedDataToKIPDB.BuildingList)
                             {
-                                if (AuditoryListThursday[i].Contains(building.BuildingShortName))
+                                if (auditoryListThursday[i].Contains(building.BuildingShortName))
                                 {
                                     buildingListThursday[i] = building.BuildingID;
                                     foreach (var audience in MappedDataToKIPDB.AudienceList)
                                     {
-                                        if (audience.AudienceName.Contains(AuditoryListThursday[i]))
+                                        if (audience.AudienceName.Contains(auditoryListThursday[i]))
                                         {
                                             audienceListThursday[i] = audience.AudienceID;
                                             break;
                                         }
                                     }
+
                                     break;
                                 }
                             }
                         }
                     }
 
-                    for (int i = 0; i < SubjectListThursday.Count; i++)
+                    for (int i = 0; i < subjectListThursday.Count; i++)
                     {
-                        if (SubjectListThursday[i] != string.Empty)
+                        if (subjectListThursday[i] != string.Empty)
                         {
-                            obj.Add(new ProfSchedule
+                            obj.Add(new StudentSchedule
                             {
-                                day = Day.Thursday,
-                                week = week,
-                                GroupID = GroupListThursdayDestination[i],
-                                SubjectName = SubjectListThursday[i],
+                                Day = Day.Thursday,
+                                Week = week,
+                                ProfID = profListThursdayDestination[i],
+                                SubjectName = subjectListThursday[i],
                                 AudienceID = audienceListThursday[i],
                                 BuildingID = buildingListThursday[i],
-                                Type = TypeListThursday[i]
+                                Type = typeListThursday[i],
                             });
                         }
                     }
                 }
 
-
-                var SubjectListFriday = new List<string>(6)
+                var subjectListFriday = new List<string>(6)
                 {
-                    source.Friday.Para1.Name,
-                    source.Friday.Para2.Name,
-                    source.Friday.Para3.Name,
-                    source.Friday.Para4.Name,
-                    source.Friday.Para5.Name,
-                    source.Friday.Para6.Name
+                    source.Wednesday.Para1.Name,
+                    source.Wednesday.Para2.Name,
+                    source.Wednesday.Para3.Name,
+                    source.Wednesday.Para4.Name,
+                    source.Wednesday.Para5.Name,
+                    source.Wednesday.Para6.Name,
                 };
 
                 exists = false;
-                foreach (var lesson in SubjectListFriday)
+                foreach (var lesson in subjectListTuesday)
                 {
                     if (lesson != string.Empty)
                     {
@@ -550,57 +541,51 @@ namespace KIP_POST_APP.Mapping.Converters
 
                 if (exists)
                 {
-                    var AuditoryListFriday = new List<string>(6)
+                    var auditoryListFriday = new List<string>(6)
                     {
                         source.Friday.Para1.Aud,
                         source.Friday.Para2.Aud,
                         source.Friday.Para3.Aud,
                         source.Friday.Para4.Aud,
                         source.Friday.Para5.Aud,
-                        source.Friday.Para6.Aud
+                        source.Friday.Para6.Aud,
                     };
 
-                    var TypeListFriday = new List<string>(6)
+                    var typeListFriday = new List<string>(6)
                     {
                         source.Friday.Para1.vid,
                         source.Friday.Para2.vid,
                         source.Friday.Para3.vid,
                         source.Friday.Para4.vid,
                         source.Friday.Para5.vid,
-                        source.Friday.Para6.vid
+                        source.Friday.Para6.vid,
                     };
 
-                    var GroupListFriday = new List<string>(6)
+                    var profListFriday = new List<string>(6)
                     {
                         source.Friday.Para1.Prepod,
                         source.Friday.Para2.Prepod,
                         source.Friday.Para3.Prepod,
                         source.Friday.Para4.Prepod,
                         source.Friday.Para5.Prepod,
-                        source.Friday.Para6.Prepod
+                        source.Friday.Para6.Prepod,
                     };
 
-                    var GroupListFridayDestination = new List<List<int?>>()
-                    {
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>(),
-                        new List<int?>() };
+                    var profListFridayDestination = new List<int?>() { null, null, null, null, null, null };
 
-                    for (int i = 0; i < GroupListFriday.Count; i++)
+                    for (int i = 0; i < profListFriday.Count; i++)
                     {
-                        if (GroupListFriday[i] == string.Empty)
+                        if (profListFriday[i] == string.Empty)
                         {
                             continue;
                         }
 
-                        foreach (var group in MappedDataToKIPDB.GroupList)
+                        foreach (var prof in MappedDataToKIPDB.ProfList)
                         {
-                            if (GroupListFriday[i].Contains(group.GroupName))
+                            if (profListFriday[i].Contains(prof.ProfSurname))
                             {
-                                GroupListFridayDestination[i].Add(group.GroupID);
+                                profListFridayDestination[i] = prof.ProfID;
+                                break;
                             }
                         }
                     }
@@ -609,45 +594,46 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListFriday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < AuditoryListFriday.Count; i++)
+                        for (int i = 0; i < auditoryListFriday.Count; i++)
                         {
-                            if (AuditoryListFriday[i] == string.Empty)
+                            if (auditoryListFriday[i] == string.Empty)
                             {
                                 continue;
                             }
 
                             foreach (var building in MappedDataToKIPDB.BuildingList)
                             {
-                                if (AuditoryListFriday[i].Contains(building.BuildingShortName))
+                                if (auditoryListFriday[i].Contains(building.BuildingShortName))
                                 {
                                     buildingListFriday[i] = building.BuildingID;
                                     foreach (var audience in MappedDataToKIPDB.AudienceList)
                                     {
-                                        if (audience.AudienceName.Contains(AuditoryListFriday[i]))
+                                        if (audience.AudienceName.Contains(auditoryListFriday[i]))
                                         {
                                             audienceListFriday[i] = audience.AudienceID;
                                             break;
                                         }
                                     }
+
                                     break;
                                 }
                             }
                         }
                     }
 
-                    for (int i = 0; i < SubjectListFriday.Count; i++)
+                    for (int i = 0; i < subjectListFriday.Count; i++)
                     {
-                        if (SubjectListFriday[i] != string.Empty)
+                        if (subjectListFriday[i] != string.Empty)
                         {
-                            obj.Add(new ProfSchedule
+                            obj.Add(new StudentSchedule
                             {
-                                day = Day.Friday,
-                                week = week,
-                                GroupID = GroupListFridayDestination[i],
-                                SubjectName = SubjectListFriday[i],
+                                Day = Day.Friday,
+                                Week = week,
+                                ProfID = profListFridayDestination[i],
+                                SubjectName = subjectListFriday[i],
                                 AudienceID = audienceListFriday[i],
                                 BuildingID = buildingListFriday[i],
-                                Type = TypeListFriday[i]
+                                Type = typeListFriday[i],
                             });
                         }
                     }
@@ -658,9 +644,10 @@ namespace KIP_POST_APP.Mapping.Converters
                 Console.WriteLine(exception.Message);
             }
 
-
             if (obj.Count == 0)
+            {
                 return null;
+            }
 
             return obj;
         }

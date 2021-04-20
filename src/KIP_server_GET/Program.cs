@@ -1,12 +1,13 @@
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace KIP_server_GET
 {
     /// <summary>
+    /// The console app class.
     /// </summary>
     [ExcludeFromCodeCoverage]
     public class Program
@@ -24,15 +25,17 @@ namespace KIP_server_GET
         /// Creates the web host builder.
         /// </summary>
         /// <param name="args">The arguments.</param>
-        /// <returns></returns>
+        /// <returns>Configured web host builder.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             string port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-            //string url = string.Concat("https://0.0.0.0:", port);
-            string url = string.Concat("http://0.0.0.0:", port);
 
+            string url = string.Concat("https://0.0.0.0:", port);
+
+            // string url = string.Concat("http://0.0.0.0:", port);
             return Host.CreateDefaultBuilder(args)
-                    .UseSerilog((context, configuration) =>
+                    .UseSerilog(
+                        (context, configuration) =>
                     {
                         configuration.ReadFrom.Configuration(context.Configuration);
                     }, true)
@@ -50,10 +53,9 @@ namespace KIP_server_GET
 
 
 /*
-    GCP DEPLOY    
+    GCP DEPLOY
 
     cd \Users\IT\source\Repos\KIP-Backend-DB\KIP_server_GET
     gcloud builds submit --tag gcr.io/khpi-in-phone-307713/kipserverget
-    gcloud run deploy --image gcr.io/khpi-in-phone-307713/kipserverget --platform managed 
- 
+    gcloud run deploy --image gcr.io/khpi-in-phone-307713/kipserverget --platform managed
  */

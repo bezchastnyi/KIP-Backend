@@ -1,11 +1,8 @@
 {
-  "profiles": 
-  {
-    "KIP_POST_APP": 
-    {
+  "profiles": {
+    "KIP_POST_APP": {
       "commandName": "Project",
-      "environmentVariables": 
-      {
+      "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }
     }

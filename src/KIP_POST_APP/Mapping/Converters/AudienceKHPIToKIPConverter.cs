@@ -1,14 +1,30 @@
-﻿using AutoMapper;
+﻿// <copyright file="AudienceKHPIToKIPConverter.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
+// </copyright>
+
 using System;
+using System.Text.RegularExpressions;
+using AutoMapper;
 using KIP_POST_APP.Models.KHPI;
 using KIP_POST_APP.Models.KIP;
-using System.Text.RegularExpressions;
 
 namespace KIP_POST_APP.Mapping.Converters
 {
-    public class Audience_KHPIToAudience_KIPConverter : ITypeConverter<Audience_KHPI, Audience>
+    /// <summary>
+    /// Building of the KIP audience model from the KhPI audience.
+    /// </summary>
+    public class AudienceKHPIToKIPConverter : ITypeConverter<AudienceKHPI, Audience>
     {
-        public Audience Convert(Audience_KHPI source, Audience destination, ResolutionContext context)
+        /// <summary>
+        /// Convert model of audience from KHPI to KIP.
+        /// </summary>
+        /// <returns>
+        /// Object of audience of model audience KIP.
+        /// </returns>
+        /// <param name="source">Model of audience KHPI.</param>
+        /// <param name = "destination">Model of audience KIP.</param>
+        /// <param name= "context">The context. </param>
+        public Audience Convert(AudienceKHPI source, Audience destination, ResolutionContext context)
         {
             if (source == null)
             {
@@ -18,21 +34,21 @@ namespace KIP_POST_APP.Mapping.Converters
             var obj = new Audience
             {
                 AudienceID = source.id,
-                AudienceName = FixTitle(source.title),
-                NumberOfSeats = SearchNumberOfSeats(source.title)
+                AudienceName = this.Fixtitle(source.title),
+                NumberOfSeats = this.SearchNumberOfSeats(source.title),
             };
 
             return obj;
         }
 
-        private string FixTitle(string title)
+        private string Fixtitle(string title)
         {
             foreach (var part in title.Split('['))
             {
                 return part;
             }
 
-            return "";
+            return " ";
         }
 
         private int SearchNumberOfSeats(string title)
@@ -53,7 +69,6 @@ namespace KIP_POST_APP.Mapping.Converters
                         }
                     }
                 }
-
             }
 
             return 0;
