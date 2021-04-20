@@ -1,11 +1,11 @@
-﻿using KIP_POST_APP.DB;
+﻿using System;
+using System.Collections.Generic;
+using KIP_POST_APP.DB;
 using KIP_POST_APP.Models.KIP;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 
 namespace KIP_server_GET.Controllers
 {
@@ -19,15 +19,22 @@ namespace KIP_server_GET.Controllers
         private readonly ServerContext _context;
         private readonly ILogger<HomeController> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="context">The context.</param>
         public GroupController(ILogger<HomeController> logger, ServerContext context)
         {
-            _context = context;
+            this._context = context;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
-        /// Faculty by <param name="id">
+        /// Group.
         /// </summary>
+        /// <returns>Group.</returns>
+        /// <param name="id">Group ID.</param>
         [HttpGet]
         [Route("Group/{id:int?}")]
         public IActionResult Group(int? id)
@@ -41,7 +48,8 @@ namespace KIP_server_GET.Controllers
                         return new JsonResult(group);
                     }
                 }
-                return NotFound();
+
+                return this.NotFound();
             }
             else
             {
@@ -49,13 +57,16 @@ namespace KIP_server_GET.Controllers
                 {
                     return new JsonResult(this._context.Group);
                 }
-                return NotFound();
+
+                return this.NotFound();
             }
         }
 
         /// <summary>
-        /// Faculty by <param name="id">
+        /// Group by faculty.
         /// </summary>
+        /// <returns>Group.</returns>
+        /// <param name="id">Faculty ID.</param>
         [HttpGet]
         [Route("Group/Faculty/{id:int?}")]
         public IActionResult Faculty(int? id)
@@ -70,9 +81,10 @@ namespace KIP_server_GET.Controllers
                         list.Add(group);
                     }
                 }
+
                 if (list.Count == 0)
                 {
-                    return NotFound();
+                    return this.NotFound();
                 }
                 else
                 {
@@ -82,9 +94,9 @@ namespace KIP_server_GET.Controllers
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            _logger.Log(LogLevel.Error, message);
+            this._logger.Log(LogLevel.Error, message);
 
-            return BadRequest();
+            return this.BadRequest();
         }
     }
 }

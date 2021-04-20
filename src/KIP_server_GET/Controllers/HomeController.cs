@@ -1,13 +1,13 @@
-﻿using KIP_server_GET.Constants;
+﻿using System;
+using System.Diagnostics;
+using System.Net;
+using KIP_server_GET.Constants;
 using KIP_server_GET.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Npgsql;
-using System;
-using System.Diagnostics;
-using System.Net;
 
 namespace KIP_server_GET.Controllers
 {
@@ -19,23 +19,28 @@ namespace KIP_server_GET.Controllers
     [Route("/[controller]/[action]")]
     public class HomeController : Controller
     {
-        public IConfiguration Configuration { get; }
         private readonly ILogger<HomeController> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <exception cref="ArgumentNullException">logger</exception>
+        /// <param name="configuration">The configuration.</param>
         public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
+        /// Gets configurations of server.
+        /// </summary>
+        public IConfiguration Configuration { get; }
+
+        /// <summary>
         /// Default action.
         /// </summary>
+        /// <returns>Json.</returns>
         [HttpGet]
         [Route("")]
         [Route("/")]
@@ -48,13 +53,14 @@ namespace KIP_server_GET.Controllers
         }
 
         /// <summary>
-        /// Default action.
+        /// Check status.
         /// </summary>
+        /// <returns>Status.</returns>
         [HttpGet]
         [Route("/health")]
-        public IActionResult health()
+        public IActionResult Health()
         {
-            string status = CustomNames.unhealthy_status;
+            string status = CustomNames.Unhealthy_status;
             using (NpgsqlConnection connection = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
             {
                 try
@@ -62,7 +68,9 @@ namespace KIP_server_GET.Controllers
                     connection.Open();
 
                     if (connection.State.ToString() == "Open")
-                        status = CustomNames.healthy_status;
+                    {
+                        status = CustomNames.Healthy_status;
+                    }
 
                     connection.Close();
                 }
@@ -77,17 +85,18 @@ namespace KIP_server_GET.Controllers
             }
 
             var health_check = new HealthCheck();
-            health_check._databases.Add(new DataBase(CustomNames.KIP_database, CustomNames.PostgreSQL, this.Configuration.GetConnectionString("PostgresVersion"), status));
+            health_check.Databases.Add(new DataBase(CustomNames.KIP_database, CustomNames.PostgreSQL, this.Configuration.GetConnectionString("PostgresVersion"), status));
 
             var message = $"{CustomNames.KIP_database} status: {status}";
-            _logger.Log(LogLevel.Information, message);
+            this._logger.Log(LogLevel.Information, message);
 
-            return Json(health_check);
+            return this.Json(health_check);
         }
 
         /// <summary>
         /// Error action.
         /// </summary>
+        /// <returns>Error.</returns>
         [HttpGet]
         [Route("/Home/Error")]
         public IActionResult Error()
@@ -95,7 +104,7 @@ namespace KIP_server_GET.Controllers
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
 
             var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            _logger.Log(LogLevel.Error, message);
+            this._logger.Log(LogLevel.Error, message);
 
             return new ObjectResult(new { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier }) { StatusCode = (int)HttpStatusCode.BadRequest };
         }

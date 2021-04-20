@@ -1,13 +1,20 @@
-﻿using KIP_POST_APP.Models.KHPI;
-using Newtonsoft.Json;
+﻿// <copyright file="GetDataFromKHPIDB.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using KIP_POST_APP.Models.KHPI;
+using Newtonsoft.Json;
 
 namespace KIP_POST_APP.Services
 {
+    /// <summary>
+    /// Pulling data from the KhPI database.
+    /// </summary>
     public static class GetDataFromKHPIDB
     {
         private const string FacultyList = @"http://schedule.kpi.kharkov.ua/json/FacultyList";
@@ -24,132 +31,245 @@ namespace KIP_POST_APP.Services
         private const string Schedule2ByAuditoryId = @"http://schedule.kpi.kharkov.ua/JSON/Schedule2A/";
         private const string AuditoryListByCathedraId = @"http://schedule.kpi.kharkov.ua/JSON/AudListByKafedra/";
 
-        //http://schedule.kpi.kharkov.ua/json/SearchGroups/поисковыйзапрос/
-        //http://schedule.kpi.kharkov.ua/json/SearchPrepod/поисковыйзапрос/
+        // http://schedule.kpi.kharkov.ua/json/SearchGroups/поисковыйзапрос/
+        // http://schedule.kpi.kharkov.ua/json/SearchPrepod/поисковыйзапрос/
 
-        [Obsolete]
-        public static async Task<IEnumerable<Faculty_KHPI>> GetFacultyListAsync(CancellationToken stoppingToken = default)
-        {
-            try 
-            { 
-                return await GetJsonListDataAsync<Faculty_KHPI>(FacultyList, stoppingToken);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + ": " + e.StackTrace);
-            }
-            return null;
-        }
-
-        [Obsolete]
-        public static async Task<IEnumerable<Group_KHPI>> GetGroupListByFacultyIdAsync(int FacultyId, CancellationToken stoppingToken = default)
-        {
-            try 
-            { 
-                return await GetJsonListDataAsync<Group_KHPI>(GroupListByFacultyId + FacultyId, stoppingToken);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + ": " + e.StackTrace);
-            }
-            return null;
-        }
-
-        [Obsolete]
-        public static async Task<IEnumerable<Cathedra_KHPI>> GetCathedraListByFacultyIdAsync(int FacultyId, CancellationToken stoppingToken = default)
-        {
-            try 
-            { 
-                return await GetJsonListDataAsync<Cathedra_KHPI>(CathedrasListByFacultyId + FacultyId, stoppingToken);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + ": " + e.StackTrace);
-            }
-            return null;
-        }
-
-        [Obsolete]
-        public static async Task<ScheduleByGroup_KHPI> GetScheduleByGroupIdAsync(int GroupId, CancellationToken stoppingToken = default)
-        {
-            try 
-            {
-                return await GetJsonDataAsync<ScheduleByGroup_KHPI>(ScheduleByGroupId + GroupId, stoppingToken);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + ": " + e.StackTrace);
-            }
-            return null;
-        }
-
-        [Obsolete]
-        public static async Task<ScheduleByProf_KHPI> GetScheduleByProfIdAsync(int ProfId, CancellationToken stoppingToken = default)
+        /// <summary>
+        /// Getting a list of faculties using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// List of faculties.
+        /// </returns>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<IEnumerable<FacultyKHPI>> GetFacultyListAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonDataAsync<ScheduleByProf_KHPI>(ProfScheduleByProfId + ProfId, stoppingToken);
+                return await GetJsonListDataAsync<FacultyKHPI>(FacultyList, cancellationToken);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message + ": " + e.StackTrace);
             }
+
             return null;
         }
 
-        [Obsolete]
-        public static async Task<IEnumerable<Building_KHPI>> GetBuildingListAsync(CancellationToken stoppingToken = default)
-        {
-            try 
-            { 
-                return await GetJsonListDataAsync<Building_KHPI>(BuildingList, stoppingToken);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + ": " + e.StackTrace);
-            }
-            return null;
-        }
-
-        [Obsolete]
-        public static async Task<IEnumerable<Audience_KHPI>> GetAudienceListByBuildingIdAsync(int BuildingId, CancellationToken stoppingToken = default)
-        {
-            try
-            { 
-                return await GetJsonListDataAsync<Audience_KHPI>(AuditoryListByBuildingId + BuildingId, stoppingToken);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message + ": " + e.StackTrace);
-            }
-            return null;
-        }
-
-        [Obsolete]
-        public static async Task<IEnumerable<Prof_KHPI>> GetProfListByCathedraIdAsync(int CathedraId, CancellationToken stoppingToken = default)
+        /// <summary>
+        /// Getting a list of groups by faculty ID using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// List of list of groups by faculty.
+        /// </returns>
+        /// <param name="facultyId">Faculty ID.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<IEnumerable<GroupKHPI>> GetGroupListByFacultyIdAsync(int facultyId, CancellationToken cancellationToken = default)
         {
             try
             {
-                return await GetJsonListDataAsync<Prof_KHPI>(ProfListByCathedraId + CathedraId, stoppingToken);
+                return await GetJsonListDataAsync<GroupKHPI>(GroupListByFacultyId + facultyId, cancellationToken);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message + ": " + e.StackTrace);
             }
+
             return null;
         }
 
-        [Obsolete]
-        private static async Task<IEnumerable<T>> GetJsonListDataAsync<T>(string url, CancellationToken stoppingToken = default)
+        /// <summary>
+        /// Getting a list of departments by faculty ID using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// List of list of departments by faculty.
+        /// </returns>
+        /// <param name="facultyId">Faculty ID.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<IEnumerable<CathedraKHPI>> GetCathedraListByFacultyIdAsync(int facultyId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetJsonListDataAsync<CathedraKHPI>(CathedrasListByFacultyId + facultyId, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting a group schedule for an unpaired week using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// Schedule of groups for an unpaired week.
+        /// </returns>
+        /// <param name="groupId">Group ID.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<ScheduleByGroupKHPI> GetScheduleByGroupIdAsync(int groupId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetJsonDataAsync<ScheduleByGroupKHPI>(ScheduleByGroupId + groupId, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting a group schedule for a paired week using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// Schedule of groups for a paired week.
+        /// </returns>
+        /// <param name="groupId">Group ID.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<ScheduleByGroupKHPI> GetSchedule2ByGroupIdAsync(int groupId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetJsonDataAsync<ScheduleByGroupKHPI>(Schedule2ByGroupId + groupId, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting a teachers schedulefor an unpaired week using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// Schedule of teachers for an unpaired week.
+        /// </returns>
+        /// <param name="profId">Teacher ID.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<ScheduleByProfKHPI> GetScheduleByProfIdAsync(int profId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetJsonDataAsync<ScheduleByProfKHPI>(ProfScheduleByProfId + profId, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting a teachers schedule for a paired week using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// Schedule of teachers for a paired week.
+        /// </returns>
+        /// <param name="profId">Teacher ID.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<ScheduleByProfKHPI> GetSchedule2ByProfIdAsync(int profId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetJsonDataAsync<ScheduleByProfKHPI>(ProfSchedule2ByProfId + profId, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting the list of buildings using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// List of buildings.
+        /// </returns>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<IEnumerable<BuildingKHPI>> GetBuildingListAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetJsonListDataAsync<BuildingKHPI>(BuildingList, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting a list of audiences in the building using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// List of audiences in the building.
+        /// </returns>
+        /// <param name="buildingId">Building Id.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<IEnumerable<AudienceKHPI>> GetAudienceListByBuildingIdAsync(int buildingId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetJsonListDataAsync<AudienceKHPI>(AuditoryListByBuildingId + buildingId, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting a list of teachers of the department using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// List of teachers of the department.
+        /// </returns>
+        /// <param name="cathedraId">Cathedra Id.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task<IEnumerable<ProfKHPI>> GetProfListByCathedraIdAsync(int cathedraId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetJsonListDataAsync<ProfKHPI>(ProfListByCathedraId + cathedraId, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting list data from json using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// List data from json.
+        /// </returns>
+        /// <param name="url">Link to json.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private static async Task<IEnumerable<T>> GetJsonListDataAsync<T>(string url, CancellationToken cancellationToken = default)
         {
             using (var web = new WebClient())
             {
-                var JsonData = string.Empty;
+                var jsonData = string.Empty;
 
                 try
                 {
-                    JsonData = web.DownloadString(url);
-                    if (JsonData.Contains("<!DOCTYPE html>"))
+                    jsonData = await web.DownloadStringTaskAsync(url);
+                    if (jsonData.Contains("<!DOCTYPE html>"))
                     {
                         return null;
                     }
@@ -159,31 +279,38 @@ namespace KIP_POST_APP.Services
                     Console.WriteLine(e.Message + ": " + e.StackTrace);
                 }
 
-                return JsonConvert.DeserializeObject<IEnumerable<T>>(JsonData);
+                return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonData);
             }
         }
 
-        [Obsolete]
-        private static async Task<T> GetJsonDataAsync<T>(string url, CancellationToken stoppingToken = default)
+        /// <summary>
+        /// Getting data from json using asynchrony.
+        /// </summary>
+        /// <returns>
+        /// Data from json.
+        /// </returns>
+        /// <param name="url">Link to json.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        private static async Task<T> GetJsonDataAsync<T>(string url, CancellationToken cancellationToken = default)
         {
             using (var web = new WebClient())
             {
-                var JsonData = string.Empty;
+                var jsonData = string.Empty;
 
                 try
                 {
-                    JsonData = web.DownloadString(url);
-                    if (JsonData.Contains("<!DOCTYPE html>"))
+                    jsonData = await web.DownloadStringTaskAsync(url);
+                    if (jsonData.Contains("<!DOCTYPE html>"))
                     {
                         return default;
                     }
                 }
                 catch (Exception e)
                 {
-                    //Console.WriteLine(e.Message + ": " + e.StackTrace + "\n URL = " + url);
+                    Console.WriteLine(e.Message + ": " + e.StackTrace + "\n URL = " + url);
                 }
 
-                return JsonConvert.DeserializeObject<T>(JsonData);
+                return JsonConvert.DeserializeObject<T>(jsonData);
             }
         }
     }
