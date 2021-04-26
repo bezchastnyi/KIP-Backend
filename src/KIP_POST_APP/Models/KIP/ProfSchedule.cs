@@ -55,6 +55,14 @@ namespace KIP_POST_APP.Models.KIP
         public string Type { get; set; }
 
         /// <summary>
+        /// Gets or sets the number of para.
+        /// </summary>
+        /// <value>Number of para.</value>
+        [Required(ErrorMessage = "Number is required")]
+        [Range(1, 6, ErrorMessage = "Number of para must be between 1 and 6")]
+        public int Number { get; set; }
+
+        /// <summary>
         /// Gets or sets the id of teacher.
         /// </summary>
         /// <value>ID of teacher.</value>

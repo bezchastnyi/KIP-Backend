@@ -165,6 +165,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListMonday[i],
                                 BuildingID = buildingListMonday[i],
                                 Type = typeListMonday[i],
+                                Number = i + 1,
                             });
                         }
                     }
@@ -291,6 +292,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListTuesday[i],
                                 BuildingID = buildingListTuesday[i],
                                 Type = typeListTuesday[i],
+                                Number = i + 1,
                             });
                         }
                     }
@@ -417,6 +419,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListWednesday[i],
                                 BuildingID = buildingListWednesday[i],
                                 Type = typeListWednesday[i],
+                                Number = i + 1,
                             });
                         }
                     }
@@ -543,6 +546,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListThursday[i],
                                 BuildingID = buildingListThursday[i],
                                 Type = typeListThursday[i],
+                                Number = i + 1,
                             });
                         }
                     }
@@ -669,6 +673,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListFriday[i],
                                 BuildingID = buildingListFriday[i],
                                 Type = typeListFriday[i],
+                                Number = i + 1,
                             });
                         }
                     }
