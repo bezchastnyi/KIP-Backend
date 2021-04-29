@@ -44,6 +44,7 @@ namespace KIP_POST_APP.Mapping.Converters
             {
                 var week = KIP_POST_APPHostedService.Week;
 
+                // Monday
                 var subjectListMonday = new List<string>(6)
                 {
                     source.Monday.Para1.Name,
@@ -54,7 +55,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     source.Monday.Para6.Name,
                 };
 
-                bool exists = false;
+                var exists = false;
                 foreach (var lesson in subjectListMonday)
                 {
                     if (lesson != string.Empty)
@@ -105,7 +106,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         new List<int?>(),
                     };
 
-                    for (int i = 0; i < groupListMonday.Count; i++)
+                    for (var i = 0; i < groupListMonday.Count; i++)
                     {
                         if (groupListMonday[i] == string.Empty)
                         {
@@ -125,7 +126,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListMonday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < auditoryListMonday.Count; i++)
+                        for (var i = 0; i < auditoryListMonday.Count; i++)
                         {
                             if (auditoryListMonday[i] == string.Empty)
                             {
@@ -152,7 +153,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         }
                     }
 
-                    for (int i = 0; i < subjectListMonday.Count; i++)
+                    for (var i = 0; i < subjectListMonday.Count; i++)
                     {
                         if (subjectListMonday[i] != string.Empty)
                         {
@@ -165,12 +166,13 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListMonday[i],
                                 BuildingID = buildingListMonday[i],
                                 Type = typeListMonday[i],
-                                Number = i + 1,
+                                Number = i,
                             });
                         }
                     }
                 }
 
+                // Tuesday
                 var subjectListTuesday = new List<string>(6)
                 {
                     source.Tuesday.Para1.Name,
@@ -232,7 +234,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         new List<int?>(),
                     };
 
-                    for (int i = 0; i < groupListTuesday.Count; i++)
+                    for (var i = 0; i < groupListTuesday.Count; i++)
                     {
                         if (groupListTuesday[i] == string.Empty)
                         {
@@ -252,7 +254,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListTuesday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < auditoryListTuesday.Count; i++)
+                        for (var i = 0; i < auditoryListTuesday.Count; i++)
                         {
                             if (auditoryListTuesday[i] == string.Empty)
                             {
@@ -279,7 +281,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         }
                     }
 
-                    for (int i = 0; i < subjectListTuesday.Count; i++)
+                    for (var i = 0; i < subjectListTuesday.Count; i++)
                     {
                         if (subjectListTuesday[i] != string.Empty)
                         {
@@ -292,12 +294,13 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListTuesday[i],
                                 BuildingID = buildingListTuesday[i],
                                 Type = typeListTuesday[i],
-                                Number = i + 1,
+                                Number = i,
                             });
                         }
                     }
                 }
 
+                // Wednesday
                 var subjectListWednesday = new List<string>(6)
                 {
                     source.Wednesday.Para1.Name,
@@ -359,7 +362,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         new List<int?>(),
                     };
 
-                    for (int i = 0; i < groupListWednesday.Count; i++)
+                    for (var i = 0; i < groupListWednesday.Count; i++)
                     {
                         if (groupListWednesday[i] == string.Empty)
                         {
@@ -379,7 +382,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListWednesday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < auditoryListWednesday.Count; i++)
+                        for (var i = 0; i < auditoryListWednesday.Count; i++)
                         {
                             if (auditoryListWednesday[i] == string.Empty)
                             {
@@ -406,7 +409,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         }
                     }
 
-                    for (int i = 0; i < subjectListWednesday.Count; i++)
+                    for (var i = 0; i < subjectListWednesday.Count; i++)
                     {
                         if (subjectListWednesday[i] != string.Empty)
                         {
@@ -419,12 +422,13 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListWednesday[i],
                                 BuildingID = buildingListWednesday[i],
                                 Type = typeListWednesday[i],
-                                Number = i + 1,
+                                Number = i,
                             });
                         }
                     }
                 }
 
+                // Thursday
                 var subjectListThursday = new List<string>(6)
                 {
                     source.Thursday.Para1.Name,
@@ -486,7 +490,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         new List<int?>(),
                     };
 
-                    for (int i = 0; i < groupListThursday.Count; i++)
+                    for (var i = 0; i < groupListThursday.Count; i++)
                     {
                         if (groupListThursday[i] == string.Empty)
                         {
@@ -506,7 +510,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListThursday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < auditoryListThursday.Count; i++)
+                        for (var i = 0; i < auditoryListThursday.Count; i++)
                         {
                             if (auditoryListThursday[i] == string.Empty)
                             {
@@ -533,7 +537,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         }
                     }
 
-                    for (int i = 0; i < subjectListThursday.Count; i++)
+                    for (var i = 0; i < subjectListThursday.Count; i++)
                     {
                         if (subjectListThursday[i] != string.Empty)
                         {
@@ -546,12 +550,13 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListThursday[i],
                                 BuildingID = buildingListThursday[i],
                                 Type = typeListThursday[i],
-                                Number = i + 1,
+                                Number = i,
                             });
                         }
                     }
                 }
 
+                // Friday
                 var subjectListFriday = new List<string>(6)
                 {
                     source.Friday.Para1.Name,
@@ -613,7 +618,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         new List<int?>(),
                     };
 
-                    for (int i = 0; i < groupListFriday.Count; i++)
+                    for (var i = 0; i < groupListFriday.Count; i++)
                     {
                         if (groupListFriday[i] == string.Empty)
                         {
@@ -633,7 +638,7 @@ namespace KIP_POST_APP.Mapping.Converters
                     var audienceListFriday = new List<int?>() { null, null, null, null, null, null };
                     if (MappedDataToKIPDB.BuildingList != null && MappedDataToKIPDB.AudienceList != null)
                     {
-                        for (int i = 0; i < auditoryListFriday.Count; i++)
+                        for (var i = 0; i < auditoryListFriday.Count; i++)
                         {
                             if (auditoryListFriday[i] == string.Empty)
                             {
@@ -660,7 +665,7 @@ namespace KIP_POST_APP.Mapping.Converters
                         }
                     }
 
-                    for (int i = 0; i < subjectListFriday.Count; i++)
+                    for (var i = 0; i < subjectListFriday.Count; i++)
                     {
                         if (subjectListFriday[i] != string.Empty)
                         {
@@ -673,7 +678,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 AudienceID = audienceListFriday[i],
                                 BuildingID = buildingListFriday[i],
                                 Type = typeListFriday[i],
-                                Number = i + 1,
+                                Number = i,
                             });
                         }
                     }
