@@ -45,6 +45,12 @@ namespace KIP_POST_APP.Models.KIP
         public string ProfPatronymic { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the Schedule Is Present for the current prof.
+        /// </summary>
+        /// <value>Course of group.</value>
+        public bool ScheduleIsPresent { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the id of departments.
         /// </summary>
         /// <value>ID of departments.</value>

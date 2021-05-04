@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KIP_POST_APP.Migrations
 {
     [DbContext(typeof(ServerContext))]
-    [Migration("20210422181228_KIP_DB_Migration")]
+    [Migration("20210503123803_KIP_DB_Migration")]
     partial class KIP_DB_Migration
     {
         /// <inheritdoc/>
@@ -129,6 +129,9 @@ namespace KIP_POST_APP.Migrations
                     b.Property<int?>("ProfScheduleID")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("ScheduleIsPresent")
+                        .HasColumnType("boolean");
+
                     b.HasKey("GroupID");
 
                     b.HasIndex("FacultyID");
@@ -159,6 +162,9 @@ namespace KIP_POST_APP.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
+                    b.Property<bool>("ScheduleIsPresent")
+                        .HasColumnType("boolean");
+
                     b.HasKey("ProfID");
 
                     b.HasIndex("CathedraID");
@@ -187,6 +193,9 @@ namespace KIP_POST_APP.Migrations
 
                     b.Property<int>("Number")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Output")
+                        .HasColumnType("varchar(5000)");
 
                     b.Property<int>("ProfID")
                         .HasColumnType("integer");
@@ -234,6 +243,9 @@ namespace KIP_POST_APP.Migrations
 
                     b.Property<int>("Number")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Output")
+                        .HasColumnType("varchar(5000)");
 
                     b.Property<int?>("ProfID")
                         .HasColumnType("integer");

@@ -31,6 +31,11 @@ namespace KIP_POST_APP.Mapping.Converters
                 throw new ArgumentNullException(nameof(source));
             }
 
+            if (string.IsNullOrEmpty(source.title))
+            {
+                return null;
+            }
+
             var shortName = string.Empty;
             foreach (var faculty in KIPFacultiesShortNames.FacultiesShortNames)
             {
@@ -40,14 +45,12 @@ namespace KIP_POST_APP.Mapping.Converters
                 }
             }
 
-            var obj = new Faculty
+            return new Faculty
             {
                 FacultyID = source.id,
                 FacultyName = source.title,
                 FacultyShortName = shortName,
             };
-
-            return obj;
         }
     }
 }

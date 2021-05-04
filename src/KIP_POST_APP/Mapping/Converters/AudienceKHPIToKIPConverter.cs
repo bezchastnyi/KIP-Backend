@@ -31,14 +31,17 @@ namespace KIP_POST_APP.Mapping.Converters
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var obj = new Audience
+            if (string.IsNullOrEmpty(source.title))
+            {
+                return null;
+            }
+
+            return new Audience
             {
                 AudienceID = source.id,
                 AudienceName = this.Fixtitle(source.title),
                 NumberOfSeats = this.SearchNumberOfSeats(source.title),
             };
-
-            return obj;
         }
 
         private string Fixtitle(string title)
@@ -48,7 +51,7 @@ namespace KIP_POST_APP.Mapping.Converters
                 return part;
             }
 
-            return " ";
+            return title;
         }
 
         private int SearchNumberOfSeats(string title)

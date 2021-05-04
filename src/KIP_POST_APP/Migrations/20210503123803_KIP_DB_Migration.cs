@@ -91,6 +91,7 @@ namespace KIP_POST_APP.Migrations
                     ProfSurname = table.Column<string>(type: "varchar(100)", nullable: false),
                     ProfName = table.Column<string>(type: "varchar(100)", nullable: false),
                     ProfPatronymic = table.Column<string>(type: "varchar(100)", nullable: true),
+                    ScheduleIsPresent = table.Column<bool>(type: "boolean", nullable: false),
                     CathedraID = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -115,6 +116,7 @@ namespace KIP_POST_APP.Migrations
                     Day = table.Column<int>(type: "integer", nullable: false),
                     Type = table.Column<string>(type: "varchar(100)", nullable: false),
                     Number = table.Column<int>(type: "integer", nullable: false),
+                    Output = table.Column<string>(type: "varchar(5000)", nullable: true),
                     ProfID = table.Column<int>(type: "integer", nullable: false),
                     BuildingID = table.Column<int>(type: "integer", nullable: true),
                     AudienceID = table.Column<int>(type: "integer", nullable: true),
@@ -151,6 +153,7 @@ namespace KIP_POST_APP.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     GroupName = table.Column<string>(type: "varchar(100)", nullable: false),
                     Course = table.Column<int>(type: "integer", nullable: false),
+                    ScheduleIsPresent = table.Column<bool>(type: "boolean", nullable: false),
                     FacultyID = table.Column<int>(type: "integer", nullable: false),
                     ProfScheduleID = table.Column<int>(type: "integer", nullable: true)
                 },
@@ -182,6 +185,7 @@ namespace KIP_POST_APP.Migrations
                     Day = table.Column<int>(type: "integer", nullable: false),
                     Type = table.Column<string>(type: "varchar(100)", nullable: false),
                     Number = table.Column<int>(type: "integer", nullable: false),
+                    Output = table.Column<string>(type: "varchar(5000)", nullable: true),
                     GroupID = table.Column<int>(type: "integer", nullable: false),
                     BuildingID = table.Column<int>(type: "integer", nullable: true),
                     AudienceID = table.Column<int>(type: "integer", nullable: true),

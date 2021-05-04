@@ -3,7 +3,7 @@
 // </copyright>
 
 using System;
-using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AutoMapper;
 using KIP_POST_APP.Models.KHPI;
 using KIP_POST_APP.Models.KIP;
@@ -31,46 +31,36 @@ namespace KIP_POST_APP.Mapping.Converters
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var fio = this.SearchFIO(source.title);
-
-            var profSurname = " ";
-            var profName = " ";
-            var profPatronymic = " ";
-
-            if (fio.Count > 0)
+            if (string.IsNullOrEmpty(source.title))
             {
-                profSurname = fio[0];
+                return null;
             }
 
-            if (fio.Count > 1)
+            var list = Regex.Split(source.title, @"\s{1,}|_#./!(),-");
+
+            var profSurname = string.Empty;
+            var profName = string.Empty;
+            var profPatronymic = string.Empty;
+
+            if (list.Length > 2)
             {
-                profName = fio[1];
+                profSurname = list[0];
+                profName = list[1];
+                profPatronymic = list[2];
             }
 
-            if (fio.Count > 2)
+            if (profSurname == string.Empty)
             {
-                profPatronymic = fio[2];
+                return null;
             }
 
-            var obj = new Prof
+            return new Prof
             {
                 ProfID = source.id,
                 ProfSurname = profSurname,
                 ProfName = profName,
                 ProfPatronymic = profPatronymic,
             };
-            return obj;
-        }
-
-        private List<string> SearchFIO(string title)
-        {
-            var list = new List<string>();
-            foreach (var part in title.Split(' '))
-            {
-                list.Add(part);
-            }
-
-            return list;
         }
     }
 }

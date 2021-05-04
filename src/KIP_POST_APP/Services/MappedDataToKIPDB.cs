@@ -86,7 +86,10 @@ namespace KIP_POST_APP.Services
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
-        public static async Task<List<Faculty>> GetFacultyListKIPAsync(ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+        public static async Task<List<Faculty>> GetFacultyListKIPAsync(
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kIPFacultyList = new List<Faculty>();
 
@@ -124,7 +127,10 @@ namespace KIP_POST_APP.Services
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Group>> GetGroupListByFacultyKIPAsync(
-            List<Faculty> kipFacultyList, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+            List<Faculty> kipFacultyList,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kipGroupListByFaculty = new List<Group>();
 
@@ -146,8 +152,11 @@ namespace KIP_POST_APP.Services
                         {
                             foreach (var group in groupList1)
                             {
-                                group.FacultyID = faculty.FacultyID;
-                                kipGroupListByFaculty.Add(group);
+                                if (group != null)
+                                {
+                                    group.FacultyID = faculty.FacultyID;
+                                    kipGroupListByFaculty.Add(group);
+                                }
                             }
                         }
                     }
@@ -175,7 +184,10 @@ namespace KIP_POST_APP.Services
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Cathedra>> GetCathedraListByFacultyKIPAsync(
-            List<Faculty> kipFacultyList, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+            List<Faculty> kipFacultyList,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kipCathedraListByFaculty = new List<Cathedra>();
 
@@ -197,8 +209,11 @@ namespace KIP_POST_APP.Services
                         {
                             foreach (var cathedra in cathedraList1)
                             {
-                                cathedra.FacultyID = faculty.FacultyID;
-                                kipCathedraListByFaculty.Add(cathedra);
+                                if (cathedra != null)
+                                {
+                                    cathedra.FacultyID = faculty.FacultyID;
+                                    kipCathedraListByFaculty.Add(cathedra);
+                                }
                             }
                         }
                     }
@@ -225,7 +240,9 @@ namespace KIP_POST_APP.Services
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Building>> GetBuildingListKIPAsync(
-            ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kipBuildingList = new List<Building>();
 
@@ -263,7 +280,10 @@ namespace KIP_POST_APP.Services
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Audience>> GetAudienceListByBuildingKIPAsync(
-            List<Building> kipBuildingList, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+            List<Building> kipBuildingList,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kipAudienceListByBuilding = new List<Audience>();
 
@@ -285,8 +305,11 @@ namespace KIP_POST_APP.Services
                         {
                             foreach (var audience in audienceList1)
                             {
-                                audience.BuildingID = building.BuildingID;
-                                kipAudienceListByBuilding.Add(audience);
+                                if (audience != null)
+                                {
+                                    audience.BuildingID = building.BuildingID;
+                                    kipAudienceListByBuilding.Add(audience);
+                                }
                             }
                         }
                     }
@@ -314,7 +337,10 @@ namespace KIP_POST_APP.Services
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Prof>> GetProfListByCathedraKIPAsync(
-            List<Cathedra> kipCathedraListByFaculty, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+            List<Cathedra> kipCathedraListByFaculty,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kipProfListByCathedra = new List<Prof>();
 
@@ -336,8 +362,11 @@ namespace KIP_POST_APP.Services
                         {
                             foreach (var prof in profList1)
                             {
-                                prof.CathedraID = cathedra.CathedraID;
-                                kipProfListByCathedra.Add(prof);
+                                if (prof != null)
+                                {
+                                    prof.CathedraID = cathedra.CathedraID;
+                                    kipProfListByCathedra.Add(prof);
+                                }
                             }
                         }
                     }
@@ -365,7 +394,10 @@ namespace KIP_POST_APP.Services
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<StudentSchedule>> GetScheduleListByGroupAsync(
-            List<Group> kipGroupByFaculty, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+            List<Group> kipGroupByFaculty,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kipScheduleByGroup = new List<StudentSchedule>();
 
@@ -386,10 +418,14 @@ namespace KIP_POST_APP.Services
                         var schedule1 = mapper.Map<List<StudentSchedule>>(schedule);
                         if (schedule1 != null)
                         {
+                            group.ScheduleIsPresent = true;
                             foreach (var lesson in schedule1)
                             {
-                                lesson.GroupID = group.GroupID;
-                                kipScheduleByGroup.Add(lesson);
+                                if (lesson != null)
+                                {
+                                    lesson.GroupID = group.GroupID;
+                                    kipScheduleByGroup.Add(lesson);
+                                }
                             }
                         }
                     }
@@ -417,7 +453,10 @@ namespace KIP_POST_APP.Services
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<StudentSchedule>> GetSchedule2ListByGroupAsync(
-            List<Group> kipGroupByFaculty, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper,  CancellationToken cancellationToken)
+            List<Group> kipGroupByFaculty,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kipSchedule2ByGroup = new List<StudentSchedule>();
 
@@ -438,10 +477,14 @@ namespace KIP_POST_APP.Services
                         var schedule1 = mapper.Map<List<StudentSchedule>>(schedule);
                         if (schedule1 != null)
                         {
+                            group.ScheduleIsPresent = true;
                             foreach (var lesson in schedule1)
                             {
-                                lesson.GroupID = group.GroupID;
-                                kipSchedule2ByGroup.Add(lesson);
+                                if (lesson != null)
+                                {
+                                    lesson.GroupID = group.GroupID;
+                                    kipSchedule2ByGroup.Add(lesson);
+                                }
                             }
                         }
                     }
@@ -469,7 +512,10 @@ namespace KIP_POST_APP.Services
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<ProfSchedule>> GetScheduleListByProfAsync(
-            List<Prof> kipProfByCathedra, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+            List<Prof> kipProfByCathedra,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kipScheduleByProf = new List<ProfSchedule>();
 
@@ -490,10 +536,14 @@ namespace KIP_POST_APP.Services
                         var schedule1 = mapper.Map<List<ProfSchedule>>(schedule);
                         if (schedule1 != null)
                         {
+                            prof.ScheduleIsPresent = true;
                             foreach (var lesson in schedule1)
                             {
-                                lesson.ProfID = prof.ProfID;
-                                kipScheduleByProf.Add(lesson);
+                                if (lesson != null)
+                                {
+                                    lesson.ProfID = prof.ProfID;
+                                    kipScheduleByProf.Add(lesson);
+                                }
                             }
                         }
                     }
@@ -521,7 +571,10 @@ namespace KIP_POST_APP.Services
         /// <param name= "mapper">The mapper. </param>
         /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<ProfSchedule>> GetSchedule2ListByProfAsync(
-            List<Prof> kipProfByCathedra, ILogger<KIP_POST_APPHostedService> logger, IMapper mapper, CancellationToken cancellationToken)
+            List<Prof> kipProfByCathedra,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper,
+            CancellationToken cancellationToken)
         {
             var kipSchedule2ByProf = new List<ProfSchedule>();
 
@@ -542,10 +595,14 @@ namespace KIP_POST_APP.Services
                         var schedule1 = mapper.Map<List<ProfSchedule>>(schedule);
                         if (schedule1 != null)
                         {
+                            prof.ScheduleIsPresent = true;
                             foreach (var lesson in schedule1)
                             {
-                                lesson.ProfID = prof.ProfID;
-                                kipSchedule2ByProf.Add(lesson);
+                                if (lesson != null)
+                                {
+                                    lesson.ProfID = prof.ProfID;
+                                    kipSchedule2ByProf.Add(lesson);
+                                }
                             }
                         }
                     }

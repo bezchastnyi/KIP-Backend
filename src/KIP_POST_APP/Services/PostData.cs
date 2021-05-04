@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using KIP_POST_APP.DB;
 using KIP_POST_APP.Models.KIP;
 
@@ -18,25 +19,33 @@ namespace KIP_POST_APP.Services
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name = "dataList">The list of data. </param>
-        public static void PostDataToDB(
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task PostDataToDBAsync(
             ServerContext context,
-            (List<Faculty> facultyList, List<Group> groupList, List<Cathedra> cathedraList, List<Building> buildingList,
-             List<Audience> audienceList, List<Prof> profList, List<StudentSchedule> studentScheduleList,
-             List<StudentSchedule> studentSchedule2List, List<ProfSchedule> profScheduleList,
-             List<ProfSchedule> profSchedule2List) dataList)
+            (List<Faculty> facultyList,
+            List<Group> groupList,
+            List<Cathedra> cathedraList,
+            List<Building> buildingList,
+            List<Audience> audienceList,
+            List<Prof> profList,
+            List<StudentSchedule> studentScheduleList,
+            List<StudentSchedule> studentSchedule2List,
+            List<ProfSchedule> profScheduleList,
+            List<ProfSchedule> profSchedule2List)
+            dataList)
         {
-            SendFacultyDataToDB(context, dataList.facultyList);
-            SendCathedraDataToDB(context, dataList.cathedraList);
-            SendGroupDataToDB(context, dataList.groupList);
-            SendBuildingDataToDB(context, dataList.buildingList);
-            SendAudienceDataToDB(context, dataList.audienceList);
-            SendProfDataToDB(context, dataList.profList);
-            SendStudentScheduleDataToDB(context, dataList.studentScheduleList);
-            SendStudentScheduleDataToDB(context, dataList.studentSchedule2List);
-            SendProfScheduleDataToDB(context, dataList.profScheduleList);
-            SendProfScheduleDataToDB(context, dataList.profSchedule2List);
+            await SendFacultyDataToDB(context, dataList.facultyList);
+            await SendCathedraDataToDB(context, dataList.cathedraList);
+            await SendGroupDataToDBAsync(context, dataList.groupList);
+            await SendBuildingDataToDB(context, dataList.buildingList);
+            await SendAudienceDataToDB(context, dataList.audienceList);
+            await SendProfDataToDB(context, dataList.profList);
+            await SendStudentScheduleDataToDB(context, dataList.studentScheduleList);
+            await SendStudentScheduleDataToDB(context, dataList.studentSchedule2List);
+            await SendProfScheduleDataToDB(context, dataList.profScheduleList);
+            await SendProfScheduleDataToDB(context, dataList.profSchedule2List);
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -44,11 +53,12 @@ namespace KIP_POST_APP.Services
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
-        public static void SendFacultyDataToDB(ServerContext context, List<Faculty> objects)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendFacultyDataToDB(ServerContext context, List<Faculty> objects)
         {
             foreach (var obj in objects)
             {
-                context.Faculty.Add(obj);
+                await context.Faculty.AddAsync(obj);
             }
         }
 
@@ -57,11 +67,12 @@ namespace KIP_POST_APP.Services
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
-        public static void SendGroupDataToDB(ServerContext context, List<Group> objects)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendGroupDataToDBAsync(ServerContext context, List<Group> objects)
         {
             foreach (var obj in objects)
             {
-                context.Group.Add(obj);
+                await context.Group.AddAsync(obj);
             }
         }
 
@@ -70,11 +81,12 @@ namespace KIP_POST_APP.Services
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
-        public static void SendCathedraDataToDB(ServerContext context, List<Cathedra> objects)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendCathedraDataToDB(ServerContext context, List<Cathedra> objects)
         {
             foreach (var obj in objects)
             {
-                context.Cathedra.Add(obj);
+                await context.Cathedra.AddAsync(obj);
             }
         }
 
@@ -83,11 +95,12 @@ namespace KIP_POST_APP.Services
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
-        public static void SendBuildingDataToDB(ServerContext context, List<Building> objects)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendBuildingDataToDB(ServerContext context, List<Building> objects)
         {
             foreach (var obj in objects)
             {
-                context.Building.Add(obj);
+                await context.Building.AddAsync(obj);
             }
         }
 
@@ -96,11 +109,12 @@ namespace KIP_POST_APP.Services
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
-        public static void SendAudienceDataToDB(ServerContext context, List<Audience> objects)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendAudienceDataToDB(ServerContext context, List<Audience> objects)
         {
             foreach (var obj in objects)
             {
-                context.Audience.Add(obj);
+                await context.Audience.AddAsync(obj);
             }
         }
 
@@ -109,11 +123,12 @@ namespace KIP_POST_APP.Services
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
-        public static void SendProfDataToDB(ServerContext context, List<Prof> objects)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendProfDataToDB(ServerContext context, List<Prof> objects)
         {
             foreach (var obj in objects)
             {
-                context.Prof.Add(obj);
+                await context.Prof.AddAsync(obj);
             }
         }
 
@@ -122,11 +137,12 @@ namespace KIP_POST_APP.Services
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
-        public static void SendStudentScheduleDataToDB(ServerContext context, List<StudentSchedule> objects)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendStudentScheduleDataToDB(ServerContext context, List<StudentSchedule> objects)
         {
             foreach (var obj in objects)
             {
-                context.StudentSchedule.Add(obj);
+                await context.StudentSchedule.AddAsync(obj);
             }
         }
 
@@ -135,11 +151,12 @@ namespace KIP_POST_APP.Services
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
-        public static void SendProfScheduleDataToDB(ServerContext context, List<ProfSchedule> objects)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendProfScheduleDataToDB(ServerContext context, List<ProfSchedule> objects)
         {
             foreach (var obj in objects)
             {
-                context.ProfSchedule.Add(obj);
+                await context.ProfSchedule.AddAsync(obj);
             }
         }
     }

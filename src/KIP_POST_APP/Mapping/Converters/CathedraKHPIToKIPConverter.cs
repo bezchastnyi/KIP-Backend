@@ -30,13 +30,16 @@ namespace KIP_POST_APP.Mapping.Converters
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var obj = new Cathedra
+            if (string.IsNullOrEmpty(source.title))
+            {
+                return null;
+            }
+
+            return new Cathedra
             {
                 CathedraID = source.id,
                 CathedraName = source.title,
             };
-
-            return obj;
         }
     }
 }

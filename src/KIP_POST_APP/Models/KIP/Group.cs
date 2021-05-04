@@ -38,6 +38,12 @@ namespace KIP_POST_APP.Models.KIP
         public int Course { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the Schedule Is Present for the current group.
+        /// </summary>
+        /// <value>Course of group.</value>
+        public bool ScheduleIsPresent { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the id of faculties.
         /// </summary>
         /// <value>ID of faculty.</value>

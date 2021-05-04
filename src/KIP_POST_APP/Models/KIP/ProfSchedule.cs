@@ -63,6 +63,13 @@ namespace KIP_POST_APP.Models.KIP
         public int Number { get; set; }
 
         /// <summary>
+        /// Gets or sets the schedule output.
+        /// </summary>
+        /// <value>Number of para.</value>
+        [Column(TypeName = "varchar(5000)")]
+        public string Output { get; set; }
+
+        /// <summary>
         /// Gets or sets the id of teacher.
         /// </summary>
         /// <value>ID of teacher.</value>

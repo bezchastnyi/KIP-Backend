@@ -31,23 +31,27 @@ namespace KIP_POST_APP.Mapping.Converters
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var shortName = string.Empty;
-            foreach (var faculty in KIPBuildingShortNames.BuildingShortNames)
+            if (string.IsNullOrEmpty(source.title))
             {
-                if (faculty.Key == source.title)
+                return null;
+            }
+
+            var shortName = string.Empty;
+            foreach (var building in KIPBuildingShortNames.BuildingShortNames)
+            {
+                if (source.title.Contains(building.Key))
                 {
-                    shortName = faculty.Value;
+                    shortName = building.Value;
+                    break;
                 }
             }
 
-            var obj = new Building
+            return new Building
             {
                 BuildingID = source.id,
                 BuildingName = source.title,
                 BuildingShortName = shortName,
             };
-
-            return obj;
         }
     }
 }

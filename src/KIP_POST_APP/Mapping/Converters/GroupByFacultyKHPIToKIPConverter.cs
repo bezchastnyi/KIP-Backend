@@ -30,14 +30,17 @@ namespace KIP_POST_APP.Mapping.Converters
                 throw new ArgumentNullException(nameof(source));
             }
 
-            var obj = new Group
+            if (string.IsNullOrEmpty(source.title))
+            {
+                return null;
+            }
+
+            return new Group
             {
                 GroupID = source.id,
                 GroupName = source.title,
                 Course = source.course,
             };
-
-            return obj;
         }
     }
 }
