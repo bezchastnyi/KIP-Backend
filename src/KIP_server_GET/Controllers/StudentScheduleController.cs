@@ -80,15 +80,14 @@ namespace KIP_server_GET.Controllers
         /// </summary>
         /// <returns>Schedule by specific group.</returns>
         /// <param name="id">Group ID.</param>
-        /// <param name="week">Number of Week.</param>
         /// <param name="day">Number of day.</param>
         [HttpGet]
-        [Route("StudentSchedule/Group/{id:int}/Week/{week:int}/Day/{day:int}")]
-        public IActionResult Group(int id, int week, int day)
+        [Route("StudentSchedule/Group/{id:int}/Day/{day:int}")]
+        public IActionResult Group(int id, int day)
         {
-            if (this._context.StudentSchedule != null && day >= 0 && day < 5 && (week == 0 || week == 1))
+            if (this._context.StudentSchedule != null && day >= 0 && day < 5)
             {
-                var list = this._context.StudentSchedule.Where(i => i.GroupID == id && i.Week == (Week)week && i.Day == (Day)day).AsNoTracking().ToHashSet();
+                var list = this._context.StudentSchedule.Where(i => i.GroupID == id && i.Day == (Day)day).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {
@@ -104,6 +103,7 @@ namespace KIP_server_GET.Controllers
                             SubjectName = l.SubjectName,
                             Type = l.Type,
                             Number = l.Number,
+                            Week = l.Week,
                             AudienceName = l.AudienceName,
                             ProfName = l.ProfName,
                         };
@@ -128,6 +128,8 @@ namespace KIP_server_GET.Controllers
             public string Type { get; set; }
 
             public int Number { get; set; }
+
+            public Week Week { get; set; }
 
             public string AudienceName { get; set; }
 
