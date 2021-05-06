@@ -63,13 +63,6 @@ namespace KIP_POST_APP.Models.KIP
         public int Number { get; set; }
 
         /// <summary>
-        /// Gets or sets the schedule output.
-        /// </summary>
-        /// <value>Number of para.</value>
-        [Column(TypeName = "varchar(5000)")]
-        public string Output { get; set; }
-
-        /// <summary>
         /// Gets or sets the id of teacher.
         /// </summary>
         /// <value>ID of teacher.</value>
@@ -102,6 +95,12 @@ namespace KIP_POST_APP.Models.KIP
         public int? AudienceID { get; set; }
 
         /// <summary>
+        /// Gets or sets the name of audience.
+        /// </summary>
+        /// <value>ID of teacher.</value>
+        public string AudienceName { get; set; }
+
+        /// <summary>
         /// Gets or sets the audience.
         /// </summary>
         /// <value>Audience.</value>
@@ -112,6 +111,12 @@ namespace KIP_POST_APP.Models.KIP
         /// </summary>
         /// <value>ID of group.</value>
         public List<int?> GroupID { get; set; }
+
+        /// <summary>
+        /// Gets or sets names of groups.
+        /// </summary>
+        /// <value>ID of teacher.</value>
+        public List<string> GroupName { get; set; }
 
         /// <summary>
         /// Gets or sets the group.

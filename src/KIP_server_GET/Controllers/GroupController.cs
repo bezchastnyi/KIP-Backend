@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KIP_POST_APP.DB;
 using KIP_POST_APP.Models.KIP;
 using Microsoft.AspNetCore.Diagnostics;
@@ -31,6 +32,26 @@ namespace KIP_server_GET.Controllers
         }
 
         /// <summary>
+        /// All groups.
+        /// </summary>
+        /// <returns>All groups.</returns>
+        [HttpGet]
+        [Route("Group")]
+        public IActionResult Group()
+        {
+            if (this._context.Group != null)
+            {
+                return new JsonResult(this._context.Group);
+            }
+
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            this._logger.Log(LogLevel.Error, message);
+
+            return this.NotFound();
+        }
+
+        /// <summary>
         /// Group.
         /// </summary>
         /// <returns>Group.</returns>
@@ -39,27 +60,25 @@ namespace KIP_server_GET.Controllers
         [Route("Group/{id:int?}")]
         public IActionResult Group(int? id)
         {
-            if (id != null)
+            if (id != null && this._context.Group != null)
             {
-                foreach (var group in this._context.Group)
-                {
-                    if (group.GroupID == id)
-                    {
-                        return new JsonResult(group);
-                    }
-                }
+                var list = this._context.Group.Where(i => i.GroupID == id).ToHashSet();
 
-                return this.NotFound();
-            }
-            else
-            {
-                if (this._context.Group != null)
+                if (list.Count == 0)
                 {
-                    return new JsonResult(this._context.Group);
+                    return this.NotFound();
                 }
-
-                return this.NotFound();
+                else
+                {
+                    return new JsonResult(list);
+                }
             }
+
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            this._logger.Log(LogLevel.Error, message);
+
+            return this.BadRequest();
         }
 
         /// <summary>
@@ -71,16 +90,9 @@ namespace KIP_server_GET.Controllers
         [Route("Group/Faculty/{id:int?}")]
         public IActionResult Faculty(int? id)
         {
-            if (id != null)
+            if (id != null && this._context.Group != null)
             {
-                var list = new List<Group>();
-                foreach (var group in this._context.Group)
-                {
-                    if (group.FacultyID == id)
-                    {
-                        list.Add(group);
-                    }
-                }
+                var list = this._context.Group.Where(i => i.GroupID == id).ToHashSet();
 
                 if (list.Count == 0)
                 {

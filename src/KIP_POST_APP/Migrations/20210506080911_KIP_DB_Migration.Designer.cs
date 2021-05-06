@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KIP_POST_APP.Migrations
 {
     [DbContext(typeof(ServerContext))]
-    [Migration("20210503123803_KIP_DB_Migration")]
+    [Migration("20210506080911_KIP_DB_Migration")]
     partial class KIP_DB_Migration
     {
         /// <inheritdoc/>
@@ -182,6 +182,9 @@ namespace KIP_POST_APP.Migrations
                     b.Property<int?>("AudienceID")
                         .HasColumnType("integer");
 
+                    b.Property<string>("AudienceName")
+                        .HasColumnType("text");
+
                     b.Property<int?>("BuildingID")
                         .HasColumnType("integer");
 
@@ -191,11 +194,11 @@ namespace KIP_POST_APP.Migrations
                     b.Property<List<Nullable<int>>>("GroupID")
                         .HasColumnType("integer[]");
 
+                    b.Property<List<string>>("GroupName")
+                        .HasColumnType("text[]");
+
                     b.Property<int>("Number")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Output")
-                        .HasColumnType("varchar(5000)");
 
                     b.Property<int>("ProfID")
                         .HasColumnType("integer");
@@ -232,6 +235,9 @@ namespace KIP_POST_APP.Migrations
                     b.Property<int?>("AudienceID")
                         .HasColumnType("integer");
 
+                    b.Property<string>("AudienceName")
+                        .HasColumnType("text");
+
                     b.Property<int?>("BuildingID")
                         .HasColumnType("integer");
 
@@ -244,11 +250,11 @@ namespace KIP_POST_APP.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Output")
-                        .HasColumnType("varchar(5000)");
-
                     b.Property<int?>("ProfID")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ProfName")
+                        .HasColumnType("text");
 
                     b.Property<string>("SubjectName")
                         .IsRequired()

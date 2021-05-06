@@ -159,6 +159,10 @@ namespace KIP_POST_APP.Services
                                 }
                             }
                         }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(groupList1)} is null: {nameof(faculty)} - {faculty.FacultyID}/{faculty.FacultyName}");
+                        }
                     }
                 }
 
@@ -215,6 +219,10 @@ namespace KIP_POST_APP.Services
                                     kipCathedraListByFaculty.Add(cathedra);
                                 }
                             }
+                        }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(cathedraList1)} is null: {nameof(faculty)} - {faculty.FacultyID}/{faculty.FacultyName}");
                         }
                     }
                 }
@@ -312,6 +320,10 @@ namespace KIP_POST_APP.Services
                                 }
                             }
                         }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(audienceList1)} is null: {nameof(building)} - {building.BuildingID}/{building.BuildingName}");
+                        }
                     }
                 }
 
@@ -366,8 +378,43 @@ namespace KIP_POST_APP.Services
                                 {
                                     prof.CathedraID = cathedra.CathedraID;
                                     kipProfListByCathedra.Add(prof);
+
+                                    /*
+                                    prof.CathedraID = new List<int>()
+                                    {
+                                        cathedra.CathedraID,
+                                    };
+
+                                    if (kipProfListByCathedra.Count > 0)
+                                    {
+                                        var exists = false;
+
+                                        foreach (var prof_ in kipProfListByCathedra)
+                                        {
+                                            if (prof.ProfSurname == prof_.ProfSurname)
+                                            {
+                                                prof_.CathedraID.Add(cathedra.CathedraID);
+                                                exists = true;
+                                                break;
+                                            }
+                                        }
+
+                                        if (!exists)
+                                        {
+                                            kipProfListByCathedra.Add(prof);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        kipProfListByCathedra.Add(prof);
+                                    }
+                                    */
                                 }
                             }
+                        }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(profList1)} is null: {nameof(cathedra)} - {cathedra.CathedraID}/{cathedra.CathedraName}");
                         }
                     }
                 }
@@ -409,7 +456,7 @@ namespace KIP_POST_APP.Services
                     {
                         var schedule = await GetDataFromKHPIDB.GetScheduleByGroupIdAsync(group.GroupID, cancellationToken);
 
-                        if (schedule == default)
+                        if (schedule == null)
                         {
                             logger.LogWarning($"{nameof(schedule)} is null: {nameof(group)} - {group.GroupID}/{group.GroupName}");
                             continue;
@@ -427,6 +474,10 @@ namespace KIP_POST_APP.Services
                                     kipScheduleByGroup.Add(lesson);
                                 }
                             }
+                        }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(schedule1)} is null: {nameof(group)} - {group.GroupID}/{group.GroupName}");
                         }
                     }
                 }
@@ -468,7 +519,7 @@ namespace KIP_POST_APP.Services
                     {
                         var schedule = await GetDataFromKHPIDB.GetSchedule2ByGroupIdAsync(group.GroupID, cancellationToken);
 
-                        if (schedule == default)
+                        if (schedule == null)
                         {
                             logger.LogWarning($"{nameof(schedule)} is null: {nameof(group)} - {group.GroupID}/{group.GroupName}");
                             continue;
@@ -486,6 +537,10 @@ namespace KIP_POST_APP.Services
                                     kipSchedule2ByGroup.Add(lesson);
                                 }
                             }
+                        }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(schedule1)} is null: {nameof(group)} - {group.GroupID}/{group.GroupName}");
                         }
                     }
                 }
@@ -527,7 +582,7 @@ namespace KIP_POST_APP.Services
                     {
                         var schedule = await GetDataFromKHPIDB.GetScheduleByProfIdAsync(prof.ProfID, cancellationToken);
 
-                        if (schedule == default)
+                        if (schedule == null)
                         {
                             logger.LogWarning($"{nameof(schedule)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
                             continue;
@@ -545,6 +600,10 @@ namespace KIP_POST_APP.Services
                                     kipScheduleByProf.Add(lesson);
                                 }
                             }
+                        }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(schedule)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
                         }
                     }
                 }
@@ -586,7 +645,7 @@ namespace KIP_POST_APP.Services
                     {
                         var schedule = await GetDataFromKHPIDB.GetSchedule2ByProfIdAsync(prof.ProfID, cancellationToken);
 
-                        if (schedule == default)
+                        if (schedule == null)
                         {
                             logger.LogWarning($"{nameof(schedule)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
                             continue;
@@ -604,6 +663,10 @@ namespace KIP_POST_APP.Services
                                     kipSchedule2ByProf.Add(lesson);
                                 }
                             }
+                        }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(schedule)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
                         }
                     }
                 }

@@ -78,10 +78,5 @@ namespace KIP_POST_APP.Constants
         /// Student Schedule.
         /// </summary>
         public const string StudentSchedule = "StudentSchedule";
-
-        /// <summary>
-        /// Migration Table.
-        /// </summary>
-        public const string MigrationTable = "__EFMigrationsHistory";
     }
 }

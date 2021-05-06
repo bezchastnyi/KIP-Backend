@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using KIP_POST_APP.DB;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -34,13 +35,15 @@ namespace KIP_server_GET.Controllers
         /// </summary>
         /// <returns>All audienses.</returns>
         [HttpGet]
-        [Route("/Audience")]
+        [Route("Audience")]
         public IActionResult Audience()
         {
             if (this._context.Audience != null)
             {
-                var audiences = this._context.Audience;
-                return new JsonResult(audiences);
+                if (this._context.Audience != null)
+                {
+                    return new JsonResult(this._context.Audience);
+                }
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -56,21 +59,21 @@ namespace KIP_server_GET.Controllers
         /// <returns>Audienses.</returns>
         /// <param name="id">Audience ID.</param>
         [HttpGet]
-        [Route("/Audience/{id:int?}")]
+        [Route("Audience/{id:int?}")]
         public IActionResult Audience(int? id)
         {
             if (id != null)
             {
-                var audiences = this._context.Audience;
-                foreach (var unit in audiences)
-                {
-                    if (unit.AudienceID == id)
-                    {
-                        return new JsonResult(unit);
-                    }
-                }
+                var list = this._context.Audience.Where(i => i.AudienceID == id).ToHashSet();
 
-                return this.NotFound();
+                if (list.Count == 0)
+                {
+                    return this.NotFound();
+                }
+                else
+                {
+                    return new JsonResult(list);
+                }
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

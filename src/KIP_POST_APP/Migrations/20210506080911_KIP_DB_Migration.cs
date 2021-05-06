@@ -116,11 +116,12 @@ namespace KIP_POST_APP.Migrations
                     Day = table.Column<int>(type: "integer", nullable: false),
                     Type = table.Column<string>(type: "varchar(100)", nullable: false),
                     Number = table.Column<int>(type: "integer", nullable: false),
-                    Output = table.Column<string>(type: "varchar(5000)", nullable: true),
                     ProfID = table.Column<int>(type: "integer", nullable: false),
                     BuildingID = table.Column<int>(type: "integer", nullable: true),
                     AudienceID = table.Column<int>(type: "integer", nullable: true),
-                    GroupID = table.Column<List<Nullable<int>>>(type: "integer[]", nullable: true)
+                    AudienceName = table.Column<string>(type: "text", nullable: true),
+                    GroupID = table.Column<List<Nullable<int>>>(type: "integer[]", nullable: true),
+                    GroupName = table.Column<List<string>>(type: "text[]", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -185,11 +186,12 @@ namespace KIP_POST_APP.Migrations
                     Day = table.Column<int>(type: "integer", nullable: false),
                     Type = table.Column<string>(type: "varchar(100)", nullable: false),
                     Number = table.Column<int>(type: "integer", nullable: false),
-                    Output = table.Column<string>(type: "varchar(5000)", nullable: true),
                     GroupID = table.Column<int>(type: "integer", nullable: false),
                     BuildingID = table.Column<int>(type: "integer", nullable: true),
                     AudienceID = table.Column<int>(type: "integer", nullable: true),
-                    ProfID = table.Column<int>(type: "integer", nullable: true)
+                    AudienceName = table.Column<string>(type: "text", nullable: true),
+                    ProfID = table.Column<int>(type: "integer", nullable: true),
+                    ProfName = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

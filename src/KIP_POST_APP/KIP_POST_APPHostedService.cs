@@ -56,7 +56,7 @@ namespace KIP_POST_APP
         /// Gets or sets the week.
         /// </summary>
         /// <value>Week.</value>
-        public static Week Week { get; set; }
+        public static Week Week { get; set; } = Week.UnPaired;
 
         /// <inheritdoc/>
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -69,6 +69,36 @@ namespace KIP_POST_APP
                 await this.CleanDBAsync(this.config);
                 var dataList = await GetDataAsync(this.logger, this.mapper, cancellationToken);
                 await PostData.PostDataToDBAsync(this.context, dataList);
+
+                /*
+                var kipFacultyList = await MappedDataToKIPDB.GetFacultyListKIPAsync(
+                this.logger, this.mapper, cancellationToken);
+
+                var kipGroupListByFaculty = await MappedDataToKIPDB.GetGroupListByFacultyKIPAsync(
+                    kipFacultyList, this.logger, this.mapper, cancellationToken);
+
+                var kipCathedraListByFaculty = await MappedDataToKIPDB.GetCathedraListByFacultyKIPAsync(
+                    kipFacultyList, this.logger, this.mapper, cancellationToken);
+
+                var kipBuildingList = await MappedDataToKIPDB.GetBuildingListKIPAsync(
+                    this.logger, this.mapper, cancellationToken);
+
+                var kipAudienceListByBuilding = await MappedDataToKIPDB.GetAudienceListByBuildingKIPAsync(
+                    kipBuildingList, this.logger, this.mapper, cancellationToken);
+
+                var kipProfListByCathedra = await MappedDataToKIPDB.GetProfListByCathedraKIPAsync(
+                    kipCathedraListByFaculty, this.logger, this.mapper, cancellationToken);
+
+                await PostData.SendFacultyDataToDB(this.context, kipFacultyList);
+                await PostData.SendCathedraDataToDB(this.context, kipCathedraListByFaculty);
+                await PostData.SendGroupDataToDBAsync(this.context, kipGroupListByFaculty);
+                await PostData.SendBuildingDataToDB(this.context, kipBuildingList);
+                await PostData.SendAudienceDataToDB(this.context, kipAudienceListByBuilding);
+                await PostData.SendProfDataToDB(this.context, kipProfListByCathedra);
+
+                // await PostData.SendProfScheduleDataToDB(this.context, kipScheduleByProf);
+                await this.context.SaveChangesAsync();
+                */
             }
             catch (Exception e)
             {
@@ -155,28 +185,35 @@ namespace KIP_POST_APP
                 {
                     connection.Open();
 
-                    message = "Connection opened";
-                    this.logger.Log(LogLevel.Information, message);
-
-                    using (var command = new NpgsqlCommand(
-                        $"TRUNCATE TABLE " +
-                        $"\"{CustomNames.Audience}\", " +
-                        $"\"{CustomNames.Building}\", " +
-                        $"\"{CustomNames.Cathedra}\", " +
-                        $"\"{CustomNames.Faculty}\", " +
-                        $"\"{CustomNames.Group}\", " +
-                        $"\"{CustomNames.Prof}\", " +
-                        $"\"{CustomNames.ProfSchedule}\", " +
-                        $"\"{CustomNames.StudentSchedule}\", " +
-                        $"\"{CustomNames.MigrationTable}\";", connection))
+                    if (connection.State.ToString() == "Open")
                     {
-                        message = $"Executing query: {command.CommandText}";
+                        message = "Connection opened";
                         this.logger.Log(LogLevel.Information, message);
 
-                        await command.ExecuteNonQueryAsync();
+                        using (var command = new NpgsqlCommand(
+                            $"TRUNCATE TABLE " +
+                            $"\"{CustomNames.Audience}\", " +
+                            $"\"{CustomNames.Building}\", " +
+                            $"\"{CustomNames.Cathedra}\", " +
+                            $"\"{CustomNames.Faculty}\", " +
+                            $"\"{CustomNames.Group}\", " +
+                            $"\"{CustomNames.Prof}\", " +
+                            $"\"{CustomNames.ProfSchedule}\", " +
+                            $"\"{CustomNames.StudentSchedule}\";", connection))
+                        {
+                            message = $"Executing query: {command.CommandText}";
+                            this.logger.Log(LogLevel.Information, message);
 
-                        message = "DataBase is cleaned";
-                        this.logger.Log(LogLevel.Information, message);
+                            await command.ExecuteNonQueryAsync();
+
+                            message = "DataBase is cleaned";
+                            this.logger.Log(LogLevel.Information, message);
+                        }
+                    }
+                    else
+                    {
+                        message = "Unable to open connection to DB";
+                        this.logger.Log(LogLevel.Error, message);
                     }
                 }
             }

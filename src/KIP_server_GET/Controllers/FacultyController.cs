@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using KIP_POST_APP.DB;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -28,6 +30,26 @@ namespace KIP_server_GET.Controllers
         }
 
         /// <summary>
+        /// All faculties.
+        /// </summary>
+        /// <returns>All faculties.</returns>
+        [HttpGet]
+        [Route("Faculty")]
+        public IActionResult Faculty()
+        {
+            if (this._context.Faculty != null)
+            {
+                return new JsonResult(this._context.Faculty);
+            }
+
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            this._logger.Log(LogLevel.Error, message);
+
+            return this.NotFound();
+        }
+
+        /// <summary>
         /// Faculty.
         /// </summary>
         /// <returns>Faculty.</returns>
@@ -36,27 +58,25 @@ namespace KIP_server_GET.Controllers
         [Route("Faculty/{id:int?}")]
         public IActionResult Faculty(int? id)
         {
-            if (id != null)
+            if (id != null && this._context.Faculty != null)
             {
-                foreach (var faculty in this._context.Faculty)
-                {
-                    if (faculty.FacultyID == id)
-                    {
-                        return new JsonResult(faculty);
-                    }
-                }
+                var list = this._context.Faculty.Where(i => i.FacultyID == id).ToHashSet();
 
-                return this.NotFound();
-            }
-            else
-            {
-                if (this._context.Faculty != null)
+                if (list.Count == 0)
                 {
-                    return new JsonResult(this._context.Faculty);
+                    return this.NotFound();
                 }
-
-                return this.NotFound();
+                else
+                {
+                    return new JsonResult(list);
+                }
             }
+
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            this._logger.Log(LogLevel.Error, message);
+
+            return this.BadRequest();
         }
     }
 }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Net;
 using KIP_server_GET.Constants;
 using KIP_server_GET.Models;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -47,8 +44,6 @@ namespace KIP_server_GET.Controllers
         public IActionResult Home()
         {
             var info = $"{CustomNames.KIP_server_GET} version: {CustomNames.Version}";
-
-            // return JSON
             return this.Ok(info);
         }
 
@@ -60,8 +55,8 @@ namespace KIP_server_GET.Controllers
         [Route("/health")]
         public IActionResult Health()
         {
-            string status = CustomNames.Unhealthy_status;
-            using (NpgsqlConnection connection = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
+            var status = CustomNames.Unhealthy_status;
+            using (var connection = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
             {
                 try
                 {
@@ -91,22 +86,6 @@ namespace KIP_server_GET.Controllers
             this._logger.Log(LogLevel.Information, message);
 
             return this.Json(health_check);
-        }
-
-        /// <summary>
-        /// Error action.
-        /// </summary>
-        /// <returns>Error.</returns>
-        [HttpGet]
-        [Route("/Home/Error")]
-        public IActionResult Error()
-        {
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return new ObjectResult(new { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier }) { StatusCode = (int)HttpStatusCode.BadRequest };
         }
     }
 }

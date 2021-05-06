@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using KIP_POST_APP.DB;
-using KIP_POST_APP.Models.KIP;
+using KIP_POST_APP.Models.KIP.Helpers;
+using KIP_server_GET.Constants;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace KIP_server_GET.Controllers
@@ -38,33 +41,22 @@ namespace KIP_server_GET.Controllers
         [Route("ProfSchedule")]
         public IActionResult ProfSchedule()
         {
-            if (this._context.ProfSchedule != null)
-            {
-                return new JsonResult(this._context.ProfSchedule);
-            }
-
-            return this.NotFound();
+            var info = $"{CustomNames.ProfSchedule}";
+            return this.Ok(info);
         }
 
         /// <summary>
-        /// Schedule by specific teacher.
+        /// Schedule by specific prof.
         /// </summary>
         /// <returns>Schedule by specific teacher.</returns>
         /// <param name="id">Teacher ID.</param>
         [HttpGet]
-        [Route("ProfSchedule/Prof/{id:int?}")]
-        public IActionResult Prof(int? id)
+        [Route("ProfSchedule/Prof/{id:int}")]
+        public IActionResult Prof(int id)
         {
-            if (id != null)
+            if (this._context.ProfSchedule != null)
             {
-                var list = new List<ProfSchedule>();
-                foreach (var lesson in this._context.ProfSchedule)
-                {
-                    if (lesson.ProfID == id)
-                    {
-                        list.Add(lesson);
-                    }
-                }
+                var list = this._context.ProfSchedule.Where(i => i.ProfID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {
@@ -81,6 +73,65 @@ namespace KIP_server_GET.Controllers
             this._logger.Log(LogLevel.Error, message);
 
             return this.BadRequest();
+        }
+
+        /// <summary>
+        /// Schedule by specific prof.
+        /// </summary>
+        /// <returns>Schedule by specific group.</returns>
+        /// <param name="id">Group ID.</param>
+        /// <param name="week">Number of Week.</param>
+        /// <param name="day">Number of day.</param>
+        [HttpGet]
+        [Route("ProfSchedule/Prof/{id:int}/Week/{week:int}/Day/{day:int}")]
+        public IActionResult Prof(int id, int week, int day)
+        {
+            if (this._context.ProfSchedule != null && day >= 0 && day < 5 && (week == 0 || week == 1))
+            {
+                var list = this._context.ProfSchedule.Where(i => i.ProfID == id && i.Week == (Week)week && i.Day == (Day)day).AsNoTracking().ToHashSet();
+
+                if (list.Count == 0)
+                {
+                    return this.NotFound();
+                }
+                else
+                {
+                    var outList = new List<Output>();
+                    foreach (var l in list)
+                    {
+                        var output = new Output()
+                        {
+                            SubjectName = l.SubjectName,
+                            Type = l.Type,
+                            Number = l.Number,
+                            AudienceName = l.AudienceName,
+                            GroupName = l.GroupName,
+                        };
+                        outList.Add(output);
+                    }
+
+                    return new JsonResult(outList);
+                }
+            }
+
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            this._logger.Log(LogLevel.Error, message);
+
+            return this.BadRequest();
+        }
+
+        private class Output
+        {
+            public string SubjectName { get; set; }
+
+            public string Type { get; set; }
+
+            public int Number { get; set; }
+
+            public string AudienceName { get; set; }
+
+            public List<string> GroupName { get; set; }
         }
     }
 }

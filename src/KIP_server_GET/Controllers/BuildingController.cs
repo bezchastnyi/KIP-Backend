@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using KIP_POST_APP.DB;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -34,13 +35,12 @@ namespace KIP_server_GET.Controllers
         /// </summary>
         /// <returns>All buildings.</returns>
         [HttpGet]
-        [Route("/Building")]
+        [Route("Building")]
         public IActionResult Building()
         {
             if (this._context.Building != null)
             {
-                var buildings = this._context.Building;
-                return new JsonResult(buildings);
+                return new JsonResult(this._context.Building);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -56,21 +56,21 @@ namespace KIP_server_GET.Controllers
         /// <returns>Building.</returns>
         /// <param name="id">Building ID.</param>
         [HttpGet]
-        [Route("/Building/{id:int?}")]
+        [Route("Building/{id:int?}")]
         public IActionResult Building(int? id)
         {
-            if (id != null)
+            if (id != null && this._context.Building != null)
             {
-                var buildings = this._context.Building;
-                foreach (var unit in buildings)
-                {
-                    if (unit.BuildingID == id)
-                    {
-                        return new JsonResult(unit);
-                    }
-                }
+                var list = this._context.Building.Where(i => i.BuildingID == id).ToHashSet();
 
-                return this.NotFound();
+                if (list.Count == 0)
+                {
+                    return this.NotFound();
+                }
+                else
+                {
+                    return new JsonResult(list);
+                }
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

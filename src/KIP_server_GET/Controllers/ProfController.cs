@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using KIP_POST_APP.DB;
 using KIP_POST_APP.Models.KIP;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -68,35 +67,26 @@ namespace KIP_server_GET.Controllers
         /// <returns>Teacher.</returns>
         /// <param name="id">Department ID.</param>
         [HttpGet]
-        [Route("Prof/Cathedra/{id:int?}")]
-        public IActionResult Cathedra(int? id)
+        [Route("Prof/Cathedra/{id:int}")]
+        public IActionResult Cathedra(int id)
         {
-            if (id != null)
+            var list = new List<Prof>();
+            foreach (var prof in this._context.Prof)
             {
-                var list = new List<Prof>();
-                foreach (var prof in this._context.Prof)
+                if (prof.CathedraID == id)
                 {
-                    if (prof.CathedraID == id)
-                    {
-                        list.Add(prof);
-                    }
-                }
-
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-                else
-                {
-                    return new JsonResult(list);
+                    list.Add(prof);
                 }
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            if (list.Count == 0)
+            {
+                return this.NotFound();
+            }
+            else
+            {
+                return new JsonResult(list);
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using KIP_POST_APP.DB;
-using KIP_POST_APP.Models.KIP;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -31,6 +30,26 @@ namespace KIP_server_GET.Controllers
         }
 
         /// <summary>
+        /// All cathedras.
+        /// </summary>
+        /// <returns>All cathedras.</returns>
+        [HttpGet]
+        [Route("Cathedra")]
+        public IActionResult Cathedra()
+        {
+            if (this._context.Cathedra != null)
+            {
+                return new JsonResult(this._context.Cathedra);
+            }
+
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            this._logger.Log(LogLevel.Error, message);
+
+            return this.NotFound();
+        }
+
+        /// <summary>
         /// Department.
         /// </summary>
         /// <returns>Department.</returns>
@@ -39,27 +58,25 @@ namespace KIP_server_GET.Controllers
         [Route("Cathedra/{id:int?}")]
         public IActionResult Cathedra(int? id)
         {
-            if (id != null)
+            if (id != null && this._context.Cathedra != null)
             {
-                foreach (var cathedra in this._context.Cathedra)
-                {
-                    if (cathedra.CathedraID == id)
-                    {
-                        return new JsonResult(cathedra);
-                    }
-                }
+                var list = this._context.Cathedra.Where(i => i.CathedraID == id).ToHashSet();
 
-                return this.NotFound();
-            }
-            else
-            {
-                if (this._context.Cathedra != null)
+                if (list.Count == 0)
                 {
-                    return new JsonResult(this._context.Cathedra);
+                    return this.NotFound();
                 }
-
-                return this.NotFound();
+                else
+                {
+                    return new JsonResult(list);
+                }
             }
+
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            this._logger.Log(LogLevel.Error, message);
+
+            return this.BadRequest();
         }
 
         /// <summary>
@@ -71,16 +88,9 @@ namespace KIP_server_GET.Controllers
         [Route("Cathedra/Faculty/{id:int?}")]
         public IActionResult Faculty(int? id)
         {
-            if (id != null)
+            if (id != null && this._context.Cathedra != null)
             {
-                var list = new List<Cathedra>();
-                foreach (var cathedra in this._context.Cathedra)
-                {
-                    if (cathedra.FacultyID == id)
-                    {
-                        list.Add(cathedra);
-                    }
-                }
+                var list = this._context.Cathedra.Where(i => i.CathedraID == id).ToHashSet();
 
                 if (list.Count == 0)
                 {

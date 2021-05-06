@@ -63,5 +63,20 @@ namespace KIP_POST_APP.Models.KIP
         /// <value>Departments.</value>
         [ForeignKey("CathedraID")]
         public Cathedra Cathedra { get; set; }
+
+        /*
+        /// <summary>
+        /// Gets or sets the id of departments.
+        /// </summary>
+        /// <value>ID of departments.</value>
+        [Required(ErrorMessage = "CathedraID is required")]
+        public List<int> CathedraID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the departments.
+        /// </summary>
+        /// <value>Departments.</value>
+        public List<Cathedra> Cathedra { get; set; }
+        */
     }
 }
