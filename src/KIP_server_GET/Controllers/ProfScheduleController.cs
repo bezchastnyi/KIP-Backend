@@ -105,7 +105,7 @@ namespace KIP_server_GET.Controllers
                             Number = l.Number,
                             Week = l.Week,
                             AudienceName = l.AudienceName,
-                            GroupName = l.GroupName,
+                            GroupNames = l.GroupNames,
                         };
                         outList.Add(output);
                     }
@@ -133,7 +133,7 @@ namespace KIP_server_GET.Controllers
 
             public string AudienceName { get; set; }
 
-            public List<string> GroupName { get; set; }
+            public string GroupNames { get; set; }
         }
     }
 }

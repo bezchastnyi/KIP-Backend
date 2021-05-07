@@ -121,7 +121,7 @@ namespace KIP_POST_APP.Migrations
                     AudienceID = table.Column<int>(type: "integer", nullable: true),
                     AudienceName = table.Column<string>(type: "text", nullable: true),
                     GroupID = table.Column<List<Nullable<int>>>(type: "integer[]", nullable: true),
-                    GroupName = table.Column<List<string>>(type: "text[]", nullable: true)
+                    GroupNames = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

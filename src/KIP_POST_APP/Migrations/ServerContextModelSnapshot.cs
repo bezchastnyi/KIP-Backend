@@ -191,8 +191,8 @@ namespace KIP_POST_APP.Migrations
                     b.Property<List<Nullable<int>>>("GroupID")
                         .HasColumnType("integer[]");
 
-                    b.Property<List<string>>("GroupName")
-                        .HasColumnType("text[]");
+                    b.Property<string>("GroupNames")
+                        .HasColumnType("text");
 
                     b.Property<int>("Number")
                         .HasColumnType("integer");

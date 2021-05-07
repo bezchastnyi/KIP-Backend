@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KIP_POST_APP.Migrations
 {
     [DbContext(typeof(ServerContext))]
-    [Migration("20210506080911_KIP_DB_Migration")]
+    [Migration("20210507120241_KIP_DB_Migration")]
     partial class KIP_DB_Migration
     {
         /// <inheritdoc/>
@@ -194,8 +194,8 @@ namespace KIP_POST_APP.Migrations
                     b.Property<List<Nullable<int>>>("GroupID")
                         .HasColumnType("integer[]");
 
-                    b.Property<List<string>>("GroupName")
-                        .HasColumnType("text[]");
+                    b.Property<string>("GroupNames")
+                        .HasColumnType("text");
 
                     b.Property<int>("Number")
                         .HasColumnType("integer");

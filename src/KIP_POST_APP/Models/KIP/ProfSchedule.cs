@@ -116,7 +116,7 @@ namespace KIP_POST_APP.Models.KIP
         /// Gets or sets names of groups.
         /// </summary>
         /// <value>ID of teacher.</value>
-        public List<string> GroupName { get; set; }
+        public string GroupNames { get; set; }
 
         /// <summary>
         /// Gets or sets the group.

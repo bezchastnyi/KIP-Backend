@@ -182,7 +182,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 SubjectName = subjectList[i],
                                 AudienceID = audienceList[i].id,
                                 BuildingID = buildingList[i],
-                                GroupName = groupListNamesDestination,
+                                GroupNames = groupListNamesDestination[i],
                                 AudienceName = audienceList[i].name,
                             });
                         }
@@ -332,7 +332,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 BuildingID = buildingList[i],
                                 Type = typeList[i],
                                 Number = i,
-                                GroupName = groupListNamesDestination,
+                                GroupNames = groupListNamesDestination[i],
                                 AudienceName = audienceList[i].name,
                             });
                         }
@@ -482,7 +482,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 BuildingID = buildingList[i],
                                 Type = typeList[i],
                                 Number = i,
-                                GroupName = groupListNamesDestination,
+                                GroupNames = groupListNamesDestination[i],
                                 AudienceName = audienceList[i].name,
                             });
                         }
@@ -632,7 +632,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 BuildingID = buildingList[i],
                                 Type = typeList[i],
                                 Number = i,
-                                GroupName = groupListNamesDestination,
+                                GroupNames = groupListNamesDestination[i],
                                 AudienceName = audienceList[i].name,
                             });
                         }
@@ -782,7 +782,7 @@ namespace KIP_POST_APP.Mapping.Converters
                                 BuildingID = buildingList[i],
                                 Type = typeList[i],
                                 Number = i,
-                                GroupName = groupListNamesDestination,
+                                GroupNames = groupListNamesDestination[i],
                                 AudienceName = audienceList[i].name,
                             });
                         }
