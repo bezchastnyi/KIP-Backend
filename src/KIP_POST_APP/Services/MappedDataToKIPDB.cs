@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_POST_APP.Models.KIP;
@@ -78,6 +77,18 @@ namespace KIP_POST_APP.Services
         public static HashSet<ProfSchedule> ProfSchedule2List { get; set; } = null;
 
         /// <summary>
+        /// Gets or sets the list of schedule of audience for a unpaired week.
+        /// </summary>
+        /// <value>List of schedule of audience for a unpaired week.</value>
+        public static HashSet<AudienceSchedule> AudienceScheduleList { get; set; } = null;
+
+        /// <summary>
+        /// Gets or sets the list of schedule of audience for a paired week.
+        /// </summary>
+        /// <value>List of schedule of audience for a paired week.</value>
+        public static HashSet<AudienceSchedule> AudienceSchedule2List { get; set; } = null;
+
+        /// <summary>
         /// Getting list of faculty to KIP.
         /// </summary>
         /// <returns>
@@ -85,17 +96,15 @@ namespace KIP_POST_APP.Services
         /// </returns>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Faculty>> GetFacultyListKIPAsync(
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kIPFacultyList = new List<Faculty>();
 
             try
             {
-                var facultyList = await GetDataFromKHPIDB.GetFacultyListAsync(cancellationToken);
+                var facultyList = await GetDataFromKHPIDB.GetFacultyListAsync();
                 if (facultyList == null)
                 {
                     logger.LogWarning(nameof(facultyList) + " is null");
@@ -125,12 +134,10 @@ namespace KIP_POST_APP.Services
         /// <param name="kipFacultyList">The KIP faculty list.</param>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Group>> GetGroupListByFacultyKIPAsync(
             List<Faculty> kipFacultyList,
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kipGroupListByFaculty = new List<Group>();
 
@@ -140,7 +147,7 @@ namespace KIP_POST_APP.Services
                 {
                     foreach (var faculty in kipFacultyList)
                     {
-                        var groupList = await GetDataFromKHPIDB.GetGroupListByFacultyIdAsync(faculty.FacultyID, cancellationToken);
+                        var groupList = await GetDataFromKHPIDB.GetGroupListByFacultyIdAsync(faculty.FacultyID);
                         if (groupList == null)
                         {
                             logger.LogWarning($"{nameof(groupList)} is null: {nameof(faculty)} - {faculty.FacultyID}/{faculty.FacultyName}");
@@ -186,12 +193,10 @@ namespace KIP_POST_APP.Services
         /// <param name="kipFacultyList">The KIP faculty list.</param>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Cathedra>> GetCathedraListByFacultyKIPAsync(
             List<Faculty> kipFacultyList,
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kipCathedraListByFaculty = new List<Cathedra>();
 
@@ -201,7 +206,7 @@ namespace KIP_POST_APP.Services
                 {
                     foreach (var faculty in kipFacultyList)
                     {
-                        var cathedraList = await GetDataFromKHPIDB.GetCathedraListByFacultyIdAsync(faculty.FacultyID, cancellationToken);
+                        var cathedraList = await GetDataFromKHPIDB.GetCathedraListByFacultyIdAsync(faculty.FacultyID);
                         if (cathedraList == null)
                         {
                             logger.LogWarning($"{nameof(cathedraList)} is null: {nameof(faculty)} - {faculty.FacultyID}/{faculty.FacultyName}");
@@ -246,17 +251,15 @@ namespace KIP_POST_APP.Services
         /// </returns>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Building>> GetBuildingListKIPAsync(
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kipBuildingList = new List<Building>();
 
             try
             {
-                var buildingList = await GetDataFromKHPIDB.GetBuildingListAsync(cancellationToken);
+                var buildingList = await GetDataFromKHPIDB.GetBuildingListAsync();
                 if (buildingList == null)
                 {
                     logger.LogWarning(nameof(buildingList) + " is null");
@@ -286,12 +289,10 @@ namespace KIP_POST_APP.Services
         /// <param name="kipBuildingList">The KIP building list.</param>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Audience>> GetAudienceListByBuildingKIPAsync(
             List<Building> kipBuildingList,
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kipAudienceListByBuilding = new List<Audience>();
 
@@ -301,7 +302,7 @@ namespace KIP_POST_APP.Services
                 {
                     foreach (var building in kipBuildingList)
                     {
-                        var audienceList = await GetDataFromKHPIDB.GetAudienceListByBuildingIdAsync(building.BuildingID, cancellationToken);
+                        var audienceList = await GetDataFromKHPIDB.GetAudienceListByBuildingIdAsync(building.BuildingID);
                         if (audienceList == null)
                         {
                             logger.LogWarning($"{nameof(audienceList)} is null: {nameof(building)} - {building.BuildingID}/{building.BuildingName}");
@@ -347,12 +348,10 @@ namespace KIP_POST_APP.Services
         /// <param name="kipCathedraListByFaculty">The KIP department by faculty list.</param>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<Prof>> GetProfListByCathedraKIPAsync(
             List<Cathedra> kipCathedraListByFaculty,
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kipProfListByCathedra = new List<Prof>();
 
@@ -362,7 +361,7 @@ namespace KIP_POST_APP.Services
                 {
                     foreach (var cathedra in kipCathedraListByFaculty)
                     {
-                        var profList = await GetDataFromKHPIDB.GetProfListByCathedraIdAsync(cathedra.CathedraID, cancellationToken);
+                        var profList = await GetDataFromKHPIDB.GetProfListByCathedraIdAsync(cathedra.CathedraID);
                         if (profList == null)
                         {
                             logger.LogWarning($"{nameof(profList)} is null: {nameof(cathedra)} - {cathedra.CathedraID}/{cathedra.CathedraName}");
@@ -439,12 +438,10 @@ namespace KIP_POST_APP.Services
         /// <param name="kipGroupByFaculty">The KIP group by faculty list.</param>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<StudentSchedule>> GetScheduleListByGroupAsync(
             List<Group> kipGroupByFaculty,
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kipScheduleByGroup = new List<StudentSchedule>();
 
@@ -454,7 +451,7 @@ namespace KIP_POST_APP.Services
                 {
                     foreach (var group in kipGroupByFaculty)
                     {
-                        var schedule = await GetDataFromKHPIDB.GetScheduleByGroupIdAsync(group.GroupID, cancellationToken);
+                        var schedule = await GetDataFromKHPIDB.GetScheduleByGroupIdAsync(group.GroupID);
 
                         if (schedule == null)
                         {
@@ -465,12 +462,13 @@ namespace KIP_POST_APP.Services
                         var schedule1 = mapper.Map<List<StudentSchedule>>(schedule);
                         if (schedule1 != null)
                         {
-                            group.ScheduleIsPresent = true;
                             foreach (var lesson in schedule1)
                             {
                                 if (lesson != null)
                                 {
                                     lesson.GroupID = group.GroupID;
+                                    group.ScheduleIsPresent[(int)lesson.Day] = true;
+
                                     kipScheduleByGroup.Add(lesson);
                                 }
                             }
@@ -502,12 +500,10 @@ namespace KIP_POST_APP.Services
         /// <param name="kipGroupByFaculty">The KIP group by faculty list.</param>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<StudentSchedule>> GetSchedule2ListByGroupAsync(
             List<Group> kipGroupByFaculty,
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kipSchedule2ByGroup = new List<StudentSchedule>();
 
@@ -517,7 +513,7 @@ namespace KIP_POST_APP.Services
                 {
                     foreach (var group in kipGroupByFaculty)
                     {
-                        var schedule = await GetDataFromKHPIDB.GetSchedule2ByGroupIdAsync(group.GroupID, cancellationToken);
+                        var schedule = await GetDataFromKHPIDB.GetSchedule2ByGroupIdAsync(group.GroupID);
 
                         if (schedule == null)
                         {
@@ -528,12 +524,13 @@ namespace KIP_POST_APP.Services
                         var schedule1 = mapper.Map<List<StudentSchedule>>(schedule);
                         if (schedule1 != null)
                         {
-                            group.ScheduleIsPresent = true;
                             foreach (var lesson in schedule1)
                             {
                                 if (lesson != null)
                                 {
                                     lesson.GroupID = group.GroupID;
+                                    group.ScheduleIsPresent[(int)lesson.Day] = true;
+
                                     kipSchedule2ByGroup.Add(lesson);
                                 }
                             }
@@ -565,12 +562,10 @@ namespace KIP_POST_APP.Services
         /// <param name="kipProfByCathedra">The KIP teacher by department list.</param>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<ProfSchedule>> GetScheduleListByProfAsync(
             List<Prof> kipProfByCathedra,
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kipScheduleByProf = new List<ProfSchedule>();
 
@@ -580,7 +575,7 @@ namespace KIP_POST_APP.Services
                 {
                     foreach (var prof in kipProfByCathedra)
                     {
-                        var schedule = await GetDataFromKHPIDB.GetScheduleByProfIdAsync(prof.ProfID, cancellationToken);
+                        var schedule = await GetDataFromKHPIDB.GetScheduleByProfIdAsync(prof.ProfID);
 
                         if (schedule == null)
                         {
@@ -591,19 +586,20 @@ namespace KIP_POST_APP.Services
                         var schedule1 = mapper.Map<List<ProfSchedule>>(schedule);
                         if (schedule1 != null)
                         {
-                            prof.ScheduleIsPresent = true;
                             foreach (var lesson in schedule1)
                             {
                                 if (lesson != null)
                                 {
                                     lesson.ProfID = prof.ProfID;
+                                    prof.ScheduleIsPresent[(int)lesson.Day] = true;
+
                                     kipScheduleByProf.Add(lesson);
                                 }
                             }
                         }
                         else
                         {
-                            logger.LogWarning($"{nameof(schedule)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
+                            logger.LogWarning($"{nameof(schedule1)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
                         }
                     }
                 }
@@ -628,12 +624,10 @@ namespace KIP_POST_APP.Services
         /// <param name="kipProfByCathedra">The KIP teacher by department list.</param>
         /// <param name = "logger">The logger.</param>
         /// <param name= "mapper">The mapper. </param>
-        /// <param name= "cancellationToken">The cancellation token. </param>
         public static async Task<List<ProfSchedule>> GetSchedule2ListByProfAsync(
             List<Prof> kipProfByCathedra,
             ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            IMapper mapper)
         {
             var kipSchedule2ByProf = new List<ProfSchedule>();
 
@@ -643,7 +637,7 @@ namespace KIP_POST_APP.Services
                 {
                     foreach (var prof in kipProfByCathedra)
                     {
-                        var schedule = await GetDataFromKHPIDB.GetSchedule2ByProfIdAsync(prof.ProfID, cancellationToken);
+                        var schedule = await GetDataFromKHPIDB.GetSchedule2ByProfIdAsync(prof.ProfID);
 
                         if (schedule == null)
                         {
@@ -654,25 +648,156 @@ namespace KIP_POST_APP.Services
                         var schedule1 = mapper.Map<List<ProfSchedule>>(schedule);
                         if (schedule1 != null)
                         {
-                            prof.ScheduleIsPresent = true;
                             foreach (var lesson in schedule1)
                             {
                                 if (lesson != null)
                                 {
                                     lesson.ProfID = prof.ProfID;
+                                    prof.ScheduleIsPresent[(int)lesson.Day] = true;
+
                                     kipSchedule2ByProf.Add(lesson);
                                 }
                             }
                         }
                         else
                         {
-                            logger.LogWarning($"{nameof(schedule)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
+                            logger.LogWarning($"{nameof(schedule1)} is null: {nameof(prof)} - {prof.ProfID}/{prof.ProfSurname}");
                         }
                     }
                 }
 
                 ProfSchedule2List = new HashSet<ProfSchedule>(kipSchedule2ByProf);
                 return kipSchedule2ByProf;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting schedule of audience for an unpaired week to KIP.
+        /// </summary>
+        /// <returns>
+        /// Schedule of audience for an unpaired week.
+        /// </returns>
+        /// <param name="kipAudienceByBuilding">The KIP teacher by department list.</param>
+        /// <param name = "logger">The logger.</param>
+        /// <param name= "mapper">The mapper. </param>
+        public static async Task<List<AudienceSchedule>> GetScheduleListByAudienceAsync(
+            List<Audience> kipAudienceByBuilding,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper)
+        {
+            var kipScheduleByAudience = new List<AudienceSchedule>();
+
+            try
+            {
+                if (kipAudienceByBuilding != null)
+                {
+                    foreach (var audience in kipAudienceByBuilding)
+                    {
+                        var schedule = await GetDataFromKHPIDB.GetScheduleByAudienceIdAsync(audience.AudienceID);
+
+                        if (schedule == null)
+                        {
+                            logger.LogWarning($"{nameof(schedule)} is null: " +
+                                $"{nameof(audience)} - {audience.AudienceID}/{audience.AudienceName}");
+                            continue;
+                        }
+
+                        var schedule1 = mapper.Map<List<AudienceSchedule>>(schedule);
+                        if (schedule1 != null)
+                        {
+                            foreach (var lesson in schedule1)
+                            {
+                                if (lesson != null)
+                                {
+                                    lesson.BuildingID = audience.BuildingID;
+                                    lesson.AudienceID = audience.AudienceID;
+                                    audience.ScheduleIsPresent[(int)lesson.Day] = true;
+
+                                    kipScheduleByAudience.Add(lesson);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(schedule1)} is null: " +
+                                $"{nameof(audience)} - {audience.AudienceID}/{audience.AudienceName}");
+                        }
+                    }
+                }
+
+                AudienceScheduleList = new HashSet<AudienceSchedule>(kipScheduleByAudience);
+                return kipScheduleByAudience;
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message + ": " + e.StackTrace);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Getting schedule of audience for a paired week to KIP.
+        /// </summary>
+        /// <returns>
+        /// Schedule of audience for a paired week.
+        /// </returns>
+        /// <param name="kipAudienceByBuilding">The KIP teacher by department list.</param>
+        /// <param name = "logger">The logger.</param>
+        /// <param name= "mapper">The mapper. </param>
+        public static async Task<List<AudienceSchedule>> GetSchedule2ListByAudienceAsync(
+            List<Audience> kipAudienceByBuilding,
+            ILogger<KIP_POST_APPHostedService> logger,
+            IMapper mapper)
+        {
+            var kipSchedule2ByAudience = new List<AudienceSchedule>();
+
+            try
+            {
+                if (kipAudienceByBuilding != null)
+                {
+                    foreach (var audience in kipAudienceByBuilding)
+                    {
+                        var schedule = await GetDataFromKHPIDB.GetSchedule2ByAudienceIdAsync(audience.AudienceID);
+
+                        if (schedule == null)
+                        {
+                            logger.LogWarning($"{nameof(schedule)} is null: " +
+                                $"{nameof(audience)} - {audience.AudienceID}/{audience.AudienceName}");
+                            continue;
+                        }
+
+                        var schedule1 = mapper.Map<List<AudienceSchedule>>(schedule);
+                        if (schedule1 != null)
+                        {
+                            foreach (var lesson in schedule1)
+                            {
+                                if (lesson != null)
+                                {
+                                    lesson.BuildingID = audience.BuildingID;
+                                    lesson.AudienceID = audience.AudienceID;
+                                    audience.ScheduleIsPresent[(int)lesson.Day] = true;
+
+                                    kipSchedule2ByAudience.Add(lesson);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            logger.LogWarning($"{nameof(schedule1)} is null: " +
+                                $"{nameof(audience)} - {audience.AudienceID}/{audience.AudienceName}");
+                        }
+                    }
+                }
+
+                AudienceSchedule2List = new HashSet<AudienceSchedule>(kipSchedule2ByAudience);
+                return kipSchedule2ByAudience;
             }
             catch (Exception e)
             {

@@ -67,7 +67,7 @@ namespace KIP_POST_APP
             try
             {
                 await this.CleanDBAsync(this.config);
-                var dataList = await GetDataAsync(this.logger, this.mapper, cancellationToken);
+                var dataList = await GetDataAsync(this.logger, this.mapper);
                 await PostData.PostDataToDBAsync(this.context, dataList);
 
                 /*
@@ -120,46 +120,52 @@ namespace KIP_POST_APP
             List<StudentSchedule> studentScheduleList,
             List<StudentSchedule> studentSchedule2List,
             List<ProfSchedule> profScheduleList,
-            List<ProfSchedule> profSchedule2List)>
-            GetDataAsync(
-            ILogger<KIP_POST_APPHostedService> logger,
-            IMapper mapper,
-            CancellationToken cancellationToken)
+            List<ProfSchedule> profSchedule2List,
+            List<AudienceSchedule> AudienceScheduleList,
+            List<AudienceSchedule> AudienceSchedule2List)>
+            GetDataAsync(ILogger<KIP_POST_APPHostedService> logger, IMapper mapper)
         {
-            var kipFacultyList = await MappedDataToKIPDB.GetFacultyListKIPAsync(
-                logger, mapper, cancellationToken);
+            var kipFacultyList = await MappedDataToKIPDB.GetFacultyListKIPAsync(logger, mapper);
 
             var kipGroupListByFaculty = await MappedDataToKIPDB.GetGroupListByFacultyKIPAsync(
-                kipFacultyList, logger, mapper, cancellationToken);
+                kipFacultyList, logger, mapper);
 
             var kipCathedraListByFaculty = await MappedDataToKIPDB.GetCathedraListByFacultyKIPAsync(
-                kipFacultyList, logger, mapper, cancellationToken);
+                kipFacultyList, logger, mapper);
 
-            var kipBuildingList = await MappedDataToKIPDB.GetBuildingListKIPAsync(
-                logger, mapper, cancellationToken);
+            var kipBuildingList = await MappedDataToKIPDB.GetBuildingListKIPAsync(logger, mapper);
 
             var kipAudienceListByBuilding = await MappedDataToKIPDB.GetAudienceListByBuildingKIPAsync(
-                kipBuildingList, logger, mapper, cancellationToken);
+                kipBuildingList, logger, mapper);
 
             var kipProfListByCathedra = await MappedDataToKIPDB.GetProfListByCathedraKIPAsync(
-                kipCathedraListByFaculty, logger, mapper, cancellationToken);
+                kipCathedraListByFaculty, logger, mapper);
 
             Week = Week.UnPaired;
             var kipScheduleByProf = await MappedDataToKIPDB.GetScheduleListByProfAsync(
-                kipProfListByCathedra, logger, mapper, cancellationToken);
+                kipProfListByCathedra, logger, mapper);
 
             var kipScheduleByGroup = await MappedDataToKIPDB.GetScheduleListByGroupAsync(
-                kipGroupListByFaculty, logger, mapper, cancellationToken);
+                kipGroupListByFaculty, logger, mapper);
+
+            var kipScheduleByAudience = await MappedDataToKIPDB.GetScheduleListByAudienceAsync(
+                kipAudienceListByBuilding, logger, mapper);
 
             Week = Week.Paired;
             var kipSchedule2ByProf = await MappedDataToKIPDB.GetSchedule2ListByProfAsync(
-                kipProfListByCathedra, logger, mapper, cancellationToken);
+                kipProfListByCathedra, logger, mapper);
 
             var kipSchedule2ByGroup = await MappedDataToKIPDB.GetSchedule2ListByGroupAsync(
-                kipGroupListByFaculty, logger, mapper, cancellationToken);
+                kipGroupListByFaculty, logger, mapper);
 
-            return (kipFacultyList, kipGroupListByFaculty, kipCathedraListByFaculty, kipBuildingList, kipAudienceListByBuilding,
-                    kipProfListByCathedra, kipScheduleByGroup, kipSchedule2ByGroup, kipScheduleByProf, kipSchedule2ByProf);
+            var kipSchedule2ByAudience = await MappedDataToKIPDB.GetSchedule2ListByAudienceAsync(
+                kipAudienceListByBuilding, logger, mapper);
+
+            return (kipFacultyList, kipGroupListByFaculty, kipCathedraListByFaculty,
+                    kipBuildingList, kipAudienceListByBuilding,
+                    kipProfListByCathedra, kipScheduleByGroup, kipSchedule2ByGroup,
+                    kipScheduleByProf, kipSchedule2ByProf,
+                    kipScheduleByAudience, kipSchedule2ByAudience);
         }
 
         private void StopApplication()
@@ -198,6 +204,7 @@ namespace KIP_POST_APP
                             $"\"{CustomNames.Faculty}\", " +
                             $"\"{CustomNames.Group}\", " +
                             $"\"{CustomNames.Prof}\", " +
+                            $"\"{CustomNames.AudienceSchedule}\", " +
                             $"\"{CustomNames.ProfSchedule}\", " +
                             $"\"{CustomNames.StudentSchedule}\";", connection))
                         {

@@ -2,6 +2,7 @@
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -48,7 +49,15 @@ namespace KIP_POST_APP.Models.KIP
         /// Gets or sets a value indicating whether the Schedule Is Present for the current prof.
         /// </summary>
         /// <value>Course of group.</value>
-        public bool ScheduleIsPresent { get; set; } = false;
+        public List<bool> ScheduleIsPresent { get; set; } = new List<bool>()
+        {
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+        };
 
         /// <summary>
         /// Gets or sets the id of departments.

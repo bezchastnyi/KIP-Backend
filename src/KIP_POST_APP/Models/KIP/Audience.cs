@@ -2,6 +2,7 @@
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -35,6 +36,20 @@ namespace KIP_POST_APP.Models.KIP
         /// <value>Number of seats in audiences.</value>
         [Range(0, 1000, ErrorMessage = "NumberOfSeats must be between 0 and 1000")]
         public int? NumberOfSeats { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the Schedule Is Present for the current group.
+        /// </summary>
+        /// <value>Course of group.</value>
+        public List<bool> ScheduleIsPresent { get; set; } = new List<bool>()
+        {
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+        };
 
         /// <summary>
         /// Gets or sets the id of building.

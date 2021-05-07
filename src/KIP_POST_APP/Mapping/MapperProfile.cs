@@ -20,14 +20,32 @@ namespace KIP_POST_APP.Mapping
         /// </summary>
         public MapperProfile()
         {
-            this.CreateMap<FacultyKHPI, Faculty>().ConvertUsing<FacultyKHPIToKIPConverter>();
-            this.CreateMap<CathedraKHPI, Cathedra>().ConvertUsing<CathedraKHPIToKIPConverter>();
-            this.CreateMap<GroupKHPI, Group>().ConvertUsing<GroupByFacultyKHPIToKIPConverter>();
-            this.CreateMap<BuildingKHPI, Building>().ConvertUsing<BuildingKHPIToKIPConverter>();
-            this.CreateMap<AudienceKHPI, Audience>().ConvertUsing<AudienceKHPIToKIPConverter>();
-            this.CreateMap<ProfKHPI, Prof>().ConvertUsing<ProfKHPIToKIPConverter>();
-            this.CreateMap<ScheduleByGroupKHPI, List<StudentSchedule>>().ConvertUsing<ScheduleByGroupKHPIToKIPConverter>();
-            this.CreateMap<ScheduleByProfKHPI, List<ProfSchedule>>().ConvertUsing<ScheduleByProfKHPIToKIPConverter>();
+            this.CreateMap<FacultyKHPI, Faculty>()
+                .ConvertUsing<FacultyKHPIToKIPConverter>();
+
+            this.CreateMap<CathedraKHPI, Cathedra>()
+                .ConvertUsing<CathedraKHPIToKIPConverter>();
+
+            this.CreateMap<GroupKHPI, Group>()
+                .ConvertUsing<GroupByFacultyKHPIToKIPConverter>();
+
+            this.CreateMap<BuildingKHPI, Building>()
+                .ConvertUsing<BuildingKHPIToKIPConverter>();
+
+            this.CreateMap<AudienceKHPI, Audience>()
+                .ConvertUsing<AudienceKHPIToKIPConverter>();
+
+            this.CreateMap<ProfKHPI, Prof>()
+                .ConvertUsing<ProfKHPIToKIPConverter>();
+
+            this.CreateMap<ScheduleByGroupKHPI, List<StudentSchedule>>()
+                .ConvertUsing<ScheduleByGroupKHPIToKIPConverter>();
+
+            this.CreateMap<ScheduleByProfKHPI, List<ProfSchedule>>()
+                .ConvertUsing<ScheduleByProfKHPIToKIPConverter>();
+
+            this.CreateMap<ScheduleByAudienceKHPI, List<AudienceSchedule>>()
+                .ConvertUsing<ScheduleByAudienceKHPIToKIPConverter>();
         }
     }
 }

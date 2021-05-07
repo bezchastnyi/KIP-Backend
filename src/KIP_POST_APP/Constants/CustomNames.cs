@@ -78,5 +78,10 @@ namespace KIP_POST_APP.Constants
         /// Student Schedule.
         /// </summary>
         public const string StudentSchedule = "StudentSchedule";
+
+        /// <summary>
+        /// Audience Schedule.
+        /// </summary>
+        public const string AudienceSchedule = "AudienceSchedule";
     }
 }

@@ -17,46 +17,47 @@ namespace KIP_server_GET.Controllers
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [Controller]
-    public class ProfScheduleController : Controller
+    public class AudienceScheduleController : Controller
     {
         private readonly ServerContext _context;
         private readonly ILogger<HomeController> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProfScheduleController"/> class.
+        /// Initializes a new instance of the <see cref="AudienceScheduleController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public ProfScheduleController(ILogger<HomeController> logger, ServerContext context)
+        public AudienceScheduleController(ILogger<HomeController> logger, ServerContext context)
         {
             this._context = context;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
-        /// Schedule by teacher.
+        /// Schedule by audience.
         /// </summary>
-        /// <returns>Schedule by teacher.</returns>
+        /// <returns>Schedule by audience.</returns>
         [HttpGet]
-        [Route("ProfSchedule")]
-        public IActionResult ProfSchedule()
+        [Route("AudienceSchedule")]
+        public IActionResult AudienceSchedule()
         {
-            var info = $"{CustomNames.ProfSchedule}";
+            var info = $"{CustomNames.AudienceSchedule}";
             return this.Ok(info);
         }
 
         /// <summary>
-        /// Schedule by specific prof.
+        /// Schedule by specific audience.
         /// </summary>
-        /// <returns>Schedule by specific teacher.</returns>
-        /// <param name="id">Teacher ID.</param>
+        /// <returns>Schedule by specific audience.</returns>
+        /// <param name="id">Audience ID.</param>
         [HttpGet]
-        [Route("ProfSchedule/Prof/{id:int}")]
-        public IActionResult Prof(int id)
+        [Route("AudienceSchedule/Audience/{id:int}")]
+        public IActionResult Audience(int id)
         {
-            if (this._context.ProfSchedule != null)
+            if (this._context.AudienceSchedule != null)
             {
-                var list = this._context.ProfSchedule.Where(i => i.ProfID == id).AsNoTracking().ToHashSet();
+                var list = this._context.AudienceSchedule
+                    .Where(i => i.AudienceID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {
@@ -76,18 +77,19 @@ namespace KIP_server_GET.Controllers
         }
 
         /// <summary>
-        /// Schedule by specific prof.
+        /// Schedule by specific audience.
         /// </summary>
-        /// <returns>Schedule by specific group.</returns>
-        /// <param name="id">Group ID.</param>
+        /// <returns>Schedule by specific audience.</returns>
+        /// <param name="id">Audience ID.</param>
         /// <param name="day">Number of day.</param>
         [HttpGet]
-        [Route("ProfSchedule/Prof/{id:int}/Day/{day:int}")]
-        public IActionResult Prof(int id, int day)
+        [Route("AudienceSchedule/Audience/{id:int}/Day/{day:int}")]
+        public IActionResult Audience(int id, int day)
         {
-            if (this._context.ProfSchedule != null && day >= 0 && day < 6)
+            if (this._context.AudienceSchedule != null && day >= 0 && day < 6)
             {
-                var list = this._context.ProfSchedule.Where(i => i.ProfID == id && i.Day == (Day)day).AsNoTracking().ToHashSet();
+                var list = this._context.AudienceSchedule
+                    .Where(i => i.AudienceID == id && i.Day == (Day)day).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {
@@ -104,8 +106,8 @@ namespace KIP_server_GET.Controllers
                             Type = l.Type,
                             Number = l.Number,
                             Week = l.Week,
-                            AudienceName = l.AudienceName,
                             GroupNames = l.GroupNames,
+                            ProfName = l.ProfName,
                         };
                         outList.Add(output);
                     }
@@ -131,9 +133,9 @@ namespace KIP_server_GET.Controllers
 
             public Week Week { get; set; }
 
-            public string AudienceName { get; set; }
-
             public string GroupNames { get; set; }
+
+            public string ProfName { get; set; }
         }
     }
 }

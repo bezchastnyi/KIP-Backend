@@ -37,11 +37,68 @@ namespace KIP_POST_APP.Migrations
                     b.Property<int?>("NumberOfSeats")
                         .HasColumnType("integer");
 
+                    b.Property<List<bool>>("ScheduleIsPresent")
+                        .HasColumnType("boolean[]");
+
                     b.HasKey("AudienceID");
 
                     b.HasIndex("BuildingID");
 
                     b.ToTable("Audience");
+                });
+
+            modelBuilder.Entity("KIP_POST_APP.Models.KIP.AudienceSchedule", b =>
+                {
+                    b.Property<int>("AudienceScheduleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+
+                    b.Property<int>("AudienceID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BuildingID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Day")
+                        .HasColumnType("integer");
+
+                    b.Property<List<Nullable<int>>>("GroupID")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.Property<string>("GroupNames")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ProfID")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ProfName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SubjectName")
+                        .IsRequired()
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Week")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AudienceScheduleID");
+
+                    b.HasIndex("AudienceID");
+
+                    b.HasIndex("BuildingID");
+
+                    b.HasIndex("ProfID");
+
+                    b.ToTable("AudienceSchedule");
                 });
 
             modelBuilder.Entity("KIP_POST_APP.Models.KIP.Building", b =>
@@ -113,6 +170,9 @@ namespace KIP_POST_APP.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
+                    b.Property<int?>("AudienceScheduleID")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Course")
                         .HasColumnType("integer");
 
@@ -126,10 +186,12 @@ namespace KIP_POST_APP.Migrations
                     b.Property<int?>("ProfScheduleID")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("ScheduleIsPresent")
-                        .HasColumnType("boolean");
+                    b.Property<List<bool>>("ScheduleIsPresent")
+                        .HasColumnType("boolean[]");
 
                     b.HasKey("GroupID");
+
+                    b.HasIndex("AudienceScheduleID");
 
                     b.HasIndex("FacultyID");
 
@@ -159,8 +221,8 @@ namespace KIP_POST_APP.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
-                    b.Property<bool>("ScheduleIsPresent")
-                        .HasColumnType("boolean");
+                    b.Property<List<bool>>("ScheduleIsPresent")
+                        .HasColumnType("boolean[]");
 
                     b.HasKey("ProfID");
 
@@ -288,6 +350,31 @@ namespace KIP_POST_APP.Migrations
                     b.Navigation("Building");
                 });
 
+            modelBuilder.Entity("KIP_POST_APP.Models.KIP.AudienceSchedule", b =>
+                {
+                    b.HasOne("KIP_POST_APP.Models.KIP.Audience", "Audience")
+                        .WithMany()
+                        .HasForeignKey("AudienceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KIP_POST_APP.Models.KIP.Building", "Building")
+                        .WithMany()
+                        .HasForeignKey("BuildingID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KIP_POST_APP.Models.KIP.Prof", "Prof")
+                        .WithMany()
+                        .HasForeignKey("ProfID");
+
+                    b.Navigation("Audience");
+
+                    b.Navigation("Building");
+
+                    b.Navigation("Prof");
+                });
+
             modelBuilder.Entity("KIP_POST_APP.Models.KIP.Cathedra", b =>
                 {
                     b.HasOne("KIP_POST_APP.Models.KIP.Faculty", "Faculty")
@@ -301,6 +388,10 @@ namespace KIP_POST_APP.Migrations
 
             modelBuilder.Entity("KIP_POST_APP.Models.KIP.Group", b =>
                 {
+                    b.HasOne("KIP_POST_APP.Models.KIP.AudienceSchedule", null)
+                        .WithMany("Group")
+                        .HasForeignKey("AudienceScheduleID");
+
                     b.HasOne("KIP_POST_APP.Models.KIP.Faculty", "Faculty")
                         .WithMany()
                         .HasForeignKey("FacultyID")
@@ -375,6 +466,11 @@ namespace KIP_POST_APP.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("Prof");
+                });
+
+            modelBuilder.Entity("KIP_POST_APP.Models.KIP.AudienceSchedule", b =>
+                {
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("KIP_POST_APP.Models.KIP.ProfSchedule", b =>

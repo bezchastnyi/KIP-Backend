@@ -31,7 +31,9 @@ namespace KIP_POST_APP.Services
             List<StudentSchedule> studentScheduleList,
             List<StudentSchedule> studentSchedule2List,
             List<ProfSchedule> profScheduleList,
-            List<ProfSchedule> profSchedule2List)
+            List<ProfSchedule> profSchedule2List,
+            List<AudienceSchedule> AudienceScheduleList,
+            List<AudienceSchedule> AudienceSchedule2List)
             dataList)
         {
             await SendFacultyDataToDB(context, dataList.facultyList);
@@ -44,6 +46,8 @@ namespace KIP_POST_APP.Services
             await SendStudentScheduleDataToDB(context, dataList.studentSchedule2List);
             await SendProfScheduleDataToDB(context, dataList.profScheduleList);
             await SendProfScheduleDataToDB(context, dataList.profSchedule2List);
+            await SendAudienceScheduleDataToDB(context, dataList.AudienceScheduleList);
+            await SendAudienceScheduleDataToDB(context, dataList.AudienceSchedule2List);
 
             await context.SaveChangesAsync();
         }
@@ -157,6 +161,20 @@ namespace KIP_POST_APP.Services
             foreach (var obj in objects)
             {
                 await context.ProfSchedule.AddAsync(obj);
+            }
+        }
+
+        /// <summary>
+        /// Sending data about schedule of audience to the database.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name = "objects">The objects.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendAudienceScheduleDataToDB(ServerContext context, List<AudienceSchedule> objects)
+        {
+            foreach (var obj in objects)
+            {
+                await context.AudienceSchedule.AddAsync(obj);
             }
         }
     }

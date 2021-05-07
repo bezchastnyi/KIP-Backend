@@ -85,7 +85,7 @@ namespace KIP_server_GET.Controllers
         [Route("StudentSchedule/Group/{id:int}/Day/{day:int}")]
         public IActionResult Group(int id, int day)
         {
-            if (this._context.StudentSchedule != null && day >= 0 && day < 5)
+            if (this._context.StudentSchedule != null && day >= 0 && day < 6)
             {
                 var list = this._context.StudentSchedule.Where(i => i.GroupID == id && i.Day == (Day)day).AsNoTracking().ToHashSet();
 

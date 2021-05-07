@@ -4,6 +4,7 @@ using KIP_POST_APP.DB;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace KIP_server_GET.Controllers
@@ -13,7 +14,6 @@ namespace KIP_server_GET.Controllers
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [Controller]
-    [Route("/[controller]/[action]")]
     public class BuildingController : Controller
     {
         private readonly ServerContext _context;
@@ -40,7 +40,7 @@ namespace KIP_server_GET.Controllers
         {
             if (this._context.Building != null)
             {
-                return new JsonResult(this._context.Building);
+                return new JsonResult(this._context.Building.AsNoTracking());
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -56,12 +56,12 @@ namespace KIP_server_GET.Controllers
         /// <returns>Building.</returns>
         /// <param name="id">Building ID.</param>
         [HttpGet]
-        [Route("Building/{id:int?}")]
-        public IActionResult Building(int? id)
+        [Route("Building/{id:int}")]
+        public IActionResult Building(int id)
         {
-            if (id != null && this._context.Building != null)
+            if (this._context.Building != null)
             {
-                var list = this._context.Building.Where(i => i.BuildingID == id).ToHashSet();
+                var list = this._context.Building.Where(i => i.BuildingID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {

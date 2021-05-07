@@ -62,6 +62,12 @@ namespace KIP_POST_APP.DB
         /// </summary>
         /// <value>Schedule by teacher.</value>
         public DbSet<ProfSchedule> ProfSchedule { get; set; }
+
+        /// <summary>
+        /// Gets or sets the schedule by audience.
+        /// </summary>
+        /// <value>Schedule by audience.</value>
+        public DbSet<AudienceSchedule> AudienceSchedule { get; set; }
     }
 }
 
