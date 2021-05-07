@@ -6,6 +6,7 @@ using KIP_POST_APP.Models.KIP;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace KIP_server_GET.Controllers
@@ -41,7 +42,7 @@ namespace KIP_server_GET.Controllers
         {
             if (this._context.Group != null)
             {
-                return new JsonResult(this._context.Group);
+                return new JsonResult(this._context.Group.AsNoTracking());
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -57,12 +58,12 @@ namespace KIP_server_GET.Controllers
         /// <returns>Group.</returns>
         /// <param name="id">Group ID.</param>
         [HttpGet]
-        [Route("Group/{id:int?}")]
-        public IActionResult Group(int? id)
+        [Route("Group/{id:int}")]
+        public IActionResult Group(int id)
         {
-            if (id != null && this._context.Group != null)
+            if (this._context.Group != null)
             {
-                var list = this._context.Group.Where(i => i.GroupID == id).ToHashSet();
+                var list = this._context.Group.Where(i => i.GroupID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {
@@ -87,12 +88,12 @@ namespace KIP_server_GET.Controllers
         /// <returns>Group.</returns>
         /// <param name="id">Faculty ID.</param>
         [HttpGet]
-        [Route("Group/Faculty/{id:int?}")]
-        public IActionResult Faculty(int? id)
+        [Route("Group/Faculty/{id:int}")]
+        public IActionResult Faculty(int id)
         {
-            if (id != null && this._context.Group != null)
+            if (this._context.Group != null)
             {
-                var list = this._context.Group.Where(i => i.GroupID == id).ToHashSet();
+                var list = this._context.Group.Where(i => i.FacultyID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {

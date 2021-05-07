@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using KIP_POST_APP.DB;
-using KIP_POST_APP.Models.KIP;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace KIP_server_GET.Controllers
@@ -35,30 +36,28 @@ namespace KIP_server_GET.Controllers
         /// <returns>Teacher.</returns>
         /// <param name="id">Teacher ID.</param>
         [HttpGet]
-        [Route("Prof/{id:int?}")]
-        public IActionResult Prof(int? id)
+        [Route("Prof/{id:int}")]
+        public IActionResult Prof(int id)
         {
-            if (id != null)
+            if (this._context.Prof != null)
             {
-                foreach (var prof in this._context.Prof)
-                {
-                    if (prof.ProfID == id)
-                    {
-                        return new JsonResult(prof);
-                    }
-                }
+                var list = this._context.Prof.Where(i => i.ProfID == id).AsNoTracking().ToHashSet();
 
-                return this.NotFound();
-            }
-            else
-            {
-                if (this._context.Prof != null)
+                if (list.Count == 0)
                 {
-                    return new JsonResult(this._context.Prof);
+                    return this.NotFound();
                 }
-
-                return this.NotFound();
+                else
+                {
+                    return new JsonResult(list);
+                }
             }
+
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            this._logger.Log(LogLevel.Error, message);
+
+            return this.BadRequest();
         }
 
         /// <summary>
@@ -70,23 +69,25 @@ namespace KIP_server_GET.Controllers
         [Route("Prof/Cathedra/{id:int}")]
         public IActionResult Cathedra(int id)
         {
-            var list = new List<Prof>();
-            foreach (var prof in this._context.Prof)
+            if (this._context.Prof != null)
             {
-                if (prof.CathedraID == id)
+                var list = this._context.Prof.Where(i => i.CathedraID == id).AsNoTracking().ToHashSet();
+
+                if (list.Count == 0)
                 {
-                    list.Add(prof);
+                    return this.NotFound();
+                }
+                else
+                {
+                    return new JsonResult(list);
                 }
             }
 
-            if (list.Count == 0)
-            {
-                return this.NotFound();
-            }
-            else
-            {
-                return new JsonResult(list);
-            }
+            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
+            this._logger.Log(LogLevel.Error, message);
+
+            return this.BadRequest();
         }
     }
 }

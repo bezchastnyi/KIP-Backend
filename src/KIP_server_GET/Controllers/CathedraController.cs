@@ -4,6 +4,7 @@ using KIP_POST_APP.DB;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace KIP_server_GET.Controllers
@@ -39,7 +40,7 @@ namespace KIP_server_GET.Controllers
         {
             if (this._context.Cathedra != null)
             {
-                return new JsonResult(this._context.Cathedra);
+                return new JsonResult(this._context.Cathedra.AsNoTracking());
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -55,12 +56,12 @@ namespace KIP_server_GET.Controllers
         /// <returns>Department.</returns>
         /// <param name="id">Department ID.</param>
         [HttpGet]
-        [Route("Cathedra/{id:int?}")]
-        public IActionResult Cathedra(int? id)
+        [Route("Cathedra/{id:int}")]
+        public IActionResult Cathedra(int id)
         {
-            if (id != null && this._context.Cathedra != null)
+            if (this._context.Cathedra != null)
             {
-                var list = this._context.Cathedra.Where(i => i.CathedraID == id).ToHashSet();
+                var list = this._context.Cathedra.Where(i => i.CathedraID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {
@@ -85,12 +86,12 @@ namespace KIP_server_GET.Controllers
         /// <returns>Department.</returns>
         /// <param name="id">Faculty ID.</param>
         [HttpGet]
-        [Route("Cathedra/Faculty/{id:int?}")]
-        public IActionResult Faculty(int? id)
+        [Route("Cathedra/Faculty/{id:int}")]
+        public IActionResult Faculty(int id)
         {
-            if (id != null && this._context.Cathedra != null)
+            if (this._context.Cathedra != null)
             {
-                var list = this._context.Cathedra.Where(i => i.CathedraID == id).ToHashSet();
+                var list = this._context.Cathedra.Where(i => i.FacultyID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {

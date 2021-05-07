@@ -4,6 +4,7 @@ using KIP_POST_APP.DB;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace KIP_server_GET.Controllers
@@ -39,7 +40,7 @@ namespace KIP_server_GET.Controllers
         {
             if (this._context.Faculty != null)
             {
-                return new JsonResult(this._context.Faculty);
+                return new JsonResult(this._context.Faculty.AsNoTracking());
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -55,12 +56,12 @@ namespace KIP_server_GET.Controllers
         /// <returns>Faculty.</returns>
         /// <param name="id">Faculty ID.</param>
         [HttpGet]
-        [Route("Faculty/{id:int?}")]
-        public IActionResult Faculty(int? id)
+        [Route("Faculty/{id:int}")]
+        public IActionResult Faculty(int id)
         {
-            if (id != null && this._context.Faculty != null)
+            if (this._context.Faculty != null)
             {
-                var list = this._context.Faculty.Where(i => i.FacultyID == id).ToHashSet();
+                var list = this._context.Faculty.Where(i => i.FacultyID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {
