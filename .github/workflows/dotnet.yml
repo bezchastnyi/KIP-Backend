@@ -2,9 +2,9 @@ name: .NET
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, KIP-feature/v1.0, release/v1.0 ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, KIP-feature/v1.0, release/v1.0 ]
 
 jobs:
   build:
