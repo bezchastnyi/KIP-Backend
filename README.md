@@ -1,6 +1,6 @@
 # KIP-Backend-DB
 
-![KIP](https://user-images.githubusercontent.com/68736883/119661187-b8095f00-be38-11eb-856d-e4a49b695e19.png)
+![KIP](https://user-images.githubusercontent.com/68736883/119661411-f30b9280-be38-11eb-82ba-1a273a00db5d.png)
 
 KIP - KhPI in phone. Make learning easier (http://surl.li/tpjw)!
 Кращий помічник студента ХПІ!
