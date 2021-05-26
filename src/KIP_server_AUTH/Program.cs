@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace KIP_server_GET
+namespace KIP_auth_mode
 {
     /// <summary>
-    /// The asp net server class.
+    /// The console app class.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     public class Program
     {
         /// <summary>
@@ -49,12 +47,3 @@ namespace KIP_server_GET
         }
     }
 }
-
-
-/*
-    GCP DEPLOY
-
-    cd \Users\IT\source\Repos\KIP-Backend-DB\KIP_server_GET
-    gcloud builds submit --tag gcr.io/khpi-in-phone-307713/kipserverget
-    gcloud run deploy --image gcr.io/khpi-in-phone-307713/kipserverget --platform managed
- */
