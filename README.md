@@ -39,7 +39,7 @@ P. S. Вітаються будь-які пропозиції з приводу 
 Ваша команда KIP !!!
 Зворотній зв'язок: kip.ntu.khpi@gmail.com
 
-версія 1.0.0
+версія 1.0
 Останнє оновлення 13 травня 2021 р
 Розмір файлу 7,4 MB
 Розробник: Команда KIP
@@ -47,3 +47,20 @@ P. S. Вітаються будь-які пропозиції з приводу 
 Кращий помічник студента ХПІ!
 
 ![image](https://user-images.githubusercontent.com/68736883/119661269-c9526b80-be38-11eb-8c4a-f2ee89ee3d69.png)
+
+
+---------------------------------------------------------------------------------------------------------------
+
+# KIP_server_GET
+
+![kip GET](https://user-images.githubusercontent.com/68736883/119661595-1df5e680-be39-11eb-9ea4-2ccefcdba069.gif)
+
+
+# KIP_POST_APP
+
+![kip post](https://user-images.githubusercontent.com/68736883/119661657-2f3ef300-be39-11eb-8317-66a9e9a6ad3b.gif)
+
+
+# KIP_DB
+
+![kip db](https://user-images.githubusercontent.com/68736883/119661688-36660100-be39-11eb-9199-cd1f51530cd1.gif)
