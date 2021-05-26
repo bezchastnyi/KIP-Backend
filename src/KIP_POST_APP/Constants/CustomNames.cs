@@ -17,7 +17,7 @@ namespace KIP_POST_APP.Constants
         /// <summary>
         /// Server version.
         /// </summary>
-        public const string Version = "2.0.0";
+        public const string Version = "1.0";
 
         /// <summary>
         /// KIP DB.

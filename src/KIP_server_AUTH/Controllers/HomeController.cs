@@ -45,7 +45,7 @@ namespace KIP_auth_mode.Controllers
         [Route("/")]
         public IActionResult Home()
         {
-            var info = $"{CustomNames.KIP_auth_mode} version: {CustomNames.Version}";
+            var info = $"{CustomNames.KIP_server_AUTH} version: {CustomNames.Version}";
             return this.Ok(info);
         }
     }

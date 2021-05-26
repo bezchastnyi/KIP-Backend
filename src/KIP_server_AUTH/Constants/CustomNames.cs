@@ -8,12 +8,12 @@
         /// <summary>
         /// App name.
         /// </summary>
-        public const string KIP_auth_mode = "KIP_server_AUTH";
+        public const string KIP_server_AUTH = "KIP_server_AUTH";
 
         /// <summary>
         /// Server version.
         /// </summary>
-        public const string Version = "1.0.0";
+        public const string Version = "1.0";
 
         /// <summary>
         /// Personal information.

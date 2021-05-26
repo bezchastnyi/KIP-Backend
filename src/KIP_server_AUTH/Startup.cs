@@ -46,7 +46,7 @@ namespace KIP_auth_mode
         public void Configure(IApplicationBuilder app, ILogger<Startup> logger, IWebHostEnvironment env)
         {
             app.UseTokens(this.Configuration["Tokens:EntryToken"]);
-            var message = $"{CustomNames.KIP_auth_mode} uses Tokens Protection";
+            var message = $"{CustomNames.KIP_server_AUTH} uses Tokens Protection";
             logger.Log(LogLevel.Information, message);
 
             app.UseHttpsRedirection();
