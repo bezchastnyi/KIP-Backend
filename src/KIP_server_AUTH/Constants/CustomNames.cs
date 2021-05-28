@@ -1,4 +1,4 @@
-﻿namespace KIP_auth_mode.Constants
+﻿namespace KIP_server_AUTH.Constants
 {
     /// <summary>
     /// Custom name constants.
@@ -16,13 +16,8 @@
         public const string Version = "1.0";
 
         /// <summary>
-        /// Personal information.
+        /// Cabinet url.
         /// </summary>
-        public const string PersonalInformation = "PersonalInformation";
-
-        /// <summary>
-        /// Cabinet url access.
-        /// </summary>
-        public const string PersonalInformationUrl = @"http://schedule.kpi.kharkov.ua/json/kabinet?";
+        public const string StudentCabinetUrl = @"http://schedule.kpi.kharkov.ua/json/kabinet?";
     }
 }

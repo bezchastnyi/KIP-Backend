@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Net;
 using Newtonsoft.Json;
 
-namespace KIP_auth_mode.Mapping.Converters
+namespace KIP_server_AUTH.Mapping.Converters
 {
     /// <summary>
     /// Convert json format of data to model.

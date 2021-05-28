@@ -1,4 +1,4 @@
-﻿// <copyright file="PersonalInformationController.cs" company="KIP">
+﻿// <copyright file="CurrentRankController.cs" company="KIP">
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
@@ -17,55 +17,55 @@ using Microsoft.Extensions.Logging;
 namespace KIP_server_AUTH.Controllers
 {
     /// <summary>
-    /// Personal Information controller.
+    /// Current Rank controller.
     /// </summary>
     /// <seealso cref="Controller" />
     [Controller]
-    public class PersonalInformationController : Controller
+    public class CurrentRankController : Controller
     {
-        private const string PersonalInformationPage = "page=1";
+        private const string CurrentRankPage = "page=5";
 
-        private readonly ILogger<PersonalInformationController> logger;
+        private readonly ILogger<CurrentRankController> logger;
         private readonly IMapper mapper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersonalInformationController"/> class.
+        /// Initializes a new instance of the <see cref="CurrentRankController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
-        public PersonalInformationController(ILogger<PersonalInformationController> logger, IMapper mapper)
+        public CurrentRankController(ILogger<CurrentRankController> logger, IMapper mapper)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>
-        /// Personal Information of student.
+        /// Current rank of student's group.
         /// </summary>
-        /// <returns>Personal Information.</returns>
+        /// <returns>Current rank.</returns>
         /// <param name="email">Email of student.</param>
         /// <param name="password">Password of student.</param>
         [HttpGet]
-        [Route("PersonalInformation/{email}/{password}")]
-        public IActionResult PersonalInformation(string email, string password)
+        [Route("CurrentRank/{email}/{password}")]
+        public IActionResult CurrentRank(string email, string password)
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{PersonalInformationPage}";
-                var personalInformationKHPI = JsonToModelConverter.GetJsonData<PersonalInformationKHPI>(path);
+                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CurrentRankPage}";
+                var currentRankKHPI = JsonToModelConverter.GetJsonData<CurrentRankKHPI>(path);
 
-                IEnumerable<PersonalInformation> personalInformation = null;
-                if (personalInformationKHPI == null)
+                IEnumerable<CurrentRank> currentRank = null;
+                if (currentRankKHPI == null)
                 {
                     this.logger.Log(LogLevel.Error, "Error");
                     return this.BadRequest();
                 }
                 else
                 {
-                    personalInformation = this.mapper.Map<IEnumerable<PersonalInformation>>(personalInformationKHPI);
+                    currentRank = this.mapper.Map<IEnumerable<CurrentRank>>(currentRankKHPI);
                 }
 
-                return new JsonResult(personalInformation);
+                return new JsonResult(currentRank);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

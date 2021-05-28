@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace KIP_auth_mode
+namespace KIP_server_AUTH
 {
     /// <summary>
-    /// The console app class.
+    /// The server.
     /// </summary>
     public class Program
     {

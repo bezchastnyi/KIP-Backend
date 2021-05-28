@@ -1,4 +1,4 @@
-﻿// <copyright file="PersonalInformationController.cs" company="KIP">
+﻿// <copyright file="DebtListController.cs" company="KIP">
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
@@ -17,55 +17,55 @@ using Microsoft.Extensions.Logging;
 namespace KIP_server_AUTH.Controllers
 {
     /// <summary>
-    /// Personal Information controller.
+    /// Debt List controller.
     /// </summary>
     /// <seealso cref="Controller" />
     [Controller]
-    public class PersonalInformationController : Controller
+    public class DebtListController : Controller
     {
-        private const string PersonalInformationPage = "page=1";
+        private const string DebtListPage = "page=3";
 
-        private readonly ILogger<PersonalInformationController> logger;
+        private readonly ILogger<DebtListController> logger;
         private readonly IMapper mapper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersonalInformationController"/> class.
+        /// Initializes a new instance of the <see cref="DebtListController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
-        public PersonalInformationController(ILogger<PersonalInformationController> logger, IMapper mapper)
+        public DebtListController(ILogger<DebtListController> logger, IMapper mapper)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>
-        /// Personal Information of student.
+        /// Debt list of student.
         /// </summary>
-        /// <returns>Personal Information.</returns>
+        /// <returns>Debt list.</returns>
         /// <param name="email">Email of student.</param>
         /// <param name="password">Password of student.</param>
         [HttpGet]
-        [Route("PersonalInformation/{email}/{password}")]
-        public IActionResult PersonalInformation(string email, string password)
+        [Route("DebtList/{email}/{password}")]
+        public IActionResult DebtList(string email, string password)
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{PersonalInformationPage}";
-                var personalInformationKHPI = JsonToModelConverter.GetJsonData<PersonalInformationKHPI>(path);
+                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{DebtListPage}";
+                var debtListKHPI = JsonToModelConverter.GetJsonData<DebtListKHPI>(path);
 
-                IEnumerable<PersonalInformation> personalInformation = null;
-                if (personalInformationKHPI == null)
+                IEnumerable<DebtList> debtList = null;
+                if (debtListKHPI == null)
                 {
                     this.logger.Log(LogLevel.Error, "Error");
                     return this.BadRequest();
                 }
                 else
                 {
-                    personalInformation = this.mapper.Map<IEnumerable<PersonalInformation>>(personalInformationKHPI);
+                    debtList = this.mapper.Map<IEnumerable<DebtList>>(debtListKHPI);
                 }
 
-                return new JsonResult(personalInformation);
+                return new JsonResult(debtList);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

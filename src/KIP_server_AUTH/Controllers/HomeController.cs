@@ -3,17 +3,16 @@
 // </copyright>
 
 using System;
-using KIP_auth_mode.Constants;
+using KIP_server_AUTH.Constants;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_auth_mode.Controllers
+namespace KIP_server_AUTH.Controllers
 {
     /// <summary>
     /// Default controller.
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// <seealso cref="Controller" />
     [Controller]
     [Route("/[controller]/[action]")]
     public class HomeController : Controller
@@ -24,17 +23,10 @@ namespace KIP_auth_mode.Controllers
         /// Initializes a new instance of the <see cref="HomeController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="configuration">The configuration.</param>
-        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
+        public HomeController(ILogger<HomeController> logger)
         {
-            this.Configuration = configuration;
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
-        /// <summary>
-        /// Gets configurations of server.
-        /// </summary>
-        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Default action.

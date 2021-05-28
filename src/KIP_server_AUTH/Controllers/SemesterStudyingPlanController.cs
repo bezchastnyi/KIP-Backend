@@ -1,4 +1,4 @@
-﻿// <copyright file="PersonalInformationController.cs" company="KIP">
+﻿// <copyright file="SemesterStudyingPlanController.cs" company="KIP">
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
@@ -17,55 +17,56 @@ using Microsoft.Extensions.Logging;
 namespace KIP_server_AUTH.Controllers
 {
     /// <summary>
-    /// Personal Information controller.
+    /// Semester Studying Plan controller.
     /// </summary>
     /// <seealso cref="Controller" />
     [Controller]
-    public class PersonalInformationController : Controller
+    public class SemesterStudyingPlanController : Controller
     {
-        private const string PersonalInformationPage = "page=1";
+        private const string SemesterStudyingPlanPage = "page=4";
 
-        private readonly ILogger<PersonalInformationController> logger;
+        private readonly ILogger<SemesterStudyingPlanController> logger;
         private readonly IMapper mapper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersonalInformationController"/> class.
+        /// Initializes a new instance of the <see cref="SemesterStudyingPlanController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
-        public PersonalInformationController(ILogger<PersonalInformationController> logger, IMapper mapper)
+        public SemesterStudyingPlanController(ILogger<SemesterStudyingPlanController> logger, IMapper mapper)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>
-        /// Personal Information of student.
+        /// Semester Studying Plan of student.
         /// </summary>
-        /// <returns>Personal Information.</returns>
+        /// <returns>Semester Studying Plan.</returns>
         /// <param name="email">Email of student.</param>
         /// <param name="password">Password of student.</param>
+        /// <param name="semester">Number of semester.</param>
         [HttpGet]
-        [Route("PersonalInformation/{email}/{password}")]
-        public IActionResult PersonalInformation(string email, string password)
+        [Route("SemesterStudyingPlan/{email}/{password}/{semester:int}")]
+        public IActionResult SemesterStudyingPlan(string email, string password, int semester)
         {
-            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password) && (semester > 0 && semester < 13))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{PersonalInformationPage}";
-                var personalInformationKHPI = JsonToModelConverter.GetJsonData<PersonalInformationKHPI>(path);
+                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{SemesterStudyingPlanPage}&semestr={semester}";
+                var semesterStudyingPlanKHPI = JsonToModelConverter.GetJsonData<SemesterStudyingPlanKHPI>(path);
 
-                IEnumerable<PersonalInformation> personalInformation = null;
-                if (personalInformationKHPI == null)
+                IEnumerable<SemesterStudyingPlan> semesterStudyingPlan = null;
+                if (semesterStudyingPlanKHPI == null)
                 {
                     this.logger.Log(LogLevel.Error, "Error");
                     return this.BadRequest();
                 }
                 else
                 {
-                    personalInformation = this.mapper.Map<IEnumerable<PersonalInformation>>(personalInformationKHPI);
+                    semesterStudyingPlan = this.mapper.Map<IEnumerable<SemesterStudyingPlan>>(semesterStudyingPlanKHPI);
                 }
 
-                return new JsonResult(personalInformation);
+                return new JsonResult(semesterStudyingPlan);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

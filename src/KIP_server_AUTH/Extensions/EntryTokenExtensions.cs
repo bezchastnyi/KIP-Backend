@@ -1,4 +1,4 @@
-﻿using KIP_auth_mode.Secrets;
+﻿using KIP_server_AUTH.Secrets;
 using Microsoft.AspNetCore.Builder;
 
 /// <summary>

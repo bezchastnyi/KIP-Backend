@@ -1,6 +1,6 @@
 ﻿using System;
-using KIP_auth_mode.Constants;
-using KIP_auth_mode.Mapping;
+using KIP_server_AUTH.Constants;
+using KIP_server_AUTH.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,10 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_auth_mode
+namespace KIP_server_AUTH
 {
     /// <summary>
-    /// KIP_auth_mode startup.
+    /// KIP_server_AUTH startup.
     /// </summary>
     public class Startup
     {
@@ -21,7 +21,7 @@ namespace KIP_auth_mode
         /// <param name="configuration">Configuration.</param>
         public Startup(IConfiguration configuration)
         {
-            this.Configuration = configuration;
+            this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         private IConfiguration Configuration { get; }

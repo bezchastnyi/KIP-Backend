@@ -2,7 +2,7 @@
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
-namespace KIP_auth_mode.Models.KHPI
+namespace KIP_server_AUTH.Models.KHPI
 {
     /// <summary>
     /// Personal Information KHPI.

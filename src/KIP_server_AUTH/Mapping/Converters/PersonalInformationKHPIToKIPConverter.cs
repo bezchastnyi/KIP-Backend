@@ -4,24 +4,25 @@
 
 using System;
 using AutoMapper;
-using KIP_auth_mode.Models.KHPI;
-using KIP_auth_mode.Models.KIP;
+using KIP_server_AUTH.Extensions;
+using KIP_server_AUTH.Models.KHPI;
+using KIP_server_AUTH.Models.KIP;
 
-namespace KIP_auth_mode.Mapping.Converters
+namespace KIP_server_AUTH.Mapping.Converters
 {
     /// <summary>
-    /// Building of the KIP audience model from the KhPI audience.
+    /// Building of the KIP PersonalInformation model from the KhPI PersonalInformation.
     /// </summary>
     public class PersonalInformationKHPIToKIPConverter : ITypeConverter<PersonalInformationKHPI, PersonalInformation>
     {
         /// <summary>
-        /// Convert model of audience from KHPI to KIP.
+        /// Convert model of PersonalInformation from KHPI to KIP.
         /// </summary>
         /// <returns>
-        /// Object of audience of model audience KIP.
+        /// Object of PersonalInformation of KIP model.
         /// </returns>
-        /// <param name="source">Model of audience KHPI.</param>
-        /// <param name = "destination">Model of audience KIP.</param>
+        /// <param name="source">Model of PersonalInformation KHPI.</param>
+        /// <param name = "destination">Model of PersonalInformation KIP.</param>
         /// <param name= "context">The context. </param>
         public PersonalInformation Convert(PersonalInformationKHPI source, PersonalInformation destination, ResolutionContext context)
         {
@@ -32,16 +33,16 @@ namespace KIP_auth_mode.Mapping.Converters
 
             return new PersonalInformation()
             {
-                StudentId = System.Convert.ToInt32(source.st_cod),
+                StudentId = ConvertExtensions.StringToInt(source.st_cod),
                 LastName = source.fam,
                 FirstName = source.imya,
                 Patronymic = source.otch,
-                Course = System.Convert.ToInt32(source.kurs),
-                GroupId = System.Convert.ToInt32(source.gid),
+                Course = ConvertExtensions.StringToInt(source.kurs),
+                GroupId = ConvertExtensions.StringToInt(source.gid),
                 Group = source.grupa,
-                FacultyId = System.Convert.ToInt32(source.fid),
+                FacultyId = ConvertExtensions.StringToInt(source.fid),
                 Faculty = source.fakultet,
-                CathedraId = System.Convert.ToInt32(source.kid),
+                CathedraId = ConvertExtensions.StringToInt(source.kid),
                 Cathedra = source.kafedra,
                 Specialization = source.specialization,
                 Specialty = source.speciality,

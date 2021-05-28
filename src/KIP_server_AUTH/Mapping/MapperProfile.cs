@@ -3,11 +3,11 @@
 // </copyright>
 
 using AutoMapper;
-using KIP_auth_mode.Mapping.Converters;
-using KIP_auth_mode.Models.KHPI;
-using KIP_auth_mode.Models.KIP;
+using KIP_server_AUTH.Mapping.Converters;
+using KIP_server_AUTH.Models.KHPI;
+using KIP_server_AUTH.Models.KIP;
 
-namespace KIP_auth_mode.Mapping
+namespace KIP_server_AUTH.Mapping
 {
     /// <summary>
     /// Building of the profile KIP model from the KhPI.
@@ -21,6 +21,18 @@ namespace KIP_auth_mode.Mapping
         {
             this.CreateMap<PersonalInformationKHPI, PersonalInformation>()
                 .ConvertUsing<PersonalInformationKHPIToKIPConverter>();
+
+            this.CreateMap<SemesterMarksListKHPI, SemesterMarksList>()
+                .ConvertUsing<SemesterMarksListKHPIToKIPConverter>();
+
+            this.CreateMap<CurrentRankKHPI, CurrentRank>()
+                .ConvertUsing<CurrentRankKHPIToKIPConverter>();
+
+            this.CreateMap<DebtListKHPI, DebtList>()
+                .ConvertUsing<DebtListKHPIToKIPConverter>();
+
+            this.CreateMap<SemesterStudyingPlanKHPI, SemesterStudyingPlan>()
+                .ConvertUsing<SemesterStudyingPlanKHPIToKIPConverter>();
         }
     }
 }

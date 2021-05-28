@@ -2,7 +2,7 @@
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
-namespace KIP_auth_mode.Models.KIP
+namespace KIP_server_AUTH.Models.KIP
 {
     /// <summary>
     /// Personal Information KIP.
