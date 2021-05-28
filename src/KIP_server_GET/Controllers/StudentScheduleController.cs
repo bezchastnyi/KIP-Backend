@@ -4,6 +4,7 @@ using System.Linq;
 using KIP_POST_APP.DB;
 using KIP_POST_APP.Models.KIP.Helpers;
 using KIP_server_GET.Constants;
+using KIP_server_GET.Models.Output;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -13,30 +14,30 @@ using Microsoft.Extensions.Logging;
 namespace KIP_server_GET.Controllers
 {
     /// <summary>
-    /// Default controller.
+    /// Student Schedule controller.
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// <seealso cref="Controller" />
     [Controller]
     public class StudentScheduleController : Controller
     {
         private readonly ServerContext _context;
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<StudentScheduleController> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StudentScheduleController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public StudentScheduleController(ILogger<HomeController> logger, ServerContext context)
+        public StudentScheduleController(ILogger<StudentScheduleController> logger, ServerContext context)
         {
-            this._context = context;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>
-        /// Schedule by group.
+        /// Student Schedule start page.
         /// </summary>
-        /// <returns>Schedule by group.</returns>
+        /// <returns>Page name.</returns>
         [HttpGet]
         [Route("StudentSchedule")]
         public IActionResult StudentSchedule()
@@ -95,10 +96,10 @@ namespace KIP_server_GET.Controllers
                 }
                 else
                 {
-                    var outList = new List<Output>();
+                    var outList = new List<StudentScheduleOutput>();
                     foreach (var l in list)
                     {
-                        var output = new Output()
+                        var output = new StudentScheduleOutput()
                         {
                             SubjectName = l.SubjectName,
                             Type = l.Type,
@@ -119,21 +120,6 @@ namespace KIP_server_GET.Controllers
             this._logger.Log(LogLevel.Error, message);
 
             return this.BadRequest();
-        }
-
-        private class Output
-        {
-            public string SubjectName { get; set; }
-
-            public string Type { get; set; }
-
-            public int Number { get; set; }
-
-            public Week Week { get; set; }
-
-            public string AudienceName { get; set; }
-
-            public string ProfName { get; set; }
         }
     }
 }

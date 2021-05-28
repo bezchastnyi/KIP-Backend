@@ -15,7 +15,7 @@
         public DataBase(string name, string db_system, string version, string status)
         {
             this.Name = name;
-            this.Db_system = db_system;
+            this.DbSystem = db_system;
             this.Version = version;
             this.Status = status;
         }
@@ -30,7 +30,7 @@
         /// Gets or sets the database system.
         /// </summary>
         /// <value>Database system.</value>
-        public string Db_system { get; set; }
+        public string DbSystem { get; set; }
 
         /// <summary>
         /// Gets or sets the version.

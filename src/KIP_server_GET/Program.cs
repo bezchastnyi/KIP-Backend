@@ -7,7 +7,7 @@ using Serilog;
 namespace KIP_server_GET
 {
     /// <summary>
-    /// The asp net server class.
+    /// The server GET.
     /// </summary>
     [ExcludeFromCodeCoverage]
     public class Program

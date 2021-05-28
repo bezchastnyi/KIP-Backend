@@ -10,24 +10,24 @@ using Microsoft.Extensions.Logging;
 namespace KIP_server_GET.Controllers
 {
     /// <summary>
-    /// Default controller.
+    /// Cathedra controller.
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// <seealso cref="Controller" />
     [Controller]
     public class CathedraController : Controller
     {
         private readonly ServerContext _context;
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<CathedraController> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CathedraController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public CathedraController(ILogger<HomeController> logger, ServerContext context)
+        public CathedraController(ILogger<CathedraController> logger, ServerContext context)
         {
-            this._context = context;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>

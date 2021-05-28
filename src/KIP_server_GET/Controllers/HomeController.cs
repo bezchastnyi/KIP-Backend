@@ -11,12 +11,13 @@ namespace KIP_server_GET.Controllers
     /// <summary>
     /// Default controller.
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// <seealso cref="Controller" />
     [Controller]
     [Route("/[controller]/[action]")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
@@ -25,14 +26,9 @@ namespace KIP_server_GET.Controllers
         /// <param name="configuration">The configuration.</param>
         public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
-            this.Configuration = configuration;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
-
-        /// <summary>
-        /// Gets configurations of server.
-        /// </summary>
-        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// Default action.
@@ -56,7 +52,7 @@ namespace KIP_server_GET.Controllers
         public IActionResult Health()
         {
             var status = CustomNames.Unhealthy_status;
-            using (var connection = new NpgsqlConnection(this.Configuration.GetConnectionString("PostgresConnection")))
+            using (var connection = new NpgsqlConnection(this._configuration.GetConnectionString("PostgresConnection")))
             {
                 try
                 {
@@ -80,7 +76,7 @@ namespace KIP_server_GET.Controllers
             }
 
             var health_check = new HealthCheck();
-            health_check.Databases.Add(new DataBase(CustomNames.KIP_database, CustomNames.PostgreSQL, this.Configuration.GetConnectionString("PostgresVersion"), status));
+            health_check.Databases.Add(new DataBase(CustomNames.KIP_database, CustomNames.PostgreSQL, this._configuration.GetConnectionString("PostgresVersion"), status));
 
             var message = $"{CustomNames.KIP_database} status: {status}";
             this._logger.Log(LogLevel.Information, message);

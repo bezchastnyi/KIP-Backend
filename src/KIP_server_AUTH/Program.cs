@@ -6,7 +6,7 @@ using Serilog;
 namespace KIP_server_AUTH
 {
     /// <summary>
-    /// The server.
+    /// The server AUTH.
     /// </summary>
     public class Program
     {

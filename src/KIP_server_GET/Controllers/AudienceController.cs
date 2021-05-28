@@ -10,24 +10,24 @@ using Microsoft.Extensions.Logging;
 namespace KIP_server_GET.Controllers
 {
     /// <summary>
-    /// Default controller.
+    /// Audience controller.
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// <seealso cref="Controller" />
     [Controller]
     public class AudienceController : Controller
     {
         private readonly ServerContext _context;
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<AudienceController> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AudienceController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public AudienceController(ILogger<HomeController> logger, ServerContext context)
+        public AudienceController(ILogger<AudienceController> logger, ServerContext context)
         {
-            this._context = context;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace KIP_server_GET.Controllers
         }
 
         /// <summary>
-        /// Audiences.
+        /// Audience by id.
         /// </summary>
-        /// <returns>Audienses.</returns>
+        /// <returns>Audiense.</returns>
         /// <param name="id">Audience ID.</param>
         [HttpGet]
         [Route("Audience/{id:int}")]

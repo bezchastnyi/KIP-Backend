@@ -10,6 +10,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_POST_APP", "src\KIP_POST_APP\KIP_POST_APP.csproj", "{3848CEA0-774A-4FEE-AEFA-17A875CFC41E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{18ECED55-DC5E-4FA8-B91A-FCAF322B84CC}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9A2F9FA7-014B-47B7-BED8-0D2A2CEAF7EE}"
 EndProject

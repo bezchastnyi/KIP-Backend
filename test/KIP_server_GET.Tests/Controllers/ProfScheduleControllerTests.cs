@@ -1,0 +1,34 @@
+﻿using System;
+using KIP_POST_APP.DB;
+using KIP_server_GET.Controllers;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Xunit;
+
+namespace KIP_server_GET.Tests.Controllers
+{
+    public class ProfScheduleControllerTests
+    {
+        private readonly Mock<ILogger<ProfScheduleController>> loggerMock;
+        private readonly Mock<ServerContext> serverContextMock;
+
+        public ProfScheduleControllerTests()
+        {
+            this.loggerMock = new Mock<ILogger<ProfScheduleController>>();
+            this.serverContextMock = new Mock<ServerContext>();
+        }
+
+        [Fact]
+        public void ProfScheduleController_NullArgumentsPassed_ExceptionThrown()
+        {
+            //Act & Assert
+            Assert.Throws<ArgumentNullException>("logger",
+                () => new ProfScheduleController(null, null));
+
+            Assert.Throws<ArgumentNullException>("context",
+                () => new ProfScheduleController(Mock.Of<ILogger<ProfScheduleController>>(), null));
+
+            _ = new ProfScheduleController(this.loggerMock.Object, this.serverContextMock.Object);
+        }
+    }
+}

@@ -2,7 +2,6 @@
 using KIP_POST_APP.DB;
 using Microsoft.EntityFrameworkCore;
 
-// ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
@@ -17,8 +16,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">The services.</param>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="pgVersionString">Postgres version string. Must contain 2-4 numerics separated by '.'.</param>
-        /// <exception cref="System.ArgumentNullException">Services.</exception>
-        /// <exception cref="System.ArgumentException">Connection string must be not null or empty - connectionString.</exception>
+        /// <exception cref="ArgumentNullException">Services.</exception>
+        /// <exception cref="ArgumentException">Connection string must be not null or empty - connectionString.</exception>
         public static IServiceCollection AddDbServices(this IServiceCollection services, string connectionString, string pgVersionString)
         {
             if (services == null)
