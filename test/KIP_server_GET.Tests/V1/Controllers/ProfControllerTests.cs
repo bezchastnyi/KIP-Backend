@@ -1,20 +1,20 @@
 ﻿using System;
 using KIP_POST_APP.DB;
-using KIP_server_GET.Controllers;
+using KIP_server_GET.V1.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace KIP_server_GET.Tests.Controllers
+namespace KIP_server_GET.Tests.V1.Controllers
 {
-    public class GroupControllerTests
+    public class ProfControllerTests
     {
-        private readonly Mock<ILogger<GroupController>> loggerMock;
+        private readonly Mock<ILogger<ProfController>> loggerMock;
         private readonly Mock<ServerContext> serverContextMock;
 
-        public GroupControllerTests()
+        public ProfControllerTests()
         {
-            this.loggerMock = new Mock<ILogger<GroupController>>();
+            this.loggerMock = new Mock<ILogger<ProfController>>();
             this.serverContextMock = new Mock<ServerContext>();
 
             // this.serverContextMock.Setup(c => c.Audience).Returns(new DbSet<Audience>());
@@ -25,12 +25,12 @@ namespace KIP_server_GET.Tests.Controllers
         {
             //Act & Assert
             Assert.Throws<ArgumentNullException>("logger",
-                () => new GroupController(null, null));
+                () => new ProfController(null, null));
 
             Assert.Throws<ArgumentNullException>("context",
-                () => new GroupController(Mock.Of<ILogger<GroupController>>(), null));
+                () => new ProfController(Mock.Of<ILogger<ProfController>>(), null));
 
-            _ = new GroupController(this.loggerMock.Object, this.serverContextMock.Object);
+            _ = new ProfController(this.loggerMock.Object, this.serverContextMock.Object);
         }
     }
 }

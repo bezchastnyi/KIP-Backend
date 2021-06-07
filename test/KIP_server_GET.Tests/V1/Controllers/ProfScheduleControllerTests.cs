@@ -1,11 +1,11 @@
 ﻿using System;
 using KIP_POST_APP.DB;
-using KIP_server_GET.Controllers;
+using KIP_server_GET.V1.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace KIP_server_GET.Tests.Controllers
+namespace KIP_server_GET.Tests.V1.Controllers
 {
     public class ProfScheduleControllerTests
     {

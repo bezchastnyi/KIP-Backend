@@ -1,20 +1,20 @@
 ﻿using System;
 using KIP_POST_APP.DB;
-using KIP_server_GET.Controllers;
+using KIP_server_GET.V1.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace KIP_server_GET.Tests.Controllers
+namespace KIP_server_GET.Tests.V1.Controllers
 {
-    public class AudienceControllerTests
+    public class FacultyControllerTests
     {
-        private readonly Mock<ILogger<AudienceController>> loggerMock;
+        private readonly Mock<ILogger<FacultyController>> loggerMock;
         private readonly Mock<ServerContext> serverContextMock;
 
-        public AudienceControllerTests()
+        public FacultyControllerTests()
         {
-            this.loggerMock = new Mock<ILogger<AudienceController>>();
+            this.loggerMock = new Mock<ILogger<FacultyController>>();
             this.serverContextMock = new Mock<ServerContext>();
 
             // this.serverContextMock.Setup(c => c.Audience).Returns(new DbSet<Audience>());
@@ -25,12 +25,12 @@ namespace KIP_server_GET.Tests.Controllers
         {
             //Act & Assert
             Assert.Throws<ArgumentNullException>("logger",
-                () => new AudienceController(null, null));
+                () => new FacultyController(null, null));
 
             Assert.Throws<ArgumentNullException>("context",
-                () => new AudienceController(Mock.Of<ILogger<AudienceController>>(), null));
+                () => new FacultyController(Mock.Of<ILogger<FacultyController>>(), null));
 
-            _ = new AudienceController(this.loggerMock.Object, this.serverContextMock.Object);
+            _ = new FacultyController(this.loggerMock.Object, this.serverContextMock.Object);
         }
     }
 }

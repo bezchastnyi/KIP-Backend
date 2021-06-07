@@ -1,20 +1,20 @@
 ﻿using System;
 using KIP_POST_APP.DB;
-using KIP_server_GET.Controllers;
+using KIP_server_GET.V1.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace KIP_server_GET.Tests.Controllers
+namespace KIP_server_GET.Tests.V1.Controllers
 {
-    public class FacultyControllerTests
+    public class CathedraControllerTests
     {
-        private readonly Mock<ILogger<FacultyController>> loggerMock;
+        private readonly Mock<ILogger<CathedraController>> loggerMock;
         private readonly Mock<ServerContext> serverContextMock;
 
-        public FacultyControllerTests()
+        public CathedraControllerTests()
         {
-            this.loggerMock = new Mock<ILogger<FacultyController>>();
+            this.loggerMock = new Mock<ILogger<CathedraController>>();
             this.serverContextMock = new Mock<ServerContext>();
 
             // this.serverContextMock.Setup(c => c.Audience).Returns(new DbSet<Audience>());
@@ -25,12 +25,12 @@ namespace KIP_server_GET.Tests.Controllers
         {
             //Act & Assert
             Assert.Throws<ArgumentNullException>("logger",
-                () => new FacultyController(null, null));
+                () => new CathedraController(null, null));
 
             Assert.Throws<ArgumentNullException>("context",
-                () => new FacultyController(Mock.Of<ILogger<FacultyController>>(), null));
+                () => new CathedraController(Mock.Of<ILogger<CathedraController>>(), null));
 
-            _ = new FacultyController(this.loggerMock.Object, this.serverContextMock.Object);
+            _ = new CathedraController(this.loggerMock.Object, this.serverContextMock.Object);
         }
     }
 }

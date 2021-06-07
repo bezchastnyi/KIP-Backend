@@ -1,11 +1,11 @@
 ﻿using System;
 using AutoMapper;
-using KIP_server_AUTH.Controllers;
+using KIP_server_AUTH.V1.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace KIP_server_AUTH.Tests.Controllers
+namespace KIP_server_AUTH.Tests.V1.Controllers
 {
     public class DebtListControllerTests
     {
