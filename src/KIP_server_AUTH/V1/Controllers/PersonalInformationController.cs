@@ -5,22 +5,26 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
+using KIP_server_AUTH.Attributes;
 using KIP_server_AUTH.Constants;
 using KIP_server_AUTH.Mapping.Converters;
 using KIP_server_AUTH.Models.KHPI;
 using KIP_server_AUTH.Models.KIP;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.Controllers
+namespace KIP_server_AUTH.V1.Controllers
 {
     /// <summary>
     /// Personal Information controller.
     /// </summary>
     /// <seealso cref="Controller" />
-    [Controller]
+    [V1]
+    [ApiRoute]
+    [ApiController]
     public class PersonalInformationController : Controller
     {
         private const string PersonalInformationPage = "page=1";
@@ -47,6 +51,8 @@ namespace KIP_server_AUTH.Controllers
         /// <param name="password">Password of student.</param>
         [HttpGet]
         [Route("PersonalInformation/{email}/{password}")]
+        [ProducesResponseType(typeof(PersonalInformation), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult PersonalInformation(string email, string password)
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
@@ -54,7 +60,7 @@ namespace KIP_server_AUTH.Controllers
                 var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{PersonalInformationPage}";
                 var personalInformationKHPI = JsonToModelConverter.GetJsonData<PersonalInformationKHPI>(path);
 
-                IEnumerable<PersonalInformation> personalInformation = null;
+                List<PersonalInformation> personalInformation = null;
                 if (personalInformationKHPI == null)
                 {
                     this.logger.Log(LogLevel.Error, "Error");
@@ -62,7 +68,12 @@ namespace KIP_server_AUTH.Controllers
                 }
                 else
                 {
-                    personalInformation = this.mapper.Map<IEnumerable<PersonalInformation>>(personalInformationKHPI);
+                    personalInformation = this.mapper.Map<List<PersonalInformation>>(personalInformationKHPI);
+                }
+
+                if (personalInformation.Count == 0)
+                {
+                    return this.BadRequest();
                 }
 
                 return new JsonResult(personalInformation);

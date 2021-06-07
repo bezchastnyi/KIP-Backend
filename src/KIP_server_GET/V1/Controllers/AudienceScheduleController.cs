@@ -2,62 +2,72 @@
 using System.Collections.Generic;
 using System.Linq;
 using KIP_POST_APP.DB;
+using KIP_POST_APP.Models.KIP;
 using KIP_POST_APP.Models.KIP.Helpers;
+using KIP_server_GET.Attributes;
 using KIP_server_GET.Constants;
 using KIP_server_GET.Models.Output;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_GET.Controllers
+namespace KIP_server_GET.V1.Controllers
 {
     /// <summary>
-    /// Prof Schedule controller.
+    /// Audience Schedule controller.
     /// </summary>
     /// <seealso cref="Controller" />
-    [Controller]
-    public class ProfScheduleController : Controller
+    [V1]
+    [ApiRoute]
+    [ApiController]
+    public class AudienceScheduleController : Controller
     {
         private readonly ServerContext _context;
-        private readonly ILogger<ProfScheduleController> _logger;
+        private readonly ILogger<AudienceScheduleController> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProfScheduleController"/> class.
+        /// Initializes a new instance of the <see cref="AudienceScheduleController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public ProfScheduleController(ILogger<ProfScheduleController> logger, ServerContext context)
+        public AudienceScheduleController(ILogger<AudienceScheduleController> logger, ServerContext context)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>
-        /// Prof Schedule start page.
+        /// Audience Schedule start page.
         /// </summary>
         /// <returns>Page name.</returns>
         [HttpGet]
-        [Route("ProfSchedule")]
-        public IActionResult ProfSchedule()
+        [Route("AudienceSchedule")]
+        [ProducesResponseType(typeof(OkObjectResult), StatusCodes.Status200OK)]
+        public IActionResult AudienceSchedule()
         {
-            var info = $"{CustomNames.ProfSchedule}";
+            var info = $"{CustomNames.AudienceSchedule}";
             return this.Ok(info);
         }
 
         /// <summary>
-        /// Schedule by specific prof.
+        /// Schedule by specific audience.
         /// </summary>
-        /// <returns>Schedule by specific teacher.</returns>
-        /// <param name="id">Teacher ID.</param>
+        /// <returns>Schedule by specific audience.</returns>
+        /// <param name="id">Audience ID.</param>
         [HttpGet]
-        [Route("ProfSchedule/Prof/{id:int}")]
-        public IActionResult Prof(int id)
+        [Route("AudienceSchedule/Audience/{id:int}")]
+        [ProducesResponseType(typeof(AudienceSchedule), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
+        public IActionResult Audience(int id)
         {
-            if (this._context.ProfSchedule != null)
+            if (this._context.AudienceSchedule != null)
             {
-                var list = this._context.ProfSchedule.Where(i => i.ProfID == id).AsNoTracking().ToHashSet();
+                var list = this._context.AudienceSchedule
+                    .Where(i => i.AudienceID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {
@@ -77,18 +87,22 @@ namespace KIP_server_GET.Controllers
         }
 
         /// <summary>
-        /// Schedule by specific prof.
+        /// Schedule by specific audience.
         /// </summary>
-        /// <returns>Schedule by specific group.</returns>
-        /// <param name="id">Group ID.</param>
+        /// <returns>Schedule by specific audience.</returns>
+        /// <param name="id">Audience ID.</param>
         /// <param name="day">Number of day.</param>
         [HttpGet]
-        [Route("ProfSchedule/Prof/{id:int}/Day/{day:int}")]
-        public IActionResult Prof(int id, int day)
+        [Route("AudienceSchedule/Audience/{id:int}/Day/{day:int}")]
+        [ProducesResponseType(typeof(AudienceSchedule), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
+        public IActionResult Audience(int id, int day)
         {
-            if (this._context.ProfSchedule != null && day >= 0 && day < 6)
+            if (this._context.AudienceSchedule != null && day >= 0 && day < 6)
             {
-                var list = this._context.ProfSchedule.Where(i => i.ProfID == id && i.Day == (Day)day).AsNoTracking().ToHashSet();
+                var list = this._context.AudienceSchedule
+                    .Where(i => i.AudienceID == id && i.Day == (Day)day).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {
@@ -96,17 +110,17 @@ namespace KIP_server_GET.Controllers
                 }
                 else
                 {
-                    var outList = new List<ProfScheduleOutput>();
+                    var outList = new List<AudienceScheduleOutput>();
                     foreach (var l in list)
                     {
-                        var output = new ProfScheduleOutput()
+                        var output = new AudienceScheduleOutput()
                         {
                             SubjectName = l.SubjectName,
                             Type = l.Type,
                             Number = l.Number,
                             Week = l.Week,
-                            AudienceName = l.AudienceName,
                             GroupNames = l.GroupNames,
+                            ProfName = l.ProfName,
                         };
                         outList.Add(output);
                     }

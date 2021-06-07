@@ -1,46 +1,50 @@
 ﻿using System;
 using System.Linq;
 using KIP_POST_APP.DB;
+using KIP_POST_APP.Models.KIP;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_GET.Controllers
+namespace KIP_server_GET.V1.Controllers
 {
     /// <summary>
-    /// Faculty controller.
+    /// Building controller.
     /// </summary>
     /// <seealso cref="Controller" />
     [Controller]
-    public class FacultyController : Controller
+    public class BuildingController : Controller
     {
         private readonly ServerContext _context;
-        private readonly ILogger<FacultyController> _logger;
+        private readonly ILogger<BuildingController> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FacultyController"/> class.
+        /// Initializes a new instance of the <see cref="BuildingController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public FacultyController(ILogger<FacultyController> logger, ServerContext context)
+        public BuildingController(ILogger<BuildingController> logger, ServerContext context)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <summary>
-        /// All faculties.
+        /// All buildings.
         /// </summary>
-        /// <returns>All faculties.</returns>
+        /// <returns>All buildings.</returns>
         [HttpGet]
-        [Route("Faculty")]
-        public IActionResult Faculty()
+        [Route("Building")]
+        [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        public IActionResult Building()
         {
-            if (this._context.Faculty != null)
+            if (this._context.Building != null)
             {
-                return new JsonResult(this._context.Faculty.AsNoTracking());
+                return new JsonResult(this._context.Building.AsNoTracking());
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -51,17 +55,20 @@ namespace KIP_server_GET.Controllers
         }
 
         /// <summary>
-        /// Faculty.
+        /// Building.
         /// </summary>
-        /// <returns>Faculty.</returns>
-        /// <param name="id">Faculty ID.</param>
+        /// <returns>Building.</returns>
+        /// <param name="id">Building ID.</param>
         [HttpGet]
-        [Route("Faculty/{id:int}")]
-        public IActionResult Faculty(int id)
+        [Route("Building/{id:int}")]
+        [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
+        public IActionResult Building(int id)
         {
-            if (this._context.Faculty != null)
+            if (this._context.Building != null)
             {
-                var list = this._context.Faculty.Where(i => i.FacultyID == id).AsNoTracking().ToHashSet();
+                var list = this._context.Building.Where(i => i.BuildingID == id).AsNoTracking().ToHashSet();
 
                 if (list.Count == 0)
                 {

@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Linq;
 using KIP_POST_APP.DB;
+using KIP_POST_APP.Models.KIP;
+using KIP_server_GET.Attributes;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_GET.Controllers
+namespace KIP_server_GET.V1.Controllers
 {
     /// <summary>
     /// Group controller.
     /// </summary>
     /// <seealso cref="Controller" />
-    [Controller]
+    [V1]
+    [ApiRoute]
+    [ApiController]
     public class GroupController : Controller
     {
         private readonly ServerContext _context;
@@ -36,6 +41,8 @@ namespace KIP_server_GET.Controllers
         /// <returns>All groups.</returns>
         [HttpGet]
         [Route("Group")]
+        [ProducesResponseType(typeof(Group), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
         public IActionResult Group()
         {
             if (this._context.Group != null)
@@ -57,6 +64,9 @@ namespace KIP_server_GET.Controllers
         /// <param name="id">Group ID.</param>
         [HttpGet]
         [Route("Group/{id:int}")]
+        [ProducesResponseType(typeof(Group), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Group(int id)
         {
             if (this._context.Group != null)
@@ -87,6 +97,9 @@ namespace KIP_server_GET.Controllers
         /// <param name="id">Faculty ID.</param>
         [HttpGet]
         [Route("Group/Faculty/{id:int}")]
+        [ProducesResponseType(typeof(Group), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Faculty(int id)
         {
             if (this._context.Group != null)

@@ -1,72 +1,83 @@
-﻿// <copyright file="SemesterMarksListController.cs" company="KIP">
+﻿// <copyright file="SemesterStudyingPlanController.cs" company="KIP">
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
 using System;
 using System.Collections.Generic;
 using AutoMapper;
+using KIP_server_AUTH.Attributes;
 using KIP_server_AUTH.Constants;
 using KIP_server_AUTH.Mapping.Converters;
 using KIP_server_AUTH.Models.KHPI;
 using KIP_server_AUTH.Models.KIP;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.Controllers
+namespace KIP_server_AUTH.V1.Controllers
 {
     /// <summary>
-    /// Semester Marks List controller.
+    /// Semester Studying Plan controller.
     /// </summary>
     /// <seealso cref="Controller" />
-    [Controller]
-    public class SemesterMarksListController : Controller
+    [V1]
+    [ApiRoute]
+    [ApiController]
+    public class SemesterStudyingPlanController : Controller
     {
-        private const string SemesterMarksListPage = "page=2";
+        private const string SemesterStudyingPlanPage = "page=4";
 
-        private readonly ILogger<SemesterMarksListController> logger;
+        private readonly ILogger<SemesterStudyingPlanController> logger;
         private readonly IMapper mapper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SemesterMarksListController"/> class.
+        /// Initializes a new instance of the <see cref="SemesterStudyingPlanController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
-        public SemesterMarksListController(ILogger<SemesterMarksListController> logger, IMapper mapper)
+        public SemesterStudyingPlanController(ILogger<SemesterStudyingPlanController> logger, IMapper mapper)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>
-        /// Semester Marks List of student.
+        /// Semester Studying Plan of student.
         /// </summary>
-        /// <returns>Semester Marks List.</returns>
+        /// <returns>Semester Studying Plan.</returns>
         /// <param name="email">Email of student.</param>
         /// <param name="password">Password of student.</param>
         /// <param name="semester">Number of semester.</param>
         [HttpGet]
-        [Route("SemesterMarksList/{email}/{password}/{semester:int}")]
-        public IActionResult SemesterMarksList(string email, string password, int semester)
+        [Route("SemesterStudyingPlan/{email}/{password}/{semester:int}")]
+        [ProducesResponseType(typeof(SemesterStudyingPlan), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
+        public IActionResult SemesterStudyingPlan(string email, string password, int semester)
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password) && (semester > 0 && semester < 13))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{SemesterMarksListPage}&semestr={semester}";
-                var semesterMarksListKHPI = JsonToModelConverter.GetJsonData<SemesterMarksListKHPI>(path);
+                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{SemesterStudyingPlanPage}&semestr={semester}";
+                var semesterStudyingPlanKHPI = JsonToModelConverter.GetJsonData<SemesterStudyingPlanKHPI>(path);
 
-                IEnumerable<SemesterMarksList> semesterMarksList = null;
-                if (semesterMarksListKHPI == null)
+                List<SemesterStudyingPlan> semesterStudyingPlan = null;
+                if (semesterStudyingPlanKHPI == null)
                 {
                     this.logger.Log(LogLevel.Error, "Error");
                     return this.BadRequest();
                 }
                 else
                 {
-                    semesterMarksList = this.mapper.Map<IEnumerable<SemesterMarksList>>(semesterMarksListKHPI);
+                    semesterStudyingPlan = this.mapper.Map<List<SemesterStudyingPlan>>(semesterStudyingPlanKHPI);
                 }
 
-                return new JsonResult(semesterMarksList);
+                if (semesterStudyingPlan.Count == 0)
+                {
+                    return this.BadRequest();
+                }
+
+                return new JsonResult(semesterStudyingPlan);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

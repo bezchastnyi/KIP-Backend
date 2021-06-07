@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Linq;
 using KIP_POST_APP.DB;
+using KIP_POST_APP.Models.KIP;
+using KIP_server_GET.Attributes;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_GET.Controllers
+namespace KIP_server_GET.V1.Controllers
 {
     /// <summary>
     /// Audience controller.
     /// </summary>
     /// <seealso cref="Controller" />
-    [Controller]
+    [V1]
+    [ApiRoute]
+    [ApiController]
     public class AudienceController : Controller
     {
         private readonly ServerContext _context;
@@ -36,6 +41,8 @@ namespace KIP_server_GET.Controllers
         /// <returns>All audienses.</returns>
         [HttpGet]
         [Route("Audience")]
+        [ProducesResponseType(typeof(Audience), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
         public IActionResult Audience()
         {
             if (this._context.Audience != null)
@@ -57,6 +64,9 @@ namespace KIP_server_GET.Controllers
         /// <param name="id">Audience ID.</param>
         [HttpGet]
         [Route("Audience/{id:int}")]
+        [ProducesResponseType(typeof(Audience), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Audience(int id)
         {
             if (this._context.Audience != null)
@@ -88,6 +98,9 @@ namespace KIP_server_GET.Controllers
         /// <param name="id">Building ID.</param>
         [HttpGet]
         [Route("Audience/Building/{id:int}")]
+        [ProducesResponseType(typeof(Audience), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Building(int id)
         {
             if (this._context.Audience != null)

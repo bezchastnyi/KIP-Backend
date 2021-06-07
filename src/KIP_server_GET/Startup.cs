@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using KIP_server_GET.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace KIP_server_GET
 {
@@ -17,6 +23,9 @@ namespace KIP_server_GET
     [ExcludeFromCodeCoverage]
     public class Startup
     {
+        private readonly bool enableSwagger;
+        private readonly bool enableTokens;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -24,6 +33,12 @@ namespace KIP_server_GET
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration;
+
+            this.enableSwagger =
+                (this.Configuration["EnableSwagger"]?.Equals("true", StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault();
+
+            this.enableTokens =
+                (this.Configuration["Tokens:EnableTokens"]?.Equals("true", StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault();
         }
 
         private IConfiguration Configuration { get; }
@@ -36,11 +51,35 @@ namespace KIP_server_GET
         {
             Console.OutputEncoding = System.Text.Encoding.Default;
 
-            services.AddMvc();
+            services.AddMvcCore()
+                .AddDataAnnotations()
+                .AddApiExplorer()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressMapClientErrors = true;
+                    options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.ModelState);
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
             var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
             services.AddDbServices(pgConnectionString, pgVersionString);
+
+            services.AddApiVersioning(o =>
+            {
+                o.ReportApiVersions = true;
+            })
+                .AddVersionedApiExplorer(options =>
+                {
+                    options.GroupNameFormat = "'v'VVV";
+                    options.SubstituteApiVersionInUrl = true;
+                });
+
+            if (this.enableSwagger)
+            {
+                services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
+                    .AddSwaggerGen();
+            }
         }
 
         /// <summary>
@@ -49,12 +88,13 @@ namespace KIP_server_GET
         /// <param name="app">Application.</param>
         /// <param name="logger">Logger.</param>
         /// <param name="env">Environment.</param>
-        public void Configure(IApplicationBuilder app, ILogger<Startup> logger, IWebHostEnvironment env)
+        /// <param name="apiDescriptionProvider">Api Description Provider.</param>
+        public void Configure(
+            IApplicationBuilder app,
+            ILogger<Startup> logger,
+            IWebHostEnvironment env,
+            IApiVersionDescriptionProvider apiDescriptionProvider)
         {
-            app.UseTokens(this.Configuration["Tokens:EntryToken"]);
-            var message = $"{CustomNames.KIP_server_GET} uses Tokens Protection";
-            logger.Log(LogLevel.Information, message);
-
             app.UseHttpsRedirection();
             app.UseRouting();
 
@@ -66,6 +106,31 @@ namespace KIP_server_GET
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+            }
+
+            if (this.enableTokens)
+            {
+                app.UseTokens(this.Configuration["Tokens:EntryToken"]);
+                var message = $"{CustomNames.KIP_server_GET} uses Tokens Protection";
+                logger.Log(LogLevel.Information, message);
+            }
+
+            if (this.enableSwagger)
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    // build a swagger endpoint for each discovered API version
+                    foreach (var description in apiDescriptionProvider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                    }
+
+                    app.Map("/swagger/versions_info", builder => builder.Run(async context =>
+                        await context.Response.WriteAsync(
+                            string.Join(Environment.NewLine, options.ConfigObject.Urls.Select(
+                                descriptor => $"{descriptor.Name} {descriptor.Url}")))));
+                });
             }
 
             app.UseEndpoints(builder =>
