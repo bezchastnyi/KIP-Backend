@@ -27,8 +27,6 @@ namespace KIP_server_AUTH.V1.Controllers
     [ApiController]
     public class PersonalInformationController : Controller
     {
-        private const string PersonalInformationPage = "page=1";
-
         private readonly ILogger<PersonalInformationController> logger;
         private readonly IMapper mapper;
 
@@ -57,7 +55,7 @@ namespace KIP_server_AUTH.V1.Controllers
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{PersonalInformationPage}";
+                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.PersonalInformationPage}";
                 var personalInformationKHPI = JsonToModelConverter.GetJsonData<PersonalInformationKHPI>(path);
 
                 List<PersonalInformation> personalInformation = null;

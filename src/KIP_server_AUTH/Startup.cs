@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using KIP_server_AUTH.Constants;
+using System.Reflection;
 using KIP_server_AUTH.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -112,7 +112,7 @@ namespace KIP_server_AUTH
             if (this.enableTokens)
             {
                 app.UseTokens(this.Configuration["Tokens:EntryToken"]);
-                var message = $"{CustomNames.KIP_server_AUTH} uses Tokens Protection";
+                var message = $"{Assembly.GetEntryAssembly().GetName().Name} uses Tokens Protection";
                 logger.Log(LogLevel.Information, message);
             }
 

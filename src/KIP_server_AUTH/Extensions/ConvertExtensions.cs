@@ -2,6 +2,9 @@
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
+using System;
+using System.Globalization;
+
 namespace KIP_server_AUTH.Extensions
 {
     /// <summary>
@@ -18,7 +21,8 @@ namespace KIP_server_AUTH.Extensions
         /// <param name="value">Value.</param>
         public static bool StringToBool(string value)
         {
-            if (value == "1" || value == "true")
+            if (value == "1" ||
+                value == "true")
             {
                 return true;
             }
@@ -35,7 +39,8 @@ namespace KIP_server_AUTH.Extensions
         /// <param name="value">Value.</param>
         public static int StringToInt(string value)
         {
-            if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrEmpty(value) ||
+                string.IsNullOrWhiteSpace(value))
             {
                 return 0;
             }
@@ -44,11 +49,12 @@ namespace KIP_server_AUTH.Extensions
 
             try
             {
-                result = System.Convert.ToInt32(value);
+                result = Convert.ToInt32(value, CultureInfo.InvariantCulture);
             }
-            catch
+            catch (Exception e)
             {
-                return result;
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+                return 0;
             }
 
             return result;
@@ -63,7 +69,8 @@ namespace KIP_server_AUTH.Extensions
         /// <param name="value">Value.</param>
         public static int? StringToNullableInt(string value)
         {
-            if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrEmpty(value) ||
+                string.IsNullOrWhiteSpace(value))
             {
                 return null;
             }
@@ -72,11 +79,12 @@ namespace KIP_server_AUTH.Extensions
 
             try
             {
-                result = System.Convert.ToInt32(value);
+                result = Convert.ToInt32(value, CultureInfo.InvariantCulture);
             }
-            catch
+            catch (Exception e)
             {
-                return result;
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+                return null;
             }
 
             return result;
@@ -91,7 +99,8 @@ namespace KIP_server_AUTH.Extensions
         /// <param name="value">Value.</param>
         public static float? StringToNullableFloat(string value)
         {
-            if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrEmpty(value) ||
+                string.IsNullOrWhiteSpace(value))
             {
                 return null;
             }
@@ -100,11 +109,12 @@ namespace KIP_server_AUTH.Extensions
 
             try
             {
-                result = float.Parse(value);
+                result = float.Parse(value, CultureInfo.InvariantCulture);
             }
-            catch
+            catch (Exception e)
             {
-                return result;
+                Console.WriteLine(e.Message + ": " + e.StackTrace);
+                return null;
             }
 
             return result;

@@ -37,8 +37,8 @@ namespace KIP_server_AUTH.Mapping.Converters
                 StudentId = ConvertExtensions.StringToInt(source.studid),
                 FIO = source.fio,
                 Group = source.group,
-                FullRankMark = ConvertExtensions.StringToNullableInt(source.sbal100),
-                ShortRankMark = ConvertExtensions.StringToNullableInt(source.sbal5),
+                FullRankMark = ConvertExtensions.StringToNullableFloat(source.sbal100),
+                ShortRankMark = ConvertExtensions.StringToNullableFloat(source.sbal5),
                 RankFormula = source.rating,
             };
         }

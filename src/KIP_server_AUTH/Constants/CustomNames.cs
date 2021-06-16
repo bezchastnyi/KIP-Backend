@@ -6,18 +6,33 @@
     public class CustomNames
     {
         /// <summary>
-        /// App name.
-        /// </summary>
-        public const string KIP_server_AUTH = "KIP_server_AUTH";
-
-        /// <summary>
-        /// Server version.
-        /// </summary>
-        public const string Version = "1.0";
-
-        /// <summary>
         /// Cabinet url.
         /// </summary>
         public const string StudentCabinetUrl = @"http://schedule.kpi.kharkov.ua/json/kabinet?";
+
+        /// <summary>
+        /// PersonalInformationPage.
+        /// </summary>
+        public const string PersonalInformationPage = "page=1";
+
+        /// <summary>
+        /// SemesterMarksListPage.
+        /// </summary>
+        public const string SemesterMarksListPage = "page=2";
+
+        /// <summary>
+        /// DebtListPage.
+        /// </summary>
+        public const string DebtListPage = "page=3";
+
+        /// <summary>
+        /// DebtListPage.
+        /// </summary>
+        public const string SemesterStudyingPlanPage = "page=4";
+
+        /// <summary>
+        /// CurrentRankPage.
+        /// </summary>
+        public const string CurrentRankPage = "page=5";
     }
 }

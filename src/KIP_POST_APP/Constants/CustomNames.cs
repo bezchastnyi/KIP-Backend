@@ -10,16 +10,6 @@ namespace KIP_POST_APP.Constants
     public class CustomNames
     {
         /// <summary>
-        /// App name.
-        /// </summary>
-        public const string KIP_POST_APP = "KIP_POST_APP";
-
-        /// <summary>
-        /// Server version.
-        /// </summary>
-        public const string Version = "1.0";
-
-        /// <summary>
         /// KIP DB.
         /// </summary>
         public const string KIP_database = "KIP_database";

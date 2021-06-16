@@ -27,8 +27,6 @@ namespace KIP_server_AUTH.V1.Controllers
     [ApiController]
     public class CurrentRankController : Controller
     {
-        private const string CurrentRankPage = "page=5";
-
         private readonly ILogger<CurrentRankController> logger;
         private readonly IMapper mapper;
 
@@ -57,7 +55,7 @@ namespace KIP_server_AUTH.V1.Controllers
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CurrentRankPage}";
+                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.CurrentRankPage}";
                 var currentRankKHPI = JsonToModelConverter.GetJsonData<CurrentRankKHPI>(path);
 
                 List<CurrentRank> currentRank = null;

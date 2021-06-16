@@ -37,13 +37,13 @@ namespace KIP_server_AUTH.Models.KIP
         /// Gets or sets the full form of rank mark.
         /// </summary>
         /// <value>full form of rank mark.</value>
-        public int? FullRankMark { get; set; }
+        public float? FullRankMark { get; set; }
 
         /// <summary>
         /// Gets or sets the short form of rank mark.
         /// </summary>
         /// <value>short form of rank mark.</value>
-        public int? ShortRankMark { get; set; }
+        public float? ShortRankMark { get; set; }
 
         /// <summary>
         /// Gets or sets the formula of rank calculating.

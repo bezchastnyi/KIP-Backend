@@ -3,18 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9A2F9FA7-014B-47B7-BED8-0D2A2CEAF7EE}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_GET", "src\KIP_server_GET\KIP_server_GET.csproj", "{ED7D1D0D-D526-43F4-95F0-610CA6CC1AAD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_AUTH", "src\KIP_server_AUTH\KIP_server_AUTH.csproj", "{685F2B88-BC73-4623-AB67-44643EEF9B19}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_POST_APP", "src\KIP_POST_APP\KIP_POST_APP.csproj", "{3848CEA0-774A-4FEE-AEFA-17A875CFC41E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{18ECED55-DC5E-4FA8-B91A-FCAF322B84CC}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9A2F9FA7-014B-47B7-BED8-0D2A2CEAF7EE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0AD68C06-80D6-43C5-B22A-3254245B4D55}"
 EndProject
@@ -23,6 +18,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_POST_APP.Tests", "test\KIP_POST_APP.Tests\KIP_POST_APP.Tests.csproj", "{1A5FFBE4-B575-45A3-B74C-10B6AE20D05F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_AUTH.Tests", "test\KIP_server_AUTH.Tests\KIP_server_AUTH.Tests.csproj", "{EC94DECA-6EF5-4C26-A7FF-21859163192F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{18ECED55-DC5E-4FA8-B91A-FCAF322B84CC}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

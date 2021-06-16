@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using KIP_server_GET.Constants;
 using KIP_server_GET.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,8 @@ namespace KIP_server_GET.Controllers
         [Route("/")]
         public IActionResult Home()
         {
-            var info = $"{CustomNames.KIP_server_GET} version: {CustomNames.Version}";
+            var info = $"{Assembly.GetEntryAssembly().GetName().Name}: " +
+                       $"{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}";
             return this.Ok(info);
         }
 

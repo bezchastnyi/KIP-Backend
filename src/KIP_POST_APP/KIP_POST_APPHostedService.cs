@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -61,7 +62,8 @@ namespace KIP_POST_APP
         /// <inheritdoc/>
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            var message = $"{CustomNames.KIP_POST_APP} version: {CustomNames.Version}";
+            var message = $"{Assembly.GetEntryAssembly().GetName().Name}: " +
+                          $"{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}";
             this.logger.Log(LogLevel.Information, message);
 
             try

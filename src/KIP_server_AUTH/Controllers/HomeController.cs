@@ -3,7 +3,7 @@
 // </copyright>
 
 using System;
-using KIP_server_AUTH.Constants;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -37,7 +37,8 @@ namespace KIP_server_AUTH.Controllers
         [Route("/")]
         public IActionResult Home()
         {
-            var info = $"{CustomNames.KIP_server_AUTH} version: {CustomNames.Version}";
+            var info = $"{Assembly.GetEntryAssembly().GetName().Name}: " +
+                       $"{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}";
             return this.Ok(info);
         }
     }

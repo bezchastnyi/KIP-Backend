@@ -27,8 +27,6 @@ namespace KIP_server_AUTH.V1.Controllers
     [ApiController]
     public class SemesterStudyingPlanController : Controller
     {
-        private const string SemesterStudyingPlanPage = "page=4";
-
         private readonly ILogger<SemesterStudyingPlanController> logger;
         private readonly IMapper mapper;
 
@@ -58,7 +56,7 @@ namespace KIP_server_AUTH.V1.Controllers
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password) && (semester > 0 && semester < 13))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{SemesterStudyingPlanPage}&semestr={semester}";
+                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.SemesterStudyingPlanPage}&semestr={semester}";
                 var semesterStudyingPlanKHPI = JsonToModelConverter.GetJsonData<SemesterStudyingPlanKHPI>(path);
 
                 List<SemesterStudyingPlan> semesterStudyingPlan = null;

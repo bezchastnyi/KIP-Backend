@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using KIP_server_GET.Constants;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -111,7 +111,7 @@ namespace KIP_server_GET
             if (this.enableTokens)
             {
                 app.UseTokens(this.Configuration["Tokens:EntryToken"]);
-                var message = $"{CustomNames.KIP_server_GET} uses Tokens Protection";
+                var message = $"{Assembly.GetEntryAssembly().GetName().Name} uses Tokens Protection";
                 logger.Log(LogLevel.Information, message);
             }
 

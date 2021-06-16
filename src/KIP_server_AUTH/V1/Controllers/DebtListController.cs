@@ -27,8 +27,6 @@ namespace KIP_server_AUTH.V1.Controllers
     [ApiController]
     public class DebtListController : Controller
     {
-        private const string DebtListPage = "page=3";
-
         private readonly ILogger<DebtListController> logger;
         private readonly IMapper mapper;
 
@@ -57,7 +55,7 @@ namespace KIP_server_AUTH.V1.Controllers
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{DebtListPage}";
+                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.DebtListPage}";
                 var debtListKHPI = JsonToModelConverter.GetJsonData<DebtListKHPI>(path);
 
                 List<DebtList> debtList = null;

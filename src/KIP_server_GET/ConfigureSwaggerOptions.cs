@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using KIP_server_GET.Constants;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -43,8 +43,9 @@ namespace KIP_server_GET
         {
             var info = new OpenApiInfo
             {
-                Title = $" {CustomNames.KIP_server_GET}: v{CustomNames.Version}",
-                Version = CustomNames.Version,
+                Title = $" {Assembly.GetEntryAssembly().GetName().Name}: " +
+                        $"v{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}",
+                Version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
                 Description = " Server \"GET\": providing common information for not auth mode",
                 Contact = new OpenApiContact
                 {
