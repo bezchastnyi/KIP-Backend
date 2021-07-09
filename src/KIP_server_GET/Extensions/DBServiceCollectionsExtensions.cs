@@ -36,7 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             var pgVersion = new Version(pgVersionString);
-            services.AddDbContextPool<ServerContext>(contextOptions =>
+            services.AddDbContextPool<POSTContext>(contextOptions =>
             {
                 contextOptions.UseNpgsql(connectionString, npgOptions =>
                 {

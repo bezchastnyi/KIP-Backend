@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KIP_server_AUTH.Attributes
+namespace KIP_Backend.Attributes
 {
     /// <summary>
     /// Class V1Attribute.

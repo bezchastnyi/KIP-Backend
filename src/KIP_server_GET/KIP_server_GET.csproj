@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KIP_POST_APP\KIP_POST_APP.csproj" />
+    <ProjectReference Include="..\..\KIP_Backend\KIP_Backend.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,13 +6,13 @@ namespace KIP_POST_APP.DB
     /// <summary>
     /// Server context.
     /// </summary>
-    public class ServerContext : DbContext
+    public class POSTContext : DbContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ServerContext"/> class.
+        /// Initializes a new instance of the <see cref="POSTContext"/> class.
         /// </summary>
         /// <param name="options">DB context options.</param>
-        public ServerContext(DbContextOptions<ServerContext> options)
+        public POSTContext(DbContextOptions<POSTContext> options)
             : base(options) { }
 
         /// <summary>

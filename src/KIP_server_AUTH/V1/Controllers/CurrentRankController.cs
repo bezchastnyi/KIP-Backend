@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using KIP_server_AUTH.Attributes;
+using KIP_Backend.Attributes;
 using KIP_server_AUTH.Constants;
 using KIP_server_AUTH.Mapping.Converters;
 using KIP_server_AUTH.Models.KHPI;

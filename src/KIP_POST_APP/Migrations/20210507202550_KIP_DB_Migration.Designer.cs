@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KIP_POST_APP.Migrations
 {
-    [DbContext(typeof(ServerContext))]
+    [DbContext(typeof(POSTContext))]
     [Migration("20210507202550_KIP_DB_Migration")]
     partial class KIP_DB_Migration
     {

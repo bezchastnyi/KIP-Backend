@@ -34,4 +34,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.1.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\KIP_Backend\KIP_Backend.csproj" />
+  </ItemGroup>
+
 </Project>

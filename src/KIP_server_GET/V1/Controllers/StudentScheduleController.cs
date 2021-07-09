@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using KIP_Backend.Attributes;
 using KIP_POST_APP.DB;
 using KIP_POST_APP.Models.KIP;
 using KIP_POST_APP.Models.KIP.Helpers;
-using KIP_server_GET.Attributes;
 using KIP_server_GET.Constants;
 using KIP_server_GET.Models.Output;
 using Microsoft.AspNetCore.Diagnostics;
@@ -25,7 +25,7 @@ namespace KIP_server_GET.V1.Controllers
     [ApiController]
     public class StudentScheduleController : Controller
     {
-        private readonly ServerContext _context;
+        private readonly POSTContext _context;
         private readonly ILogger<StudentScheduleController> _logger;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace KIP_server_GET.V1.Controllers
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public StudentScheduleController(ILogger<StudentScheduleController> logger, ServerContext context)
+        public StudentScheduleController(ILogger<StudentScheduleController> logger, POSTContext context)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._context = context ?? throw new ArgumentNullException(nameof(context));

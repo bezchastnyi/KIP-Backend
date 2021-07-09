@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KIP_POST_APP.Migrations
 {
-    [DbContext(typeof(ServerContext))]
+    [DbContext(typeof(POSTContext))]
     partial class ServerContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

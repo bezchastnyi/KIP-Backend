@@ -10,12 +10,12 @@ namespace KIP_server_GET.Tests.V1.Controllers
     public class GroupControllerTests
     {
         private readonly Mock<ILogger<GroupController>> loggerMock;
-        private readonly Mock<ServerContext> serverContextMock;
+        private readonly Mock<POSTContext> serverContextMock;
 
         public GroupControllerTests()
         {
             this.loggerMock = new Mock<ILogger<GroupController>>();
-            this.serverContextMock = new Mock<ServerContext>();
+            this.serverContextMock = new Mock<POSTContext>();
 
             // this.serverContextMock.Setup(c => c.Audience).Returns(new DbSet<Audience>());
         }

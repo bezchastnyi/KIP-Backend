@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.Secrets
+namespace KIP_Backend.Secrets
 {
     /// <summary>
     /// Entry token.
@@ -22,8 +22,8 @@ namespace KIP_server_AUTH.Secrets
         /// <param name="logger">The logger.</param>
         public EntryToken(RequestDelegate next, string pattern, ILogger<EntryToken> logger)
         {
-            this._next = next ?? throw new ArgumentNullException(nameof(next));
-            this.pattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
+            this._next = next;
+            this.pattern = pattern;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 

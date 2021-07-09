@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KIP_server_GET.Attributes
+namespace KIP_Backend.Attributes
 {
     /// <summary>
     /// Present attribute for api routing.
