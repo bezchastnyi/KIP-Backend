@@ -2,6 +2,7 @@
 using System.Linq;
 using KIP_POST_APP.DB;
 using KIP_POST_APP.Models.KIP;
+using KIP_server_GET.Attributes;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,9 @@ namespace KIP_server_GET.V1.Controllers
     /// Building controller.
     /// </summary>
     /// <seealso cref="Controller" />
-    [Controller]
+    [V1]
+    [ApiRoute]
+    [ApiController]
     public class BuildingController : Controller
     {
         private readonly ServerContext _context;
