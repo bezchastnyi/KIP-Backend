@@ -26,8 +26,8 @@ namespace KIP_server_AUTH.V1.Controllers
     [ApiController]
     public class CurrentRankController : Controller
     {
-        private readonly ILogger<CurrentRankController> logger;
-        private readonly IMapper mapper;
+        private readonly ILogger<CurrentRankController> _logger;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CurrentRankController"/> class.
@@ -36,8 +36,8 @@ namespace KIP_server_AUTH.V1.Controllers
         /// <param name="mapper">The mapper.</param>
         public CurrentRankController(ILogger<CurrentRankController> logger, IMapper mapper)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>
@@ -45,39 +45,50 @@ namespace KIP_server_AUTH.V1.Controllers
         /// </summary>
         /// <param name="email">The email of student.</param>
         /// <param name="password">The password of student.</param>
-        /// <returns>Current rank.</returns>
+        /// <returns>Action Result.</returns>
         [HttpGet]
         [Route("CurrentRank/{email}/{password}")]
         [ProducesResponseType(typeof(CurrentRank), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CurrentRank(string email, string password)
         {
-            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrWhiteSpace(email))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.CurrentRankPage}";
-                var currentRankKHPI = await JsonDeserializer.ExecuteAsync<CurrentRankKHPI>(path);
-
-                List<CurrentRank> currentRank = null;
-                if (currentRankKHPI == null)
-                {
-                    // log
-                    return this.BadRequest();
-                }
-                else
-                {
-                    currentRank = this.mapper.Map<List<CurrentRank>>(currentRankKHPI);
-                }
-
-                if (currentRank?.Count == 0)
-                {
-                    return this.BadRequest();
-                }
-
-                return new JsonResult(currentRank);
+                throw new ArgumentException(email);
             }
 
-            // log
-            return this.BadRequest();
+            if (string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(password))
+            {
+                throw new ArgumentException(password);
+            }
+
+            var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.CurrentRankPage}";
+            List<CurrentRank> currentRank = null;
+
+            try
+            {
+                var currentRankKHPI = await JsonDeserializer.ExecuteAsync<CurrentRankKHPI>(path);
+                if (currentRankKHPI == null)
+                {
+                    this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);
+                    return this.BadRequest();
+                }
+
+                currentRank = this._mapper.Map<List<CurrentRank>>(currentRankKHPI);
+                if (currentRank?.Count == 0)
+                {
+                    this._logger.LogMapDataError(ActionNames.MapData, email, password);
+                    return this.BadRequest();
+                }
+
+                this._logger.LogDataGetSuccess(ActionNames.GetCurrentRank, email, password);
+                return new JsonResult(currentRank);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogGetDataUnexpectedError(ActionNames.GetCurrentRank, email, password, ex);
+                return this.BadRequest();
+            }
         }
     }
 }

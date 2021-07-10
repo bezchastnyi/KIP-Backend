@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using KIP_server_TB.DB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +18,8 @@ namespace KIP_server_TB
     [ExcludeFromCodeCoverage]
     public class Startup
     {
+        private readonly string assenmblyName = Assembly.GetEntryAssembly()?.GetName().Name;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
@@ -37,7 +41,7 @@ namespace KIP_server_TB
 
             var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
             var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
-            services.AddDbServices(pgConnectionString, pgVersionString);
+            services.AddDbServices<TelegramDbContext>(pgConnectionString, pgVersionString, this.assenmblyName);
 
             services.AddMvcCore()
                 .AddDataAnnotations()

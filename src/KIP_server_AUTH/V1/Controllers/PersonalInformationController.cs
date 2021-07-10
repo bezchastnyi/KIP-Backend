@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_server_AUTH.Constants;
@@ -25,8 +26,8 @@ namespace KIP_server_AUTH.V1.Controllers
     [ApiController]
     public class PersonalInformationController : Controller
     {
-        private readonly ILogger<PersonalInformationController> logger;
-        private readonly IMapper mapper;
+        private readonly ILogger<PersonalInformationController> _logger;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersonalInformationController"/> class.
@@ -35,8 +36,8 @@ namespace KIP_server_AUTH.V1.Controllers
         /// <param name="mapper">The mapper.</param>
         public PersonalInformationController(ILogger<PersonalInformationController> logger, IMapper mapper)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>
@@ -49,34 +50,45 @@ namespace KIP_server_AUTH.V1.Controllers
         [Route("PersonalInformation/{email}/{password}")]
         [ProducesResponseType(typeof(PersonalInformation), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
-        public IActionResult PersonalInformation(string email, string password)
+        public async Task<IActionResult> PersonalInformation(string email, string password)
         {
-            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrWhiteSpace(email))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.PersonalInformationPage}";
-                var personalInformationKHPI = JsonDeserializer.ExecuteAsync<PersonalInformationKHPI>(path);
-
-                List<PersonalInformation> personalInformation = null;
-                if (personalInformationKHPI == null)
-                {
-                    // log
-                    return this.BadRequest();
-                }
-                else
-                {
-                    personalInformation = this.mapper.Map<List<PersonalInformation>>(personalInformationKHPI);
-                }
-
-                if (personalInformation?.Count == 0)
-                {
-                    return this.BadRequest();
-                }
-
-                return new JsonResult(personalInformation);
+                throw new ArgumentException(email);
             }
 
-            // log
-            return this.BadRequest();
+            if (string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(password))
+            {
+                throw new ArgumentException(password);
+            }
+
+            var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.PersonalInformationPage}";
+            List<PersonalInformation> personalInformation = null;
+
+            try
+            {
+                var personalInformationKHPI = await JsonDeserializer.ExecuteAsync<PersonalInformationKHPI>(path);
+                if (personalInformationKHPI == null)
+                {
+                    this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);
+                    return this.BadRequest();
+                }
+
+                personalInformation = this._mapper.Map<List<PersonalInformation>>(personalInformationKHPI);
+                if (personalInformation?.Count == 0)
+                {
+                    this._logger.LogMapDataError(ActionNames.MapData, email, password);
+                    return this.BadRequest();
+                }
+
+                this._logger.LogDataGetSuccess(ActionNames.GetPersonalInformation, email, password);
+                return new JsonResult(personalInformation);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogGetDataUnexpectedError(ActionNames.GetPersonalInformation, email, password, ex);
+                return this.BadRequest();
+            }
         }
     }
 }

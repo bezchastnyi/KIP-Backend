@@ -21,7 +21,7 @@ namespace KIP_server_GET.V1.Controllers
     [ApiController]
     public class BuildingController : Controller
     {
-        private readonly POSTContext _context;
+        private readonly PostDbContext _context;
         private readonly ILogger<BuildingController> _logger;
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace KIP_server_GET.V1.Controllers
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public BuildingController(ILogger<BuildingController> logger, POSTContext context)
+        public BuildingController(ILogger<BuildingController> logger, PostDbContext context)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._context = context ?? throw new ArgumentNullException(nameof(context));

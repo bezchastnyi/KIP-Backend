@@ -28,7 +28,7 @@ namespace KIP_POST_APP
         private readonly ILogger<KIP_POST_APPHostedService> logger;
         private readonly IHostApplicationLifetime appLifetime;
         private readonly IMapper mapper;
-        private readonly POSTContext context;
+        private readonly PostDbContext context;
         private readonly IConfiguration config;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace KIP_POST_APP
             IHostApplicationLifetime appLifetime,
             ILogger<KIP_POST_APPHostedService> logger,
             IMapper mapper,
-            POSTContext context,
+            PostDbContext context,
             IConfiguration config)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

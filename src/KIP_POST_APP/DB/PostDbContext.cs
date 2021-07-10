@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 namespace KIP_POST_APP.DB
 {
     /// <summary>
-    /// Server context.
+    /// Post app db context.
     /// </summary>
-    public class POSTContext : DbContext
+    public class PostDbContext : DbContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="POSTContext"/> class.
+        /// Initializes a new instance of the <see cref="PostDbContext"/> class.
         /// </summary>
         /// <param name="options">DB context options.</param>
-        public POSTContext(DbContextOptions<POSTContext> options)
+        public PostDbContext(DbContextOptions<PostDbContext> options)
             : base(options) { }
 
         /// <summary>

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_server_AUTH.Constants;
@@ -26,8 +27,8 @@ namespace KIP_server_AUTH.V1.Controllers
     [ApiController]
     public class SemesterMarksListController : Controller
     {
-        private readonly ILogger<SemesterMarksListController> logger;
-        private readonly IMapper mapper;
+        private readonly ILogger<SemesterMarksListController> _logger;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SemesterMarksListController"/> class.
@@ -36,8 +37,8 @@ namespace KIP_server_AUTH.V1.Controllers
         /// <param name="mapper">The mapper.</param>
         public SemesterMarksListController(ILogger<SemesterMarksListController> logger, IMapper mapper)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>
@@ -51,34 +52,50 @@ namespace KIP_server_AUTH.V1.Controllers
         [Route("SemesterMarksList/{email}/{password}/{semester:int}")]
         [ProducesResponseType(typeof(SemesterMarksListKHPI), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
-        public IActionResult SemesterMarksList(string email, string password, int semester)
+        public async Task<IActionResult> SemesterMarksList(string email, string password, int semester)
         {
-            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password) && (semester > 0 && semester < 13))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrWhiteSpace(email))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.SemesterMarksListPage}&semestr={semester}";
-                var semesterMarksListKHPI = JsonDeserializer.ExecuteAsync<SemesterMarksListKHPI>(path);
-
-                List<SemesterMarksList> semesterMarksList = null;
-                if (semesterMarksListKHPI == null)
-                {
-                    // log
-                    return this.BadRequest();
-                }
-                else
-                {
-                    semesterMarksList = this.mapper.Map<List<SemesterMarksList>>(semesterMarksListKHPI);
-                }
-
-                if (semesterMarksList?.Count == 0)
-                {
-                    return this.BadRequest();
-                }
-
-                return new JsonResult(semesterMarksList);
+                throw new ArgumentException(email);
             }
 
-            // log
-            return this.BadRequest();
+            if (string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(password))
+            {
+                throw new ArgumentException(password);
+            }
+
+            if (semester < 0 || semester > 12)
+            {
+                throw new ArgumentException(nameof(semester));
+            }
+
+            var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.SemesterMarksListPage}&semestr={semester}";
+            List<SemesterMarksList> semesterMarksList = null;
+
+            try
+            {
+                var semesterMarksListKHPI = await JsonDeserializer.ExecuteAsync<SemesterMarksListKHPI>(path);
+                if (semesterMarksListKHPI == null)
+                {
+                    this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);
+                    return this.BadRequest();
+                }
+
+                semesterMarksList = this._mapper.Map<List<SemesterMarksList>>(semesterMarksListKHPI);
+                if (semesterMarksList?.Count == 0)
+                {
+                    this._logger.LogMapDataError(ActionNames.MapData, email, password);
+                    return this.BadRequest();
+                }
+
+                this._logger.LogDataGetSuccess(ActionNames.GetSemesterMarksList, email, password);
+                return new JsonResult(semesterMarksList);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogGetDataUnexpectedError(ActionNames.GetSemesterMarksList, email, password, ex);
+                return this.BadRequest();
+            }
         }
     }
 }

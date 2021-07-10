@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using KIP_Backend.Extensions;
+using KIP_POST_APP.DB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,8 @@ namespace KIP_server_GET
     [ExcludeFromCodeCoverage]
     public class Startup
     {
+        private readonly string assenmblyName = Assembly.GetEntryAssembly()?.GetName().Name;
+
         private readonly bool enableSwagger;
         private readonly bool enableTokens;
 
@@ -64,7 +67,7 @@ namespace KIP_server_GET
 
             var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
             var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
-            services.AddDbServices(pgConnectionString, pgVersionString);
+            services.AddDbServices<PostDbContext>(pgConnectionString, pgVersionString, this.assenmblyName);
 
             services.AddApiVersioning(o =>
             {
@@ -112,7 +115,7 @@ namespace KIP_server_GET
             if (this.enableTokens)
             {
                 app.UseTokens(this.Configuration["Tokens:EntryToken"]);
-                var message = $"{Assembly.GetEntryAssembly().GetName().Name} uses Tokens Protection";
+                var message = $"{this.assenmblyName} uses Tokens Protection";
                 logger.Log(LogLevel.Information, message);
             }
 

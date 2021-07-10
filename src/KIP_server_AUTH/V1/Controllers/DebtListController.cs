@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_server_AUTH.Constants;
@@ -25,8 +26,8 @@ namespace KIP_server_AUTH.V1.Controllers
     [ApiController]
     public class DebtListController : Controller
     {
-        private readonly ILogger<DebtListController> logger;
-        private readonly IMapper mapper;
+        private readonly ILogger<DebtListController> _logger;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DebtListController"/> class.
@@ -35,8 +36,8 @@ namespace KIP_server_AUTH.V1.Controllers
         /// <param name="mapper">The mapper.</param>
         public DebtListController(ILogger<DebtListController> logger, IMapper mapper)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         /// <summary>
@@ -44,39 +45,50 @@ namespace KIP_server_AUTH.V1.Controllers
         /// </summary>
         /// <param name="email">The email of student.</param>
         /// <param name="password">The password of student.</param>
-        /// <returns>Debt list.</returns>
+        /// <returns>Action Result.</returns>
         [HttpGet]
         [Route("DebtList/{email}/{password}")]
         [ProducesResponseType(typeof(DebtList), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
-        public IActionResult DebtList(string email, string password)
+        public async Task<IActionResult> DebtList(string email, string password)
         {
-            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrWhiteSpace(email))
             {
-                var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.DebtListPage}";
-                var debtListKHPI = JsonDeserializer.ExecuteAsync<DebtListKHPI>(path);
-
-                List<DebtList> debtList = null;
-                if (debtListKHPI == null)
-                {
-                    // log
-                    return this.BadRequest();
-                }
-                else
-                {
-                    debtList = this.mapper.Map<List<DebtList>>(debtListKHPI);
-                }
-
-                if (debtList?.Count == 0)
-                {
-                    return this.BadRequest();
-                }
-
-                return new JsonResult(debtList);
+                throw new ArgumentException(email);
             }
 
-            // log
-            return this.BadRequest();
+            if (string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(password))
+            {
+                throw new ArgumentException(password);
+            }
+
+            var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.DebtListPage}";
+            List<DebtList> debtList = null;
+
+            try
+            {
+                var debtListKHPI = await JsonDeserializer.ExecuteAsync<DebtListKHPI>(path);
+                if (debtListKHPI == null)
+                {
+                    this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);
+                    return this.BadRequest();
+                }
+
+                debtList = this._mapper.Map<List<DebtList>>(debtListKHPI);
+                if (debtList?.Count == 0)
+                {
+                    this._logger.LogMapDataError(ActionNames.MapData, email, password);
+                    return this.BadRequest();
+                }
+
+                this._logger.LogDataGetSuccess(ActionNames.GetDebtList, email, password);
+                return new JsonResult(debtList);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogGetDataUnexpectedError(ActionNames.GetDebtList, email, password, ex);
+                return this.BadRequest();
+            }
         }
     }
 }

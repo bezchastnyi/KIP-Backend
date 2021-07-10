@@ -21,7 +21,7 @@ namespace KIP_POST_APP.Services
         /// <param name = "dataList">The list of data. </param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task PostDataToDBAsync(
-            POSTContext context,
+            PostDbContext context,
             (List<Faculty> facultyList,
             List<Group> groupList,
             List<Cathedra> cathedraList,
@@ -58,7 +58,7 @@ namespace KIP_POST_APP.Services
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendFacultyDataToDB(POSTContext context, List<Faculty> objects)
+        public static async Task SendFacultyDataToDB(PostDbContext context, List<Faculty> objects)
         {
             foreach (var obj in objects)
             {
@@ -72,7 +72,7 @@ namespace KIP_POST_APP.Services
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendGroupDataToDBAsync(POSTContext context, List<Group> objects)
+        public static async Task SendGroupDataToDBAsync(PostDbContext context, List<Group> objects)
         {
             foreach (var obj in objects)
             {
@@ -86,7 +86,7 @@ namespace KIP_POST_APP.Services
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendCathedraDataToDB(POSTContext context, List<Cathedra> objects)
+        public static async Task SendCathedraDataToDB(PostDbContext context, List<Cathedra> objects)
         {
             foreach (var obj in objects)
             {
@@ -100,7 +100,7 @@ namespace KIP_POST_APP.Services
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendBuildingDataToDB(POSTContext context, List<Building> objects)
+        public static async Task SendBuildingDataToDB(PostDbContext context, List<Building> objects)
         {
             foreach (var obj in objects)
             {
@@ -114,7 +114,7 @@ namespace KIP_POST_APP.Services
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendAudienceDataToDB(POSTContext context, List<Audience> objects)
+        public static async Task SendAudienceDataToDB(PostDbContext context, List<Audience> objects)
         {
             foreach (var obj in objects)
             {
@@ -128,7 +128,7 @@ namespace KIP_POST_APP.Services
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendProfDataToDB(POSTContext context, List<Prof> objects)
+        public static async Task SendProfDataToDB(PostDbContext context, List<Prof> objects)
         {
             foreach (var obj in objects)
             {
@@ -142,7 +142,7 @@ namespace KIP_POST_APP.Services
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendStudentScheduleDataToDB(POSTContext context, List<StudentSchedule> objects)
+        public static async Task SendStudentScheduleDataToDB(PostDbContext context, List<StudentSchedule> objects)
         {
             foreach (var obj in objects)
             {
@@ -156,7 +156,7 @@ namespace KIP_POST_APP.Services
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendProfScheduleDataToDB(POSTContext context, List<ProfSchedule> objects)
+        public static async Task SendProfScheduleDataToDB(PostDbContext context, List<ProfSchedule> objects)
         {
             foreach (var obj in objects)
             {
@@ -170,7 +170,7 @@ namespace KIP_POST_APP.Services
         /// <param name="context">The context.</param>
         /// <param name = "objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendAudienceScheduleDataToDB(POSTContext context, List<AudienceSchedule> objects)
+        public static async Task SendAudienceScheduleDataToDB(PostDbContext context, List<AudienceSchedule> objects)
         {
             foreach (var obj in objects)
             {

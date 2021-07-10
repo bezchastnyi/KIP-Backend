@@ -41,7 +41,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var connectionString = config["ConnectionStrings:PostgresConnection"];
             var pgVersion = new Version(config["ConnectionStrings:PostgresVersion"]);
 
-            services.AddDbContext<POSTContext>(
+            services.AddDbContext<PostDbContext>(
                 contextOptions =>
             {
                 contextOptions.UseNpgsql(connectionString, npgOptions =>
