@@ -3,7 +3,7 @@ name: CI-CD
 on: [push, pull_request]
 
 env:
-  solution: 'src\ReportGenerator.sln'
+  solution: 'src\KIP-Backend.sln'
   buildPlatform: Any CPU
   buildConfiguration: Release
   version: 4.8.12
