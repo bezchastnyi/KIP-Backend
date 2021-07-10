@@ -9,6 +9,7 @@ using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_server_AUTH.Constants;
 using KIP_server_AUTH.Extensions;
+using KIP_server_AUTH.Interfaces;
 using KIP_server_AUTH.Models.KHPI;
 using KIP_server_AUTH.Models.KIP;
 using Microsoft.AspNetCore.Http;
@@ -28,16 +29,20 @@ namespace KIP_server_AUTH.V1.Controllers
     {
         private readonly ILogger<SemesterStudyingPlanController> _logger;
         private readonly IMapper _mapper;
+        private readonly IDeserializeService _deserializeService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SemesterStudyingPlanController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
-        public SemesterStudyingPlanController(ILogger<SemesterStudyingPlanController> logger, IMapper mapper)
+        /// <param name="deserializeService">The deserializeService.</param>
+        public SemesterStudyingPlanController(
+            ILogger<SemesterStudyingPlanController> logger, IMapper mapper, IDeserializeService deserializeService)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this._deserializeService = deserializeService ?? throw new ArgumentNullException(nameof(deserializeService));
         }
 
         /// <summary>
@@ -73,7 +78,7 @@ namespace KIP_server_AUTH.V1.Controllers
 
             try
             {
-                var semesterStudyingPlanKHPI = await JsonDeserializer.ExecuteAsync<SemesterStudyingPlanKHPI>(path);
+                var semesterStudyingPlanKHPI = await this._deserializeService.ExecuteAsync<SemesterStudyingPlanKHPI>(path);
                 if (semesterStudyingPlanKHPI == null)
                 {
                     this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);

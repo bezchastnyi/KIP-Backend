@@ -1,4 +1,5 @@
 ﻿using System;
+using KIP_Backend.Constants;
 using Microsoft.EntityFrameworkCore;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -8,8 +9,6 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class DbServiceCollectionsExtensions
     {
-        private const string NullOrEptyErrorMessage = "{0} must not be null or empty";
-
         /// <summary>
         /// Adds the database services.
         /// </summary>
@@ -32,12 +31,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new ArgumentException(string.Format(NullOrEptyErrorMessage, nameof(connectionString)));
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, nameof(connectionString)));
             }
 
             if (string.IsNullOrEmpty(pgVersionString))
             {
-                throw new ArgumentException(string.Format(NullOrEptyErrorMessage, nameof(pgVersionString)));
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, nameof(pgVersionString)));
             }
 
             var pgVersion = new Version(pgVersionString);

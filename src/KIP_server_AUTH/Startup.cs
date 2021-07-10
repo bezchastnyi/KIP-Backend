@@ -7,7 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using KIP_Backend.Extensions;
+using KIP_server_AUTH.Interfaces;
 using KIP_server_AUTH.Mapping;
+using KIP_server_AUTH.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -68,6 +70,7 @@ namespace KIP_server_AUTH
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddAutoMapper(typeof(MapperProfile));
+            services.AddSingleton<IDeserializeService, JsonDeserializeService>();
 
             services.AddApiVersioning(o =>
             {

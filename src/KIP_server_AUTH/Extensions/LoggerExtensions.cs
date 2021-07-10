@@ -21,7 +21,7 @@ namespace KIP_server_AUTH.Extensions
             LoggerMessage.Define<string, string, string>(
                 LogLevel.Information,
                 EventIds.DataGetSuccessEventId,
-                "Action: '{ACTION}'. Data has been get successfully " +
+                "Action: '{ACTION}'. Data has been get successfully. " +
                 "Email: '{EMAIL}'. " +
                 "Password: '{PASSWORD}'.");
 
@@ -107,6 +107,24 @@ namespace KIP_server_AUTH.Extensions
             this ILogger logger, string actionName, string email, string password, Exception exception)
         {
             GetDataUnexpectedError(logger, actionName, email, password, exception);
+        }
+
+        private static readonly Action<ILogger, string, Exception> JsonDeserializeUnexpectedError =
+            LoggerMessage.Define<string>(
+                LogLevel.Error,
+                EventIds.JsonDeserializeUnexpectedErrorEventId,
+                "Unexpected error while deserializing json data. " +
+                "Url: '{URL}'.");
+
+        /// <summary>
+        /// Log when an unexpected error has occurred while deserializing json data.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="url">The url.</param>
+        /// <param name="exception">The exception.</param>
+        public static void LogJsonDeserializeUnexpectedError(this ILogger logger, string url, Exception exception)
+        {
+            JsonDeserializeUnexpectedError(logger, url, exception);
         }
 
         #endregion

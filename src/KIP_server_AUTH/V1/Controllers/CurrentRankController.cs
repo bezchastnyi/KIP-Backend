@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
+using KIP_Backend.Constants;
 using KIP_server_AUTH.Constants;
 using KIP_server_AUTH.Extensions;
+using KIP_server_AUTH.Interfaces;
 using KIP_server_AUTH.Models.KHPI;
 using KIP_server_AUTH.Models.KIP;
 using Microsoft.AspNetCore.Http;
@@ -28,16 +30,20 @@ namespace KIP_server_AUTH.V1.Controllers
     {
         private readonly ILogger<CurrentRankController> _logger;
         private readonly IMapper _mapper;
+        private readonly IDeserializeService _deserializeService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CurrentRankController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper.</param>
-        public CurrentRankController(ILogger<CurrentRankController> logger, IMapper mapper)
+        /// <param name="deserializeService">The deserializeService.</param>
+        public CurrentRankController(
+            ILogger<CurrentRankController> logger, IMapper mapper, IDeserializeService deserializeService)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this._deserializeService = deserializeService ?? throw new ArgumentNullException(nameof(deserializeService));
         }
 
         /// <summary>
@@ -54,12 +60,12 @@ namespace KIP_server_AUTH.V1.Controllers
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrWhiteSpace(email))
             {
-                throw new ArgumentException(email);
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, email));
             }
 
             if (string.IsNullOrEmpty(password) || string.IsNullOrWhiteSpace(password))
             {
-                throw new ArgumentException(password);
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, password));
             }
 
             var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.CurrentRankPage}";
@@ -67,7 +73,7 @@ namespace KIP_server_AUTH.V1.Controllers
 
             try
             {
-                var currentRankKHPI = await JsonDeserializer.ExecuteAsync<CurrentRankKHPI>(path);
+                var currentRankKHPI = await this._deserializeService.ExecuteAsync<CurrentRankKHPI>(path);
                 if (currentRankKHPI == null)
                 {
                     this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);

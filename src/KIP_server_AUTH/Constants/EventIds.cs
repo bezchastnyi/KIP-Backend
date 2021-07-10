@@ -41,6 +41,11 @@ namespace KIP_server_AUTH.Constants
         /// </summary>
         public static readonly EventId GetDataUnexpectedErrorEventId = new EventId(2402, "GET_DATA_UNEXPECTED_ERROR");
 
+        /// <summary>
+        /// Deserializing json data error identifier.
+        /// </summary>
+        public static readonly EventId JsonDeserializeUnexpectedErrorEventId = new EventId(2403, "JSON_DESERIALIZE_UNEXPECTED_ERROR");
+
         #endregion
     }
 }
