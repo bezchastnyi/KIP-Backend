@@ -1,8 +1,11 @@
-﻿namespace KIP_server_AUTH.Constants
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace KIP_server_AUTH.Constants
 {
     /// <summary>
     /// Custom name constants.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class CustomNames
     {
         /// <summary>
@@ -26,7 +29,7 @@
         public const string DebtListPage = "page=3";
 
         /// <summary>
-        /// DebtListPage.
+        /// SemesterStudyingPlanPage.
         /// </summary>
         public const string SemesterStudyingPlanPage = "page=4";
 

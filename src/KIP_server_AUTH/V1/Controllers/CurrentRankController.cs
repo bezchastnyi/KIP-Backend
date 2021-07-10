@@ -4,13 +4,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_server_AUTH.Constants;
-using KIP_server_AUTH.Mapping.Converters;
+using KIP_server_AUTH.Extensions;
 using KIP_server_AUTH.Models.KHPI;
 using KIP_server_AUTH.Models.KIP;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -21,7 +21,6 @@ namespace KIP_server_AUTH.V1.Controllers
     /// <summary>
     /// Current Rank controller.
     /// </summary>
-    /// <seealso cref="Controller" />
     [V1]
     [ApiRoute]
     [ApiController]
@@ -44,24 +43,24 @@ namespace KIP_server_AUTH.V1.Controllers
         /// <summary>
         /// Current rank of student's group.
         /// </summary>
+        /// <param name="email">The email of student.</param>
+        /// <param name="password">The password of student.</param>
         /// <returns>Current rank.</returns>
-        /// <param name="email">Email of student.</param>
-        /// <param name="password">Password of student.</param>
         [HttpGet]
         [Route("CurrentRank/{email}/{password}")]
         [ProducesResponseType(typeof(CurrentRank), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
-        public IActionResult CurrentRank(string email, string password)
+        public async Task<IActionResult> CurrentRank(string email, string password)
         {
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
                 var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.CurrentRankPage}";
-                var currentRankKHPI = JsonToModelConverter.GetJsonData<CurrentRankKHPI>(path);
+                var currentRankKHPI = await JsonDeserializer.ExecuteAsync<CurrentRankKHPI>(path);
 
                 List<CurrentRank> currentRank = null;
                 if (currentRankKHPI == null)
                 {
-                    this.logger.Log(LogLevel.Error, "Error");
+                    // log
                     return this.BadRequest();
                 }
                 else
@@ -69,7 +68,7 @@ namespace KIP_server_AUTH.V1.Controllers
                     currentRank = this.mapper.Map<List<CurrentRank>>(currentRankKHPI);
                 }
 
-                if (currentRank.Count == 0)
+                if (currentRank?.Count == 0)
                 {
                     return this.BadRequest();
                 }
@@ -77,10 +76,7 @@ namespace KIP_server_AUTH.V1.Controllers
                 return new JsonResult(currentRank);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this.logger.Log(LogLevel.Error, message);
-
+            // log
             return this.BadRequest();
         }
     }

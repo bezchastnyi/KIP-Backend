@@ -1,7 +1,12 @@
-﻿using System;
+﻿// <copyright file="Startup.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
+// </copyright>
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using KIP_Backend.Extensions;
 using KIP_server_AUTH.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +35,7 @@ namespace KIP_server_AUTH
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
-        /// <param name="configuration">Configuration.</param>
+        /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -51,6 +56,7 @@ namespace KIP_server_AUTH
         public void ConfigureServices(IServiceCollection services)
         {
             Console.OutputEncoding = System.Text.Encoding.Default;
+
             services.AddMvcCore()
                 .AddDataAnnotations()
                 .AddApiExplorer()
@@ -60,6 +66,7 @@ namespace KIP_server_AUTH
                     options.InvalidModelStateResponseFactory = context => new BadRequestObjectResult(context.ModelState);
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
             services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddApiVersioning(o =>
@@ -82,10 +89,10 @@ namespace KIP_server_AUTH
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        /// <param name="app">Application.</param>
-        /// <param name="logger">Logger.</param>
-        /// <param name="env">Environment.</param>
-        /// <param name="apiDescriptionProvider">Api Description Provider.</param>
+        /// <param name="app">The application.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="env">The environment.</param>
+        /// <param name="apiDescriptionProvider">The api Description Provider.</param>
         public void Configure(
             IApplicationBuilder app,
             ILogger<Startup> logger,

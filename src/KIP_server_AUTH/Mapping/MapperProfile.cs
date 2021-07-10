@@ -10,7 +10,7 @@ using KIP_server_AUTH.Models.KIP;
 namespace KIP_server_AUTH.Mapping
 {
     /// <summary>
-    /// Building of the profile KIP model from the KhPI.
+    /// MapperProfile.
     /// </summary>
     public class MapperProfile : Profile
     {
@@ -20,19 +20,19 @@ namespace KIP_server_AUTH.Mapping
         public MapperProfile()
         {
             this.CreateMap<PersonalInformationKHPI, PersonalInformation>()
-                .ConvertUsing<PersonalInformationKHPIToKIPConverter>();
+                .ConvertUsing<PersonalInformationConverter>();
 
             this.CreateMap<SemesterMarksListKHPI, SemesterMarksList>()
-                .ConvertUsing<SemesterMarksListKHPIToKIPConverter>();
+                .ConvertUsing<SemesterMarksListConverter>();
 
             this.CreateMap<CurrentRankKHPI, CurrentRank>()
-                .ConvertUsing<CurrentRankKHPIToKIPConverter>();
+                .ConvertUsing<CurrentRankConverter>();
 
             this.CreateMap<DebtListKHPI, DebtList>()
-                .ConvertUsing<DebtListKHPIToKIPConverter>();
+                .ConvertUsing<DebtListConverter>();
 
             this.CreateMap<SemesterStudyingPlanKHPI, SemesterStudyingPlan>()
-                .ConvertUsing<SemesterStudyingPlanKHPIToKIPConverter>();
+                .ConvertUsing<SemesterStudyingPlanConverter>();
         }
     }
 }

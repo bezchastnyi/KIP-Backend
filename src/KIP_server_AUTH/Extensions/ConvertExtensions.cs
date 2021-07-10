@@ -15,14 +15,12 @@ namespace KIP_server_AUTH.Extensions
         /// <summary>
         /// Convert string to bool.
         /// </summary>
-        /// <returns>
-        /// bool value.
-        /// </returns>
-        /// <param name="value">Value.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>bool value.</returns>
         public static bool StringToBool(string value)
         {
-            if (value == "1" ||
-                value == "true")
+            value = value.ToLower();
+            if (value == "1" || value == "true")
             {
                 return true;
             }
@@ -33,14 +31,11 @@ namespace KIP_server_AUTH.Extensions
         /// <summary>
         /// Convert string to int.
         /// </summary>
-        /// <returns>
-        /// int value.
-        /// </returns>
-        /// <param name="value">Value.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>int value.</returns>
         public static int StringToInt(string value)
         {
-            if (string.IsNullOrEmpty(value) ||
-                string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
             {
                 return 0;
             }
@@ -63,14 +58,11 @@ namespace KIP_server_AUTH.Extensions
         /// <summary>
         /// Convert string to nullable int.
         /// </summary>
-        /// <returns>
-        /// nullable int value.
-        /// </returns>
-        /// <param name="value">Value.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>nullable int value.</returns>
         public static int? StringToNullableInt(string value)
         {
-            if (string.IsNullOrEmpty(value) ||
-                string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
             {
                 return null;
             }
@@ -93,14 +85,11 @@ namespace KIP_server_AUTH.Extensions
         /// <summary>
         /// Convert string to nullable float.
         /// </summary>
-        /// <returns>
-        /// nullable float value.
-        /// </returns>
-        /// <param name="value">Value.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>nullable float value.</returns>
         public static float? StringToNullableFloat(string value)
         {
-            if (string.IsNullOrEmpty(value) ||
-                string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
             {
                 return null;
             }

@@ -1,4 +1,4 @@
-﻿// <copyright file="DebtListKHPIToKIPConverter.cs" company="KIP">
+﻿// <copyright file="SemesterStudyingPlanConverter.cs" company="KIP">
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
@@ -11,38 +11,36 @@ using KIP_server_AUTH.Models.KIP;
 namespace KIP_server_AUTH.Mapping.Converters
 {
     /// <summary>
-    /// Building of the KIP DebtList model from the KhPI DebtList.
+    /// Convert KhPI SemesterStudyingPlan model to the KIP model.
     /// </summary>
-    public class DebtListKHPIToKIPConverter : ITypeConverter<DebtListKHPI, DebtList>
+    public class SemesterStudyingPlanConverter :
+        ITypeConverter<SemesterStudyingPlanKHPI, SemesterStudyingPlan>
     {
         /// <summary>
-        /// Convert model of DebtList from KHPI to KIP.
+        /// Convert model of SemesterStudyingPlan from KHPI to KIP.
         /// </summary>
-        /// <returns>
-        /// Object of DebtList of KIP model.
-        /// </returns>
-        /// <param name="source">Model of DebtList KHPI.</param>
-        /// <param name = "destination">Model of DebtList KIP.</param>
+        /// <param name="source">The model of KHPI SemesterStudyingPlan.</param>
+        /// <param name = "destination">The model of KIP SemesterStudyingPlan.</param>
         /// <param name= "context">The context. </param>
-        public DebtList Convert(DebtListKHPI source, DebtList destination, ResolutionContext context)
+        /// <returns>Object of the KIP SemesterStudyingPlan model.</returns>
+        public SemesterStudyingPlan Convert(SemesterStudyingPlanKHPI source, SemesterStudyingPlan destination, ResolutionContext context)
         {
             if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new DebtList()
+            return new SemesterStudyingPlan()
             {
                 SubjectId = ConvertExtensions.StringToInt(source.subj_id),
                 Subject = source.subject,
-                Prof = source.prepod,
                 ShortCathedra = source.kabr,
                 Cathedra = source.kafedra,
                 Course = ConvertExtensions.StringToInt(source.kurs),
                 Semester = ConvertExtensions.StringToInt(source.semestr),
                 Credits = ConvertExtensions.StringToNullableFloat(source.credit),
+                Audits = ConvertExtensions.StringToNullableFloat(source.audit),
                 Control = source.control,
-                Date = source.data,
             };
         }
     }

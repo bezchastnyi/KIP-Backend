@@ -7,10 +7,9 @@ using System.Collections.Generic;
 using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_server_AUTH.Constants;
-using KIP_server_AUTH.Mapping.Converters;
+using KIP_server_AUTH.Extensions;
 using KIP_server_AUTH.Models.KHPI;
 using KIP_server_AUTH.Models.KIP;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -21,7 +20,6 @@ namespace KIP_server_AUTH.V1.Controllers
     /// <summary>
     /// Personal Information controller.
     /// </summary>
-    /// <seealso cref="Controller" />
     [V1]
     [ApiRoute]
     [ApiController]
@@ -44,9 +42,9 @@ namespace KIP_server_AUTH.V1.Controllers
         /// <summary>
         /// Personal Information of student.
         /// </summary>
+        /// <param name="email">The email of student.</param>
+        /// <param name="password">The password of student.</param>
         /// <returns>Personal Information.</returns>
-        /// <param name="email">Email of student.</param>
-        /// <param name="password">Password of student.</param>
         [HttpGet]
         [Route("PersonalInformation/{email}/{password}")]
         [ProducesResponseType(typeof(PersonalInformation), StatusCodes.Status200OK)]
@@ -56,12 +54,12 @@ namespace KIP_server_AUTH.V1.Controllers
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
                 var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.PersonalInformationPage}";
-                var personalInformationKHPI = JsonToModelConverter.GetJsonData<PersonalInformationKHPI>(path);
+                var personalInformationKHPI = JsonDeserializer.ExecuteAsync<PersonalInformationKHPI>(path);
 
                 List<PersonalInformation> personalInformation = null;
                 if (personalInformationKHPI == null)
                 {
-                    this.logger.Log(LogLevel.Error, "Error");
+                    // log
                     return this.BadRequest();
                 }
                 else
@@ -69,7 +67,7 @@ namespace KIP_server_AUTH.V1.Controllers
                     personalInformation = this.mapper.Map<List<PersonalInformation>>(personalInformationKHPI);
                 }
 
-                if (personalInformation.Count == 0)
+                if (personalInformation?.Count == 0)
                 {
                     return this.BadRequest();
                 }
@@ -77,10 +75,7 @@ namespace KIP_server_AUTH.V1.Controllers
                 return new JsonResult(personalInformation);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this.logger.Log(LogLevel.Error, message);
-
+            // log
             return this.BadRequest();
         }
     }

@@ -1,4 +1,4 @@
-﻿// <copyright file="PersonalInformationKHPIToKIPConverter.cs" company="KIP">
+﻿// <copyright file="PersonalInformationConverter.cs" company="KIP">
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
@@ -11,20 +11,20 @@ using KIP_server_AUTH.Models.KIP;
 namespace KIP_server_AUTH.Mapping.Converters
 {
     /// <summary>
-    /// Building of the KIP PersonalInformation model from the KhPI PersonalInformation.
+    /// Convert KhPI PersonalInformation model to the KIP model.
     /// </summary>
-    public class PersonalInformationKHPIToKIPConverter : ITypeConverter<PersonalInformationKHPI, PersonalInformation>
+    public class PersonalInformationConverter :
+        ITypeConverter<PersonalInformationKHPI, PersonalInformation>
     {
         /// <summary>
         /// Convert model of PersonalInformation from KHPI to KIP.
         /// </summary>
-        /// <returns>
-        /// Object of PersonalInformation of KIP model.
-        /// </returns>
-        /// <param name="source">Model of PersonalInformation KHPI.</param>
-        /// <param name = "destination">Model of PersonalInformation KIP.</param>
+        /// <param name="source">The model of KHPI PersonalInformation.</param>
+        /// <param name = "destination">The model of KIP PersonalInformation.</param>
         /// <param name= "context">The context. </param>
-        public PersonalInformation Convert(PersonalInformationKHPI source, PersonalInformation destination, ResolutionContext context)
+        /// <returns>Object of the KIP PersonalInformation model.</returns>
+        public PersonalInformation Convert(
+            PersonalInformationKHPI source, PersonalInformation destination, ResolutionContext context)
         {
             if (source == null)
             {

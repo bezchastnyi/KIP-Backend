@@ -1,4 +1,4 @@
-﻿// <copyright file="CurrentRankKHPIToKIPConverter.cs" company="KIP">
+﻿// <copyright file="CurrentRankConverter.cs" company="KIP">
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
@@ -11,19 +11,17 @@ using KIP_server_AUTH.Models.KIP;
 namespace KIP_server_AUTH.Mapping.Converters
 {
     /// <summary>
-    /// Building of the KIP CurrentRank model from the KhPI CurrentRank.
+    /// Convert KhPI CurrentRank model to the KIP model.
     /// </summary>
-    public class CurrentRankKHPIToKIPConverter : ITypeConverter<CurrentRankKHPI, CurrentRank>
+    public class CurrentRankConverter : ITypeConverter<CurrentRankKHPI, CurrentRank>
     {
         /// <summary>
         /// Convert model of CurrentRank from KHPI to KIP.
         /// </summary>
-        /// <returns>
-        /// Object of CurrentRank of KIP model.
-        /// </returns>
-        /// <param name="source">Model of CurrentRank KHPI.</param>
-        /// <param name = "destination">Model of CurrentRank KIP.</param>
+        /// <param name="source">The model of KHPI CurrentRank.</param>
+        /// <param name = "destination">The model of KIP CurrentRank.</param>
         /// <param name= "context">The context. </param>
+        /// <returns>Object of the KIP CurrentRank model.</returns>
         public CurrentRank Convert(CurrentRankKHPI source, CurrentRank destination, ResolutionContext context)
         {
             if (source == null)

@@ -41,12 +41,14 @@ namespace KIP_server_AUTH
 
         private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
+            var name = Assembly.GetEntryAssembly()?.GetName().Name;
+            var version = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+
             var info = new OpenApiInfo
             {
-                Title = $" {Assembly.GetEntryAssembly().GetName().Name}: " +
-                        $"v{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}",
-                Version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
-                Description = " Server \"AUTH\": providing information for individual student's cabinet from KhPI data base",
+                Title = $" {name}: v{version}",
+                Version = version,
+                Description = " Server \"AUTH\": providing information for individual student's cabinet from KhPI database",
                 Contact = new OpenApiContact
                 {
                     Name = " KIP ",

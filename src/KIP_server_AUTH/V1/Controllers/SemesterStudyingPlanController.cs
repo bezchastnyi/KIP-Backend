@@ -7,10 +7,9 @@ using System.Collections.Generic;
 using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_server_AUTH.Constants;
-using KIP_server_AUTH.Mapping.Converters;
+using KIP_server_AUTH.Extensions;
 using KIP_server_AUTH.Models.KHPI;
 using KIP_server_AUTH.Models.KIP;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -21,7 +20,6 @@ namespace KIP_server_AUTH.V1.Controllers
     /// <summary>
     /// Semester Studying Plan controller.
     /// </summary>
-    /// <seealso cref="Controller" />
     [V1]
     [ApiRoute]
     [ApiController]
@@ -44,10 +42,10 @@ namespace KIP_server_AUTH.V1.Controllers
         /// <summary>
         /// Semester Studying Plan of student.
         /// </summary>
+        /// <param name="email">The email of student.</param>
+        /// <param name="password">The password of student.</param>
+        /// <param name="semester">The semester.</param>
         /// <returns>Semester Studying Plan.</returns>
-        /// <param name="email">Email of student.</param>
-        /// <param name="password">Password of student.</param>
-        /// <param name="semester">Number of semester.</param>
         [HttpGet]
         [Route("SemesterStudyingPlan/{email}/{password}/{semester:int}")]
         [ProducesResponseType(typeof(SemesterStudyingPlan), StatusCodes.Status200OK)]
@@ -57,12 +55,12 @@ namespace KIP_server_AUTH.V1.Controllers
             if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password) && (semester > 0 && semester < 13))
             {
                 var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.SemesterStudyingPlanPage}&semestr={semester}";
-                var semesterStudyingPlanKHPI = JsonToModelConverter.GetJsonData<SemesterStudyingPlanKHPI>(path);
+                var semesterStudyingPlanKHPI = JsonDeserializer.ExecuteAsync<SemesterStudyingPlanKHPI>(path);
 
                 List<SemesterStudyingPlan> semesterStudyingPlan = null;
                 if (semesterStudyingPlanKHPI == null)
                 {
-                    this.logger.Log(LogLevel.Error, "Error");
+                    // log
                     return this.BadRequest();
                 }
                 else
@@ -70,7 +68,7 @@ namespace KIP_server_AUTH.V1.Controllers
                     semesterStudyingPlan = this.mapper.Map<List<SemesterStudyingPlan>>(semesterStudyingPlanKHPI);
                 }
 
-                if (semesterStudyingPlan.Count == 0)
+                if (semesterStudyingPlan?.Count == 0)
                 {
                     return this.BadRequest();
                 }
@@ -78,10 +76,7 @@ namespace KIP_server_AUTH.V1.Controllers
                 return new JsonResult(semesterStudyingPlan);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this.logger.Log(LogLevel.Error, message);
-
+            // log
             return this.BadRequest();
         }
     }

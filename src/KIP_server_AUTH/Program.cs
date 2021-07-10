@@ -1,4 +1,8 @@
-﻿using System;
+﻿// <copyright file="Program.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
+// </copyright>
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -29,15 +33,16 @@ namespace KIP_server_AUTH
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-            var url = string.Concat("https://0.0.0.0:", port);
 
-            // var url = string.Concat("http://0.0.0.0:", port);
+            var url = string.Format("https://0.0.0.0:{0}", port);
+
+            // var url = string.Format("http://0.0.0.0:{0}", port);
             return Host.CreateDefaultBuilder(args)
                     .UseSerilog(
                         (context, configuration) =>
-                    {
-                        configuration.ReadFrom.Configuration(context.Configuration);
-                    }, true)
+                        {
+                            configuration.ReadFrom.Configuration(context.Configuration);
+                        }, true)
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
                         webBuilder.ConfigureKestrel(serverOptions =>
