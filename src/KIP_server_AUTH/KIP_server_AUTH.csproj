@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\KIP_Backend\KIP_Backend.csproj" />
+    <ProjectReference Include="..\KIP_Backend\KIP_Backend.csproj" />
   </ItemGroup>
 
 </Project>

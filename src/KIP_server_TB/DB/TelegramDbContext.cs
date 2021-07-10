@@ -37,8 +37,6 @@ namespace KIP_server_TB.DB
         /// </remarks>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); // See comment inside model builder for SyncTicket.
-
             modelBuilder.Entity<TelegramUser>(entity =>
             {
                 entity.Property(e => e.Id).IsRequired();

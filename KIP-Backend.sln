@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_TB", "src\KIP_se
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_POST_APP", "src\KIP_POST_APP\KIP_POST_APP.csproj", "{3848CEA0-774A-4FEE-AEFA-17A875CFC41E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_Backend", "src\KIP_Backend\KIP_Backend.csproj", "{F15D0321-E114-43F7-8D22-987D2083574A}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0AD68C06-80D6-43C5-B22A-3254245B4D55}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_GET.Tests", "test\KIP_server_GET.Tests\KIP_server_GET.Tests.csproj", "{041BB436-3E59-43AC-A9EB-CFCD00C17CB6}"
@@ -27,8 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_Backend", "KIP_Backend\KIP_Backend.csproj", "{F15D0321-E114-43F7-8D22-987D2083574A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

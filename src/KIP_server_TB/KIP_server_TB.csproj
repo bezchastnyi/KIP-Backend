@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\KIP_Backend\KIP_Backend.csproj"/>
+    <ProjectReference Include="..\KIP_Backend\KIP_Backend.csproj" />
     <ProjectReference Include="..\KIP_POST_APP\KIP_POST_APP.csproj"/>
     <ProjectReference Include="..\KIP_server_AUTH\KIP_server_AUTH.csproj"/>
     <ProjectReference Include="..\KIP_server_GET\KIP_server_GET.csproj"/>
