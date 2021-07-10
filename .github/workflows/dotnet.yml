@@ -3,7 +3,7 @@ name: CI-CD
 on: [push, pull_request]
 
 env:
-  solution: 'src\KIP-Backend.sln'
+  solution: 'KIP-Backend.sln'
   buildPlatform: Any CPU
   buildConfiguration: Release
   version: 4.8.12
@@ -28,7 +28,6 @@ jobs:
 
     - name: 'Install dependendies'
       run: msbuild .\build.proj /t:Restore
-      working-directory: src
 
     - name: 'Setup .NET Core'
       uses: actions/setup-dotnet@v1
