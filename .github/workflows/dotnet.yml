@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
@@ -20,14 +19,23 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: |
-        .\.sonar\scanner\dotnet-sonarscanner begin /k:"ohalay_TestSonarCloud" /o:"ohalay" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.language="cs" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
-        dotnet build
-        dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-        .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-    
-  test:
+      run: dotnet build --no-restore /p:ContinuousIntegrationBuild=true
+    - name: Run tests with coverage
+      run: dotnet test --no-build --collect:"XPlat Code Coverage"
+    - name: ReportGenerator
+      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.5
+      with:
+        reports: '*Test*/TestResults/*/coverage.cobertura.xml'
+        targetdir: 'CoverageReports'
+        reporttypes: 'HtmlInline;Cobertura'
+        verbosity: 'Verbose'
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: CoverageReports # Artifact name        
+        path: CoverageReports # Directory containing files to upload
 
+  test:
     runs-on: windows-latest
 
     steps:
@@ -37,6 +45,5 @@ jobs:
     - name: Codecov
       uses: codecov/codecov-action@v1.5.2
       with:
-        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         files: ./coverage1.xml,./coverage2.xml # optional
         flags: unittests # optional
