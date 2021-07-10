@@ -42,7 +42,7 @@ namespace KIP_server_AUTH.Tests.Controllers
         }
 
         [Fact]
-        public void HomeController_Index_ReturnsOkResult()
+        public void HomeController_Home_ReturnsOkResult()
         {
             var result = this._controller.Home();
             var okObjectResult = Assert.IsType<OkObjectResult>(result);
