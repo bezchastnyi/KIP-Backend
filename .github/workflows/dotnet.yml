@@ -26,8 +26,8 @@ jobs:
     - name: setup-msbuild
       uses: microsoft/setup-msbuild@v1
 
-    - name: 'Install dependendies'
-      run: msbuild .\build.proj /t:Restore
+    - name: Restore dependencies
+      run: dotnet restore
 
     - name: 'Setup .NET Core'
       uses: actions/setup-dotnet@v1
