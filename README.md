@@ -1,5 +1,4 @@
 # KIP-Backend-DB
-![Uploading KIP.png…]()
 
 ![KIP](https://user-images.githubusercontent.com/68736883/125178959-5a678100-e1f2-11eb-9f46-65641ac9d57f.png)
 
