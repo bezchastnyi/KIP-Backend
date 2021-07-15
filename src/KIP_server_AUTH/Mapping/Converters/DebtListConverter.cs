@@ -4,7 +4,7 @@
 
 using System;
 using AutoMapper;
-using KIP_server_AUTH.Extensions;
+using KIP_Backend.Extensions;
 using KIP_server_AUTH.Models.KHPI;
 using KIP_server_AUTH.Models.KIP;
 

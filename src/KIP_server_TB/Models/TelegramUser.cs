@@ -1,18 +1,33 @@
 ﻿namespace KIP_server_TB.Models
 {
     /// <summary>
-    /// ChatHistory.
+    /// TelegramUser.
     /// </summary>
     public class TelegramUser
     {
         /// <summary>
-        /// Gets or sets history.
+        /// Gets or sets UserId.
         /// </summary>
-        public long Id { get; set; }
+        public int UserId { get; set; }
 
         /// <summary>
-        /// Gets or sets history.
+        /// Gets or sets UserName.
         /// </summary>
-        public string Name { get; set; }
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// Gets or sets Faculty.
+        /// </summary>
+        public string Faculty { get; set; }
+
+        /// <summary>
+        /// Gets or sets Course.
+        /// </summary>
+        public int? Course { get; set; }
+
+        /// <summary>
+        /// Gets or sets Group.
+        /// </summary>
+        public string Group { get; set; }
     }
 }

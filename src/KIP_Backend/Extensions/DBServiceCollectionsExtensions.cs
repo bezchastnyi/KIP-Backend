@@ -44,8 +44,6 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 contextOptions.UseNpgsql(connectionString, npgOptions =>
                 {
-                    npgOptions.MigrationsAssembly(migrationsAssembly)
-                        .EnableRetryOnFailure();
                     npgOptions.SetPostgresVersion(pgVersion);
                 });
             });

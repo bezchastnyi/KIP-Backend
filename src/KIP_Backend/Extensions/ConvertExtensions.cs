@@ -5,7 +5,7 @@
 using System;
 using System.Globalization;
 
-namespace KIP_server_AUTH.Extensions
+namespace KIP_Backend.Extensions
 {
     /// <summary>
     /// Convert extensions.
