@@ -3,15 +3,18 @@
 // </copyright>
 
 using System;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Cloud.Dialogflow.V2;
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using KIP_Backend.Attributes;
 using KIP_Backend.Extensions;
 using KIP_POST_APP.DB;
+using KIP_POST_APP.Models.KIP.Helpers;
 using KIP_server_TB.DB;
 using KIP_server_TB.Models;
 using Microsoft.AspNetCore.Http;
@@ -142,6 +145,9 @@ namespace KIP_server_TB.V1.Controllers
 
                     user.Faculty = facultyValue;
                     await this._telegramDbContext.SaveChangesAsync();
+
+                    // log
+                    return this.Ok();
                 }
 
                 #endregion
@@ -179,17 +185,59 @@ namespace KIP_server_TB.V1.Controllers
                         outputSb.AppendLine(g.GroupName);
                     }
 
+                    var button = Value.ForStruct(new Struct
+                    {
+                        Fields =
+                        {
+                            ["text"] = Value.ForString("Card Link Title"),
+                        },
+                    });
+
+                    var m = Value.ForStruct(new Struct
+                    {
+                        Fields =
+                                {
+                                    ["buttons"] = Value.ForList(button),
+                                    ["platform"] = Value.ForString("telegram"),
+                                    ["title"] = Value.ForString("Cart Title"),
+                                },
+                    });
+                    var payload = new Struct { Fields = { ["messages"] = Value.ForList(m) } };
+
                     // log
-                    var response = new WebhookResponse();
-                    response.FulfillmentText = outputSb.ToString();
+                    /*
+                    var response = new WebhookResponse()
+                    {
+                        Payload = new Struct
+                        {
+                            Fields =
+                            {
+                                ["telegram"] = Value.ForStruct(new Struct
+                                {
+                                    Fields =
+                                    {
+                                        ["text"] = Value.ForString("TEXT"),
+                                    },
+                                }),
+                            },
+                        },
+                    };
+                    */
+
+                    // log
+                    var response = new WebhookResponse()
+                    {
+                        FulfillmentText = outputSb.ToString(),
+                    };
+
                     return this.Json(response);
                 }
 
                 #endregion
 
-                #region Group
-
                 var existingUser = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+
+                #region Group
 
                 if (existingUser != null && existingUser.Course != null && message.Contains(existingUser.Faculty))
                 {
@@ -210,8 +258,11 @@ namespace KIP_server_TB.V1.Controllers
                             outputSb.AppendLine($"Група: {existingUser.Group}");
 
                             // log
-                            var response = new WebhookResponse();
-                            response.FulfillmentText = outputSb.ToString();
+                            var response = new WebhookResponse()
+                            {
+                                FulfillmentText = outputSb.ToString(),
+                            };
+
                             return this.Json(response);
                         }
                     }
@@ -220,6 +271,55 @@ namespace KIP_server_TB.V1.Controllers
                     return this.Ok();
                 }
 
+                #endregion
+
+                #region GroupSchedule
+
+                if (existingUser != null && message.Contains("GroupSchedule"))
+                {
+                    var messageContent = message.Split(":");
+                    var day = ConvertExtensions.StringToInt(messageContent[1]);
+
+                    var groupId = this._postDbContext.Group.FirstOrDefault(i => i.GroupName == existingUser.Group).GroupID;
+                    var list = this._postDbContext.StudentSchedule.Where(i => i.GroupID == groupId && i.Day == (Day)day).AsNoTracking().ToList();
+
+                    if (list.Count == 0)
+                    {
+                        return this.NotFound();
+                    }
+
+                    var outputSb = new StringBuilder();
+
+                    var week0List = list.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
+                    var week1List = list.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
+
+                    outputSb.AppendLine("Непарный тиждень:");
+                    foreach (var l in week0List)
+                    {
+                        outputSb.AppendLine($"{l.Number + 1}. {l.SubjectName} ({l.ProfName}) [{l.AudienceName}]");
+                    }
+
+                    outputSb.AppendLine("\nПарный тиждень:");
+                    foreach (var l in week1List)
+                    {
+                        outputSb.AppendLine($"{l.Number + 1}. {l.SubjectName} ({l.ProfName}) [{l.AudienceName}]");
+                    }
+
+                    // log
+                    var response = new WebhookResponse()
+                    {
+                        FulfillmentText = outputSb.ToString(),
+                    };
+
+                    return this.Json(response);
+                }
+
+                #endregion
+
+                #region ProfSchedule
+                #endregion
+
+                #region AudienceSchedule
                 #endregion
 
                 // log
