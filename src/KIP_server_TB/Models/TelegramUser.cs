@@ -29,5 +29,10 @@
         /// Gets or sets Group.
         /// </summary>
         public string Group { get; set; }
+
+        /// <summary>
+        /// Gets or sets Group.
+        /// </summary>
+        public int? TempDayValue { get; set; }
     }
 }

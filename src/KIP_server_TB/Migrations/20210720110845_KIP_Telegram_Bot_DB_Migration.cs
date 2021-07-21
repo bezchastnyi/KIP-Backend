@@ -19,6 +19,7 @@ namespace KIP_server_TB.Migrations
                     Faculty = table.Column<string>(type: "text", nullable: true),
                     Course = table.Column<int>(type: "integer", nullable: true),
                     Group = table.Column<string>(type: "text", nullable: true),
+                    TempDayValue = table.Column<int>(type: "integer", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false),
                 },
                 constraints: table =>

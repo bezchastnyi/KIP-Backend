@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "KIP_telegram_bot": {
+    "KIP_server_TB": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KIP_server_TB.Migrations
 {
     [DbContext(typeof(TelegramDbContext))]
-    [Migration("20210715133516_KIP_Telegram_Bot_DB_Migration")]
+    [Migration("20210720110845_KIP_Telegram_Bot_DB_Migration")]
     partial class KIP_Telegram_Bot_DB_Migration
     {
         /// <inheritdoc/>
@@ -37,6 +37,9 @@ namespace KIP_server_TB.Migrations
 
                     b.Property<string>("Group")
                         .HasColumnType("text");
+
+                    b.Property<int?>("TempDayValue")
+                        .HasColumnType("integer");
 
                     b.Property<string>("UserName")
                         .HasColumnType("text");

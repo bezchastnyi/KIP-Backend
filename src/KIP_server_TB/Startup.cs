@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using KIP_Backend.Constants;
 using KIP_POST_APP.DB;
 using KIP_server_TB.DB;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Telegram.Bot;
 
 namespace KIP_server_TB
 {
@@ -19,7 +21,8 @@ namespace KIP_server_TB
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private readonly string assenmblyName = Assembly.GetEntryAssembly()?.GetName().Name;
+        private static string assenmblyName = Assembly.GetEntryAssembly()?.GetName().Name;
+        private TelegramBotClient _telegramBotClient;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -42,8 +45,8 @@ namespace KIP_server_TB
 
             var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
             var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
-            services.AddDbServices<TelegramDbContext>(pgConnectionString, pgVersionString, this.assenmblyName);
-            services.AddDbServices<PostDbContext>(pgConnectionString, pgVersionString, this.assenmblyName);
+            services.AddDbServices<TelegramDbContext>(pgConnectionString, pgVersionString, assenmblyName);
+            services.AddDbServices<PostDbContext>(pgConnectionString, pgVersionString, assenmblyName);
 
             services.AddMvcCore()
                 .AddDataAnnotations()
@@ -65,18 +68,24 @@ namespace KIP_server_TB
                     options.GroupNameFormat = "'v'VVV";
                     options.SubstituteApiVersionInUrl = true;
                 });
+
+            var telegramConnectionString = this.Configuration.GetConnectionString("TelegramConnection");
+            if (string.IsNullOrEmpty(telegramConnectionString))
+            {
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, nameof(telegramConnectionString)));
+            }
+
+            this._telegramBotClient = new TelegramBotClient(telegramConnectionString);
+            services.AddSingleton<ITelegramBotClient>(this._telegramBotClient);
         }
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        /// <param name="app">Application.</param>
-        /// <param name="logger">Logger.</param>
-        /// <param name="env">Environment.</param>
-        public void Configure(
-            IApplicationBuilder app,
-            ILogger<Startup> logger,
-            IWebHostEnvironment env)
+        /// <param name="app">The application.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="env">The environment.</param>
+        public void Configure(IApplicationBuilder app, ILogger<Startup> logger, IWebHostEnvironment env)
         {
             // app.UseHttpsRedirection();
             app.UseRouting();
@@ -89,6 +98,11 @@ namespace KIP_server_TB
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+            }
+
+            if (this._telegramBotClient != null)
+            {
+                logger.LogInformation($"{assenmblyName} starts listening {this._telegramBotClient.GetMeAsync().Result.Username}");
             }
 
             app.UseEndpoints(builder =>

@@ -35,6 +35,9 @@ namespace KIP_server_TB.Migrations
                     b.Property<string>("Group")
                         .HasColumnType("text");
 
+                    b.Property<int?>("TempDayValue")
+                        .HasColumnType("integer");
+
                     b.Property<string>("UserName")
                         .HasColumnType("text");
 

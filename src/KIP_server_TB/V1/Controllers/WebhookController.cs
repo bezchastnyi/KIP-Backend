@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -10,7 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Google.Cloud.Dialogflow.V2;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using KIP_Backend.Attributes;
 using KIP_Backend.Extensions;
 using KIP_POST_APP.DB;
@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace KIP_server_TB.V1.Controllers
 {
@@ -36,6 +38,7 @@ namespace KIP_server_TB.V1.Controllers
         private readonly ILogger<WebhookController> _logger;
         private readonly TelegramDbContext _telegramDbContext;
         private readonly PostDbContext _postDbContext;
+        private readonly ITelegramBotClient _telegramBotClient;
 
         private readonly JsonParser jsonParser = new JsonParser(JsonParser.Settings.Default.WithIgnoreUnknownFields(true));
 
@@ -45,11 +48,17 @@ namespace KIP_server_TB.V1.Controllers
         /// <param name="logger">The logger.</param>
         /// <param name="telegramDbContext">The telegram db context.</param>
         /// <param name="postDbContext">The POST db context.</param>
-        public WebhookController(ILogger<WebhookController> logger, TelegramDbContext telegramDbContext, PostDbContext postDbContext)
+        /// <param name="telegramBotClient">The telegramBotClient.</param>
+        public WebhookController(
+            ILogger<WebhookController> logger,
+            TelegramDbContext telegramDbContext,
+            PostDbContext postDbContext,
+            ITelegramBotClient telegramBotClient)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._telegramDbContext = telegramDbContext ?? throw new ArgumentNullException(nameof(telegramDbContext));
             this._postDbContext = postDbContext ?? throw new ArgumentNullException(nameof(postDbContext));
+            this._telegramBotClient = telegramBotClient ?? throw new ArgumentNullException(nameof(telegramBotClient));
         }
 
         /// <summary>
@@ -74,6 +83,7 @@ namespace KIP_server_TB.V1.Controllers
                 }
 
                 var message = request.QueryResult.QueryText;
+                var intent = request.QueryResult.Intent.DisplayName;
 
                 if (string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message))
                 {
@@ -101,14 +111,54 @@ namespace KIP_server_TB.V1.Controllers
 
                 #endregion
 
-                #region Faculty
+                #region FacultyOutput
 
-                if (message.Contains("Faculty"))
+                if (intent == "No Auth Mode Intent")
                 {
-                    var messageContent = message.Split(":");
-                    var facultyValue = messageContent[1];
+                    var faculties = this._postDbContext.Faculty.AsNoTracking().ToList();
 
-                    if (string.IsNullOrEmpty(facultyValue))
+                    var inlineButtons = new List<List<InlineKeyboardButton>>();
+
+                    foreach (var f in faculties)
+                    {
+                        inlineButtons.Add(new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData(f.FacultyShortName, f.FacultyShortName),
+                        });
+                    }
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                    string chatId = null;
+
+                    try
+                    {
+                        chatId = GetChatIdFromButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свій факультет", replyMarkup: inlineKeyboard);
+
+                    return this.Ok();
+                }
+                #endregion
+
+                #region CourseOutput
+
+                if (intent == "Faculty Intent")
+                {
+                    #region FacultyRegistration
+
+                    if (string.IsNullOrEmpty(message))
                     {
                         // log
                         return this.Ok();
@@ -119,6 +169,7 @@ namespace KIP_server_TB.V1.Controllers
                     if (user == null)
                     {
                         string userName = null;
+
                         try
                         {
                             userName = GetUserNameFromButton(request);
@@ -133,33 +184,62 @@ namespace KIP_server_TB.V1.Controllers
                         {
                             UserId = (int)userId,
                             UserName = userName,
-                            Faculty = facultyValue,
+                            Faculty = message,
                         };
 
                         await this._telegramDbContext.Users.AddAsync(newUser);
                         await this._telegramDbContext.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        user.Faculty = message;
+                        await this._telegramDbContext.SaveChangesAsync();
+                    }
 
+                    #endregion
+
+                    var inlineButtons = new List<List<InlineKeyboardButton>>();
+
+                    for (var i = 1; i <= 6; i++)
+                    {
+                        inlineButtons.Add(new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData(i.ToString(), i.ToString()),
+                        });
+                    }
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                    string chatId = null;
+
+                    try
+                    {
+                        chatId = GetChatIdFromButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
                         // log
                         return this.Ok();
                     }
 
-                    user.Faculty = facultyValue;
-                    await this._telegramDbContext.SaveChangesAsync();
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свій курс", replyMarkup: inlineKeyboard);
 
-                    // log
                     return this.Ok();
                 }
-
                 #endregion
 
-                #region Course
+                #region GroupOutput
 
-                if (message.Contains("Course"))
+                if (intent == "Course Intent")
                 {
-                    var messageContent = message.Split(":");
-                    var courseValue = messageContent[1];
+                    #region CourseRegistration
 
-                    if (string.IsNullOrEmpty(courseValue))
+                    if (string.IsNullOrEmpty(message))
                     {
                         // log
                         return this.Ok();
@@ -172,102 +252,100 @@ namespace KIP_server_TB.V1.Controllers
                         // log
                         return this.Ok();
                     }
+                    else
+                    {
+                        user.Course = ConvertExtensions.StringToInt(message);
+                        await this._telegramDbContext.SaveChangesAsync();
+                    }
 
-                    user.Course = ConvertExtensions.StringToInt(courseValue);
-                    await this._telegramDbContext.SaveChangesAsync();
+                    #endregion
 
                     var userFaculty = this._postDbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == user.Faculty);
                     var groups = this._postDbContext.Group.Where(g => g.Course == user.Course && g.Faculty == userFaculty);
 
-                    var outputSb = new StringBuilder();
+                    var inlineButtons = new List<List<InlineKeyboardButton>>();
+
                     foreach (var g in groups)
                     {
-                        outputSb.AppendLine(g.GroupName);
+                        inlineButtons.Add(new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData(g.GroupName, g.GroupName),
+                        });
                     }
 
-                    var button = Value.ForStruct(new Struct
-                    {
-                        Fields =
-                        {
-                            ["text"] = Value.ForString("Card Link Title"),
-                        },
-                    });
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
 
-                    var m = Value.ForStruct(new Struct
-                    {
-                        Fields =
-                                {
-                                    ["buttons"] = Value.ForList(button),
-                                    ["platform"] = Value.ForString("telegram"),
-                                    ["title"] = Value.ForString("Cart Title"),
-                                },
-                    });
-                    var payload = new Struct { Fields = { ["messages"] = Value.ForList(m) } };
+                    string chatId = null;
 
-                    // log
-                    /*
-                    var response = new WebhookResponse()
+                    try
                     {
-                        Payload = new Struct
-                        {
-                            Fields =
-                            {
-                                ["telegram"] = Value.ForStruct(new Struct
-                                {
-                                    Fields =
-                                    {
-                                        ["text"] = Value.ForString("TEXT"),
-                                    },
-                                }),
-                            },
-                        },
-                    };
-                    */
-
-                    // log
-                    var response = new WebhookResponse()
+                        chatId = GetChatIdFromButton(request);
+                    }
+                    catch
                     {
-                        FulfillmentText = outputSb.ToString(),
-                    };
+                        // log
+                    }
 
-                    return this.Json(response);
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свою групу", replyMarkup: inlineKeyboard);
+
+                    return this.Ok();
                 }
-
                 #endregion
 
-                var existingUser = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+                #region GroupRegistration
 
-                #region Group
-
-                if (existingUser != null && existingUser.Course != null && message.Contains(existingUser.Faculty))
+                if (intent == "Course Intent - fallback")
                 {
-                    var userFaculty = this._postDbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == existingUser.Faculty);
-                    var groups = this._postDbContext.Group.Where(g => g.Course == existingUser.Course && g.Faculty == userFaculty);
-
-                    var outputSb = new StringBuilder();
-                    foreach (var g in groups)
+                    if (string.IsNullOrEmpty(message))
                     {
-                        if (message.Contains(g.GroupName))
-                        {
-                            existingUser.Group = message;
-                            await this._telegramDbContext.SaveChangesAsync();
-
-                            outputSb.AppendLine("Ваш профіль");
-                            outputSb.AppendLine($"Факультет: {existingUser.Faculty}");
-                            outputSb.AppendLine($"Курс: {existingUser.Course}");
-                            outputSb.AppendLine($"Група: {existingUser.Group}");
-
-                            // log
-                            var response = new WebhookResponse()
-                            {
-                                FulfillmentText = outputSb.ToString(),
-                            };
-
-                            return this.Json(response);
-                        }
+                        // log
+                        return this.Ok();
                     }
 
-                    // log
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+
+                    if (user == null)
+                    {
+                        // log
+                        return this.Ok();
+                    }
+                    else
+                    {
+                        user.Group = message;
+                        await this._telegramDbContext.SaveChangesAsync();
+                    }
+
+                    var outputSb = new StringBuilder();
+
+                    outputSb.AppendLine("Ваш профіль");
+                    outputSb.AppendLine($"Факультет: {user.Faculty}");
+                    outputSb.AppendLine($"Курс: {user.Course}");
+                    outputSb.AppendLine($"Група: {user.Group}");
+
+                    string chatId = null;
+                    try
+                    {
+                        chatId = GetChatIdFromButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
+
                     return this.Ok();
                 }
 
@@ -275,12 +353,18 @@ namespace KIP_server_TB.V1.Controllers
 
                 #region GroupSchedule
 
-                if (existingUser != null && message.Contains("GroupSchedule"))
+                if (intent == "Group Schedule Intent - fallback")
                 {
-                    var messageContent = message.Split(":");
-                    var day = ConvertExtensions.StringToInt(messageContent[1]);
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        // log
+                        return this.Ok();
+                    }
 
-                    var groupId = this._postDbContext.Group.FirstOrDefault(i => i.GroupName == existingUser.Group).GroupID;
+                    var day = ConvertExtensions.StringToInt(message);
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+
+                    var groupId = this._postDbContext.Group.FirstOrDefault(i => i.GroupName == user.Group).GroupID;
                     var list = this._postDbContext.StudentSchedule.Where(i => i.GroupID == groupId && i.Day == (Day)day).AsNoTracking().ToList();
 
                     if (list.Count == 0)
@@ -305,6 +389,157 @@ namespace KIP_server_TB.V1.Controllers
                         outputSb.AppendLine($"{l.Number + 1}. {l.SubjectName} ({l.ProfName}) [{l.AudienceName}]");
                     }
 
+                    string chatId = null;
+                    try
+                    {
+                        chatId = GetChatIdFromButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
+
+                    return this.Ok();
+                }
+
+                #endregion
+
+                return this.Ok();
+
+                /*
+
+                #region ProfsOutput
+
+                if (existingUser != null && message.Contains("ProfSchedule"))
+                {
+                    var messageContent = message.Split(":");
+                    var day = ConvertExtensions.StringToInt(messageContent[1]);
+
+                    existingUser.TempDayValue = day;
+                    await this._telegramDbContext.SaveChangesAsync();
+
+                    var userFaculty = this._postDbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == existingUser.Faculty);
+                    var cathedras = this._postDbContext.Cathedra.Where(c => c.FacultyID == userFaculty.FacultyID).AsNoTracking().ToList();
+
+                    var outputSb = new StringBuilder();
+                    outputSb.AppendLine("Оберіть викладача\n");
+
+                    foreach (var c in cathedras)
+                    {
+                        outputSb.AppendLine($"Кафедра [{c.CathedraName}]\n");
+
+                        var profs = this._postDbContext.Prof.Where(p => p.CathedraID == c.CathedraID).AsNoTracking().ToList();
+
+                        var output = string.Join("\n", profs.Select(p => $"{p.ProfSurname} {p.ProfName} {p.ProfPatronymic}"));
+                        outputSb.Append(output + "\n\n");
+                    }
+
+                    // log
+                    var response = new WebhookResponse
+                    {
+                        FulfillmentText = outputSb.ToString(),
+                    };
+
+                    return this.Json(response);
+                }
+
+                #endregion
+
+                #region AudiencesOutput
+
+                if (existingUser != null && message.Contains("AudienceSchedule"))
+                {
+                    var messageContent = message.Split(":");
+                    var day = ConvertExtensions.StringToInt(messageContent[1]);
+
+                    existingUser.TempDayValue = day;
+                    await this._telegramDbContext.SaveChangesAsync();
+
+                    var buildings = this._postDbContext.Building.AsNoTracking().ToList();
+
+                    var outputSb = new StringBuilder();
+                    outputSb.AppendLine("Оберіть аудиторію\n");
+
+                    foreach (var b in buildings)
+                    {
+                        outputSb.AppendLine($"Корпус [{b.BuildingName} ({b.BuildingShortName})]\n");
+
+                        var audiences = this._postDbContext.Audience.Where(a => a.BuildingID == b.BuildingID).AsNoTracking().ToList();
+
+                        if (audiences.Count != 0)
+                        {
+                            var output = string.Join("\n", audiences.Select(p => $"{p.AudienceName}"));
+                            outputSb.Append(output + "\n\n");
+                        }
+                    }
+
+                    // log
+                    var response = new WebhookResponse
+                    {
+                        FulfillmentText = outputSb.ToString(),
+                    };
+
+                    return this.Json(response);
+                }
+
+                #endregion
+
+                #region ProfSchedule
+
+                var userFaculty1 = this._postDbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == existingUser.Faculty);
+                var cathedras1 = this._postDbContext.Cathedra.Where(c => c.FacultyID == userFaculty1.FacultyID).AsNoTracking().ToList();
+
+                foreach (var c in cathedras1)
+                {
+                    var profs = this._postDbContext.Prof.Where(p => p.CathedraID == c.CathedraID).AsNoTracking().ToList();
+
+                    var prof = profs.FirstOrDefault(p => message.Contains(p.ProfSurname));
+
+                    if (prof == null)
+                    {
+                        continue;
+                    }
+
+                    if (existingUser.TempDayValue == null)
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    var list = this._postDbContext.ProfSchedule.Where(i => i.ProfID == prof.ProfID && i.Day == (Day)existingUser.TempDayValue).AsNoTracking().ToList();
+
+                    if (list.Count == 0)
+                    {
+                        return this.NotFound();
+                    }
+
+                    var outputSb = new StringBuilder();
+
+                    var week0List = list.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
+                    var week1List = list.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
+
+                    outputSb.AppendLine("Непарный тиждень:");
+                    foreach (var l in week0List)
+                    {
+                        outputSb.AppendLine($"{l.Number + 1}. {l.SubjectName} ({string.Join(",", l.GroupID.Select(p => $"{p.Value}"))} [{l.AudienceName}]");
+                    }
+
+                    outputSb.AppendLine("\nПарный тиждень:");
+                    foreach (var l in week1List)
+                    {
+                        outputSb.AppendLine($"{l.Number + 1}. {l.SubjectName} ({string.Join(",", l.GroupID.Select(p => $"{p.Value}"))} [{l.AudienceName}]");
+                    }
+
+                    existingUser.TempDayValue = null;
+
                     // log
                     var response = new WebhookResponse()
                     {
@@ -316,14 +551,11 @@ namespace KIP_server_TB.V1.Controllers
 
                 #endregion
 
-                #region ProfSchedule
-                #endregion
-
                 #region AudienceSchedule
                 #endregion
 
                 // log
-                return this.Ok();
+                return this.Ok();*/
             }
             catch (Exception ex)
             {
@@ -357,6 +589,16 @@ namespace KIP_server_TB.V1.Controllers
                 .Fields["callback_query"].StructValue
                 .Fields["from"].StructValue
                 .Fields["username"].StringValue;
+        }
+
+        private static string GetChatIdFromButton(WebhookRequest request)
+        {
+            return request.OriginalDetectIntentRequest.Payload
+                .Fields["data"].StructValue
+                .Fields["callback_query"].StructValue
+                .Fields["message"].StructValue
+                .Fields["chat"].StructValue
+                .Fields["id"].StringValue;
         }
     }
 }

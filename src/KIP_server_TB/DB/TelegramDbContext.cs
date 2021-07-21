@@ -35,6 +35,7 @@ namespace KIP_server_TB.DB
                 entity.Property(e => e.Faculty);
                 entity.Property(e => e.Course);
                 entity.Property(e => e.Group);
+                entity.Property(e => e.TempDayValue).HasDefaultValue(null);
 
                 entity.HasIndex(e => e.UserId).IsUnique();
             });
