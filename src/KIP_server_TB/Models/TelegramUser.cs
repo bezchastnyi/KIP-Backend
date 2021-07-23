@@ -31,7 +31,22 @@
         public string Group { get; set; }
 
         /// <summary>
-        /// Gets or sets Group.
+        /// Gets or sets TempProfValue.
+        /// </summary>
+        public int? TempProfValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets TempBuildingValue.
+        /// </summary>
+        public int? TempBuildingValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets TempAudienceValue.
+        /// </summary>
+        public int? TempAudienceValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets TempDayValue.
         /// </summary>
         public int? TempDayValue { get; set; }
     }

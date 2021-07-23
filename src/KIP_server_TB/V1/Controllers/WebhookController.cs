@@ -15,8 +15,10 @@ using KIP_Backend.Attributes;
 using KIP_Backend.Extensions;
 using KIP_POST_APP.DB;
 using KIP_POST_APP.Models.KIP.Helpers;
+using KIP_server_TB.Constants;
 using KIP_server_TB.DB;
 using KIP_server_TB.Models;
+using KIP_server_TB.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -95,12 +97,12 @@ namespace KIP_server_TB.V1.Controllers
 
                 try
                 {
-                    userId = GetUserIdFromButton(request);
+                    userId = TelegramRequestProcessing.GetUserIdFromInlineButton(request);
                 }
                 catch
                 {
                     // log
-                    userId = GetUserIdFromMessage(request);
+                    userId = TelegramRequestProcessing.GetUserIdFromMessage(request);
                 }
 
                 if (userId == 0)
@@ -115,7 +117,7 @@ namespace KIP_server_TB.V1.Controllers
 
                 if (intent == "No Auth Mode Intent")
                 {
-                    var faculties = this._postDbContext.Faculty.AsNoTracking().ToList();
+                    var faculties = this._postDbContext.Faculty.OrderBy(f => f.FacultyShortName).AsNoTracking().ToList();
 
                     var inlineButtons = new List<List<InlineKeyboardButton>>();
 
@@ -133,7 +135,7 @@ namespace KIP_server_TB.V1.Controllers
 
                     try
                     {
-                        chatId = GetChatIdFromButton(request);
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
                     }
                     catch
                     {
@@ -172,7 +174,7 @@ namespace KIP_server_TB.V1.Controllers
 
                         try
                         {
-                            userName = GetUserNameFromButton(request);
+                            userName = TelegramRequestProcessing.GetUserNameFromInlineButton(request);
                         }
                         catch (Exception ex)
                         {
@@ -200,7 +202,7 @@ namespace KIP_server_TB.V1.Controllers
 
                     var inlineButtons = new List<List<InlineKeyboardButton>>();
 
-                    for (var i = 1; i <= 6; i++)
+                    for (var i = 1; i <= KIPTelegramConstants.MaxCourse; i++)
                     {
                         inlineButtons.Add(new List<InlineKeyboardButton>
                         {
@@ -214,7 +216,7 @@ namespace KIP_server_TB.V1.Controllers
 
                     try
                     {
-                        chatId = GetChatIdFromButton(request);
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
                     }
                     catch
                     {
@@ -261,10 +263,10 @@ namespace KIP_server_TB.V1.Controllers
                     #endregion
 
                     var userFaculty = this._postDbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == user.Faculty);
-                    var groups = this._postDbContext.Group.Where(g => g.Course == user.Course && g.Faculty == userFaculty);
+                    var groups = this._postDbContext.Group.Where(g => g.Course == user.Course && g.Faculty == userFaculty)
+                        .OrderBy(g => g.GroupName);
 
                     var inlineButtons = new List<List<InlineKeyboardButton>>();
-
                     foreach (var g in groups)
                     {
                         inlineButtons.Add(new List<InlineKeyboardButton>
@@ -279,7 +281,7 @@ namespace KIP_server_TB.V1.Controllers
 
                     try
                     {
-                        chatId = GetChatIdFromButton(request);
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
                     }
                     catch
                     {
@@ -328,10 +330,21 @@ namespace KIP_server_TB.V1.Controllers
                     outputSb.AppendLine($"Курс: {user.Course}");
                     outputSb.AppendLine($"Група: {user.Group}");
 
+                    var inlineButtons = new List<List<InlineKeyboardButton>>
+                    {
+                        new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData("Вірно ✅", "ScheduleIntent"),
+                            InlineKeyboardButton.WithCallbackData("Невірно ❌", "Гостьовий режим"),
+                        },
+                    };
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
                     string chatId = null;
                     try
                     {
-                        chatId = GetChatIdFromButton(request);
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
                     }
                     catch
                     {
@@ -344,7 +357,7 @@ namespace KIP_server_TB.V1.Controllers
                         return this.Ok();
                     }
 
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString(), replyMarkup: inlineKeyboard);
 
                     return this.Ok();
                 }
@@ -361,38 +374,10 @@ namespace KIP_server_TB.V1.Controllers
                         return this.Ok();
                     }
 
-                    var day = ConvertExtensions.StringToInt(message);
-                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
-
-                    var groupId = this._postDbContext.Group.FirstOrDefault(i => i.GroupName == user.Group).GroupID;
-                    var list = this._postDbContext.StudentSchedule.Where(i => i.GroupID == groupId && i.Day == (Day)day).AsNoTracking().ToList();
-
-                    if (list.Count == 0)
-                    {
-                        return this.NotFound();
-                    }
-
-                    var outputSb = new StringBuilder();
-
-                    var week0List = list.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
-                    var week1List = list.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
-
-                    outputSb.AppendLine("Непарный тиждень:");
-                    foreach (var l in week0List)
-                    {
-                        outputSb.AppendLine($"{l.Number + 1}. {l.SubjectName} ({l.ProfName}) [{l.AudienceName}]");
-                    }
-
-                    outputSb.AppendLine("\nПарный тиждень:");
-                    foreach (var l in week1List)
-                    {
-                        outputSb.AppendLine($"{l.Number + 1}. {l.SubjectName} ({l.ProfName}) [{l.AudienceName}]");
-                    }
-
                     string chatId = null;
                     try
                     {
-                        chatId = GetChatIdFromButton(request);
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
                     }
                     catch
                     {
@@ -405,120 +390,17 @@ namespace KIP_server_TB.V1.Controllers
                         return this.Ok();
                     }
 
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
+                    var day = ConvertExtensions.StringToInt(message);
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
 
-                    return this.Ok();
-                }
-
-                #endregion
-
-                return this.Ok();
-
-                /*
-
-                #region ProfsOutput
-
-                if (existingUser != null && message.Contains("ProfSchedule"))
-                {
-                    var messageContent = message.Split(":");
-                    var day = ConvertExtensions.StringToInt(messageContent[1]);
-
-                    existingUser.TempDayValue = day;
-                    await this._telegramDbContext.SaveChangesAsync();
-
-                    var userFaculty = this._postDbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == existingUser.Faculty);
-                    var cathedras = this._postDbContext.Cathedra.Where(c => c.FacultyID == userFaculty.FacultyID).AsNoTracking().ToList();
-
-                    var outputSb = new StringBuilder();
-                    outputSb.AppendLine("Оберіть викладача\n");
-
-                    foreach (var c in cathedras)
-                    {
-                        outputSb.AppendLine($"Кафедра [{c.CathedraName}]\n");
-
-                        var profs = this._postDbContext.Prof.Where(p => p.CathedraID == c.CathedraID).AsNoTracking().ToList();
-
-                        var output = string.Join("\n", profs.Select(p => $"{p.ProfSurname} {p.ProfName} {p.ProfPatronymic}"));
-                        outputSb.Append(output + "\n\n");
-                    }
-
-                    // log
-                    var response = new WebhookResponse
-                    {
-                        FulfillmentText = outputSb.ToString(),
-                    };
-
-                    return this.Json(response);
-                }
-
-                #endregion
-
-                #region AudiencesOutput
-
-                if (existingUser != null && message.Contains("AudienceSchedule"))
-                {
-                    var messageContent = message.Split(":");
-                    var day = ConvertExtensions.StringToInt(messageContent[1]);
-
-                    existingUser.TempDayValue = day;
-                    await this._telegramDbContext.SaveChangesAsync();
-
-                    var buildings = this._postDbContext.Building.AsNoTracking().ToList();
-
-                    var outputSb = new StringBuilder();
-                    outputSb.AppendLine("Оберіть аудиторію\n");
-
-                    foreach (var b in buildings)
-                    {
-                        outputSb.AppendLine($"Корпус [{b.BuildingName} ({b.BuildingShortName})]\n");
-
-                        var audiences = this._postDbContext.Audience.Where(a => a.BuildingID == b.BuildingID).AsNoTracking().ToList();
-
-                        if (audiences.Count != 0)
-                        {
-                            var output = string.Join("\n", audiences.Select(p => $"{p.AudienceName}"));
-                            outputSb.Append(output + "\n\n");
-                        }
-                    }
-
-                    // log
-                    var response = new WebhookResponse
-                    {
-                        FulfillmentText = outputSb.ToString(),
-                    };
-
-                    return this.Json(response);
-                }
-
-                #endregion
-
-                #region ProfSchedule
-
-                var userFaculty1 = this._postDbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == existingUser.Faculty);
-                var cathedras1 = this._postDbContext.Cathedra.Where(c => c.FacultyID == userFaculty1.FacultyID).AsNoTracking().ToList();
-
-                foreach (var c in cathedras1)
-                {
-                    var profs = this._postDbContext.Prof.Where(p => p.CathedraID == c.CathedraID).AsNoTracking().ToList();
-
-                    var prof = profs.FirstOrDefault(p => message.Contains(p.ProfSurname));
-
-                    if (prof == null)
-                    {
-                        continue;
-                    }
-
-                    if (existingUser.TempDayValue == null)
-                    {
-                        // log
-                        return this.Ok();
-                    }
-
-                    var list = this._postDbContext.ProfSchedule.Where(i => i.ProfID == prof.ProfID && i.Day == (Day)existingUser.TempDayValue).AsNoTracking().ToList();
+                    var group = this._postDbContext.Group.FirstOrDefault(i => i.GroupName == user.Group);
+                    var list = this._postDbContext.StudentSchedule.Where(i => i.GroupID == group.GroupID && i.Day == Enum.Parse<Day>(message)).AsNoTracking().ToList();
 
                     if (list.Count == 0)
                     {
-                        return this.NotFound();
+                        // log
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, $"Вибачте, але в базі даних немає розкладу для вашої групи {group.GroupName}");
+                        return this.Ok();
                     }
 
                     var outputSb = new StringBuilder();
@@ -526,36 +408,470 @@ namespace KIP_server_TB.V1.Controllers
                     var week0List = list.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
                     var week1List = list.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
 
-                    outputSb.AppendLine("Непарный тиждень:");
+                    outputSb.AppendLine($"{group.GroupName}\n");
+                    outputSb.AppendLine("Непарный тиждень:\n");
                     foreach (var l in week0List)
                     {
-                        outputSb.AppendLine($"{l.Number + 1}. {l.SubjectName} ({string.Join(",", l.GroupID.Select(p => $"{p.Value}"))} [{l.AudienceName}]");
+                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                        outputSb.AppendLine($"  Викладач: {l.ProfName}");
+                        outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                     }
 
-                    outputSb.AppendLine("\nПарный тиждень:");
+                    outputSb.AppendLine("\nПарный тиждень:\n");
                     foreach (var l in week1List)
                     {
-                        outputSb.AppendLine($"{l.Number + 1}. {l.SubjectName} ({string.Join(",", l.GroupID.Select(p => $"{p.Value}"))} [{l.AudienceName}]");
+                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                        outputSb.AppendLine($"  Викладач: {l.ProfName}");
+                        outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                     }
 
-                    existingUser.TempDayValue = null;
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
 
-                    // log
-                    var response = new WebhookResponse()
+                    return this.Ok();
+                }
+
+                #endregion
+
+                #region CathedrasOutput
+
+                if (intent == "Prof Schedule Intent")
+                {
+                    if (string.IsNullOrEmpty(message))
                     {
-                        FulfillmentText = outputSb.ToString(),
-                    };
+                        // log
+                        return this.Ok();
+                    }
 
-                    return this.Json(response);
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+
+                    var userFaculty = this._postDbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == user.Faculty);
+                    var cathedras = this._postDbContext.Cathedra.Where(c => c.FacultyID == userFaculty.FacultyID).OrderBy(c => c.CathedraName).AsNoTracking().ToList();
+
+                    var inlineButtons = new List<List<InlineKeyboardButton>>();
+
+                    foreach (var c in cathedras)
+                    {
+                        inlineButtons.Add(new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData(c.CathedraName, c.CathedraID.ToString()),
+                        });
+                    }
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                    string chatId = null;
+                    try
+                    {
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                        chatId = TelegramRequestProcessing.GetChatIdFromKeyboard(request);
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть кафедру", replyMarkup: inlineKeyboard);
+
+                    return this.Ok();
+                }
+
+                #endregion
+
+                #region ProfsOutput
+
+                if (intent == "Prof Schedule Intent - Cathedra")
+                {
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+
+                    var cathedra = this._postDbContext.Cathedra.FirstOrDefault(c => c.CathedraID == ConvertExtensions.StringToInt(message));
+                    var profs = this._postDbContext.Prof.Where(p => p.CathedraID == cathedra.CathedraID).OrderBy(p => p.ProfSurname).AsNoTracking().ToList();
+
+                    var inlineButtons = new List<List<InlineKeyboardButton>>();
+
+                    foreach (var p in profs)
+                    {
+                        inlineButtons.Add(new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData($"{p.ProfSurname} {p.ProfName} {p.ProfPatronymic}", p.ProfSurname),
+                        });
+                    }
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                    string chatId = null;
+                    try
+                    {
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                        chatId = TelegramRequestProcessing.GetChatIdFromKeyboard(request);
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть викладача", replyMarkup: inlineKeyboard);
+
+                    return this.Ok();
+                }
+
+                #endregion
+
+                #region DayOutput
+
+                if (intent == "Prof Schedule Intent - Prof")
+                {
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+                    var prof = this._postDbContext.Prof.FirstOrDefault(p => p.ProfSurname == message);
+
+                    user.TempProfValue = prof.ProfID;
+                    await this._telegramDbContext.SaveChangesAsync();
+
+                    var inlineButtons = new List<List<InlineKeyboardButton>>();
+
+                    foreach (var d in KIPTelegramConstants.DayUkrConstants)
+                    {
+                        inlineButtons.Add(new List<InlineKeyboardButton>
+                    {
+                        InlineKeyboardButton.WithCallbackData(d.Value, d.Key.ToString()),
+                    });
+                    }
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                    string chatId = null;
+                    try
+                    {
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                        chatId = TelegramRequestProcessing.GetChatIdFromKeyboard(request);
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть день", replyMarkup: inlineKeyboard);
+
+                    return this.Ok();
+                }
+
+                #endregion
+
+                #region ProfSchedule
+
+                if (intent == "Prof Schedule Intent - Day")
+                {
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    string chatId = null;
+                    try
+                    {
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                        chatId = TelegramRequestProcessing.GetChatIdFromKeyboard(request);
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+
+                    var prof = this._postDbContext.Prof.FirstOrDefault(i => i.ProfID == user.TempProfValue);
+                    var list = this._postDbContext.ProfSchedule.Where(i => i.ProfID == user.TempProfValue && i.Day == Enum.Parse<Day>(message)).AsNoTracking().ToList();
+
+                    if (list.Count == 0)
+                    {
+                        // log
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, $"Вибачте, але в базі даних немає розкладу для {prof.ProfSurname}");
+                        return this.Ok();
+                    }
+
+                    var outputSb = new StringBuilder();
+
+                    var week0List = list.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
+                    var week1List = list.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
+
+                    outputSb.AppendLine($"{prof.ProfSurname} {prof.ProfName} {prof.ProfPatronymic}\n");
+                    outputSb.AppendLine("Непарный тиждень:\n");
+                    foreach (var l in week0List)
+                    {
+                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                        outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
+                        outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
+                    }
+
+                    outputSb.AppendLine("\nПарный тиждень:\n");
+                    foreach (var l in week1List)
+                    {
+                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                        outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
+                        outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
+
+                    return this.Ok();
+                }
+
+                #endregion
+
+                #region BuildingsOutput
+
+                if (intent == "Audience Schedule Intent")
+                {
+                    var buildings = this._postDbContext.Building.OrderBy(b => b.BuildingShortName).AsNoTracking().ToList();
+
+                    var inlineButtons = new List<List<InlineKeyboardButton>>();
+                    foreach (var b in buildings)
+                    {
+                        inlineButtons.Add(new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData($"{b.BuildingName} ({b.BuildingShortName})", b.BuildingID.ToString()),
+                        });
+                    }
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                    string chatId = null;
+                    try
+                    {
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                        chatId = TelegramRequestProcessing.GetChatIdFromKeyboard(request);
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть навчальний корпус", replyMarkup: inlineKeyboard);
+
+                    return this.Ok();
+                }
+
+                #endregion
+
+                #region AudiencesOutput
+
+                if (intent == "Audience Schedule Intent - Building")
+                {
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+                    user.TempBuildingValue = ConvertExtensions.StringToInt(message);
+                    await this._telegramDbContext.SaveChangesAsync();
+
+                    var audiences = this._postDbContext.Audience.Where(a => a.BuildingID == user.TempBuildingValue).OrderBy(a => a.AudienceName)
+                        .AsNoTracking().ToList();
+
+                    var inlineButtons = new List<List<InlineKeyboardButton>>();
+                    foreach (var a in audiences)
+                    {
+                        inlineButtons.Add(new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData($"{a.AudienceName}", $"Audience:{a.AudienceName}"),
+                        });
+                    }
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                    string chatId = null;
+                    try
+                    {
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                        chatId = TelegramRequestProcessing.GetChatIdFromKeyboard(request);
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть навчальну аудиторію", replyMarkup: inlineKeyboard);
+
+                    return this.Ok();
+                }
+
+                #endregion
+
+                #region DayOutput
+
+                if (intent == "Audience Schedule Intent - Audience")
+                {
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    var arr = message.Split(':');
+                    message = arr[1];
+
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+
+                    var audience = this._postDbContext.Audience.FirstOrDefault(a => a.AudienceName.Contains(message));
+                    user.TempAudienceValue = audience.AudienceID;
+                    await this._telegramDbContext.SaveChangesAsync();
+
+                    var inlineButtons = new List<List<InlineKeyboardButton>>();
+
+                    foreach (var d in KIPTelegramConstants.DayUkrConstants)
+                    {
+                        inlineButtons.Add(new List<InlineKeyboardButton>
+                    {
+                        InlineKeyboardButton.WithCallbackData(d.Value, d.Key.ToString()),
+                    });
+                    }
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                    string chatId = null;
+                    try
+                    {
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                        chatId = TelegramRequestProcessing.GetChatIdFromKeyboard(request);
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть день", replyMarkup: inlineKeyboard);
+
+                    return this.Ok();
                 }
 
                 #endregion
 
                 #region AudienceSchedule
+
+                if (intent == "Audience Schedule Intent - Day")
+                {
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    string chatId = null;
+                    try
+                    {
+                        chatId = TelegramRequestProcessing.GetChatIdFromInlineButton(request);
+                    }
+                    catch
+                    {
+                        // log
+                        chatId = TelegramRequestProcessing.GetChatIdFromKeyboard(request);
+                    }
+
+                    if (string.IsNullOrEmpty(chatId))
+                    {
+                        // log
+                        return this.Ok();
+                    }
+
+                    var user = this._telegramDbContext.Users.FirstOrDefault(u => u.UserId == userId);
+
+                    var audience = this._postDbContext.Audience.FirstOrDefault(a => a.AudienceID == user.TempAudienceValue);
+                    var list = this._postDbContext.AudienceSchedule.Where(i => i.AudienceID == user.TempAudienceValue && i.Day == Enum.Parse<Day>(message)).AsNoTracking().ToList();
+
+                    if (list.Count == 0)
+                    {
+                        // log
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, $"Вибачте, але в базі даних немає розкладу для {audience.AudienceName}");
+                        return this.Ok();
+                    }
+
+                    var outputSb = new StringBuilder();
+
+                    var week0List = list.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
+                    var week1List = list.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
+
+                    outputSb.AppendLine($"{audience.AudienceName}\n");
+                    outputSb.AppendLine("Непарный тиждень:\n");
+                    foreach (var l in week0List)
+                    {
+                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                        outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
+                        outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
+                    }
+
+                    outputSb.AppendLine("\nПарный тиждень:\n");
+                    foreach (var l in week1List)
+                    {
+                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                        outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
+                        outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
+                    }
+
+                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
+
+                    return this.Ok();
+                }
+
                 #endregion
 
                 // log
-                return this.Ok();*/
+                return this.Ok();
             }
             catch (Exception ex)
             {
@@ -563,42 +879,6 @@ namespace KIP_server_TB.V1.Controllers
                 Console.WriteLine(ex.Message);
                 return this.Ok();
             }
-        }
-
-        private static double GetUserIdFromButton(WebhookRequest request)
-        {
-            return request.OriginalDetectIntentRequest.Payload
-                .Fields["data"].StructValue
-                .Fields["callback_query"].StructValue
-                .Fields["from"].StructValue
-                .Fields["id"].NumberValue;
-        }
-
-        private static double GetUserIdFromMessage(WebhookRequest request)
-        {
-            return request.OriginalDetectIntentRequest.Payload
-                .Fields["data"].StructValue
-                .Fields["from"].StructValue
-                .Fields["id"].NumberValue;
-        }
-
-        private static string GetUserNameFromButton(WebhookRequest request)
-        {
-            return request.OriginalDetectIntentRequest.Payload
-                .Fields["data"].StructValue
-                .Fields["callback_query"].StructValue
-                .Fields["from"].StructValue
-                .Fields["username"].StringValue;
-        }
-
-        private static string GetChatIdFromButton(WebhookRequest request)
-        {
-            return request.OriginalDetectIntentRequest.Payload
-                .Fields["data"].StructValue
-                .Fields["callback_query"].StructValue
-                .Fields["message"].StructValue
-                .Fields["chat"].StructValue
-                .Fields["id"].StringValue;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace KIP_server_TB
         /// <returns>Configured web host builder.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var port = Environment.GetEnvironmentVariable("PORT") ?? "8443";
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 
             // var url = string.Concat("https://0.0.0.0:", port);
             var url = string.Concat("http://0.0.0.0:", port);
