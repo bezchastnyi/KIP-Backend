@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using KIP_Backend.Attributes;
-using KIP_POST_APP.DB;
-using KIP_POST_APP.Models.KIP;
+using KIP_server_GET.DB;
+using KIP_server_GET.Models.KIP;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ namespace KIP_server_GET.V1.Controllers
     [ApiController]
     public class CathedraController : Controller
     {
-        private readonly PostDbContext _context;
+        private readonly KIPDbContext _context;
         private readonly ILogger<CathedraController> _logger;
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace KIP_server_GET.V1.Controllers
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public CathedraController(ILogger<CathedraController> logger, PostDbContext context)
+        public CathedraController(ILogger<CathedraController> logger, KIPDbContext context)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._context = context ?? throw new ArgumentNullException(nameof(context));

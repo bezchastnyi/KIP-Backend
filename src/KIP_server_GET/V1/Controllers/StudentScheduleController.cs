@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using KIP_Backend.Attributes;
-using KIP_POST_APP.DB;
-using KIP_POST_APP.Models.KIP;
-using KIP_POST_APP.Models.KIP.Helpers;
 using KIP_server_GET.Constants;
+using KIP_server_GET.DB;
+using KIP_server_GET.Models.KIP;
+using KIP_server_GET.Models.KIP.Helpers;
 using KIP_server_GET.Models.Output;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +24,7 @@ namespace KIP_server_GET.V1.Controllers
     [ApiController]
     public class StudentScheduleController : Controller
     {
-        private readonly PostDbContext _context;
+        private readonly KIPDbContext _context;
         private readonly ILogger<StudentScheduleController> _logger;
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace KIP_server_GET.V1.Controllers
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public StudentScheduleController(ILogger<StudentScheduleController> logger, PostDbContext context)
+        public StudentScheduleController(ILogger<StudentScheduleController> logger, KIPDbContext context)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._context = context ?? throw new ArgumentNullException(nameof(context));

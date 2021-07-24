@@ -3,7 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using KIP_Backend.Extensions;
-using KIP_POST_APP.DB;
+using KIP_server_GET.DB;
+using KIP_server_GET.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -67,7 +68,8 @@ namespace KIP_server_GET
 
             var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
             var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
-            services.AddDbServices<PostDbContext>(pgConnectionString, pgVersionString, this.assenmblyName);
+            services.AddDbServices<KIPDbContext>(pgConnectionString, pgVersionString, this.assenmblyName);
+            services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddApiVersioning(o =>
             {
