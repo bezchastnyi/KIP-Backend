@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.Controllers
+namespace KIP_server_Auth.Controllers
 {
     /// <summary>
     /// Default controller.

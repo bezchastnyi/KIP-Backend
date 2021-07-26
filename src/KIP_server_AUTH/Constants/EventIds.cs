@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.Constants
+namespace KIP_server_Auth.Constants
 {
     /// <summary>
     /// Event identifiers.

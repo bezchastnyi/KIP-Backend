@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace KIP_server_AUTH
+namespace KIP_server_Auth
 {
     /// <summary>
     /// The server AUTH.

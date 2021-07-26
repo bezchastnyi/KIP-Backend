@@ -4,7 +4,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace KIP_server_AUTH.Models.KIP
+namespace KIP_server_Auth.Models.KIP
 {
     /// <summary>
     /// Semester Studying Plan KIP.

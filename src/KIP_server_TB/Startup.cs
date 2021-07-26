@@ -2,8 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using KIP_Backend.Constants;
-using KIP_server_GET.DB;
-using KIP_server_TB.DB;
+using KIP_Backend.DB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -45,8 +44,7 @@ namespace KIP_server_TB
 
             var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
             var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
-            services.AddDbServices<TelegramDbContext>(pgConnectionString, pgVersionString, assenmblyName);
-            services.AddDbServices<KIPDbContext>(pgConnectionString, pgVersionString, assenmblyName);
+            services.AddDbServices<KIPDbContext>(pgConnectionString, pgVersionString);
 
             services.AddMvcCore()
                 .AddDataAnnotations()

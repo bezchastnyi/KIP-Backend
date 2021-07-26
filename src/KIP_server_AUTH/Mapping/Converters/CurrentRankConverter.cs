@@ -5,10 +5,10 @@
 using System;
 using AutoMapper;
 using KIP_Backend.Extensions;
-using KIP_server_AUTH.Models.KHPI;
-using KIP_server_AUTH.Models.KIP;
+using KIP_server_Auth.Models.KHPI;
+using KIP_server_Auth.Models.KIP;
 
-namespace KIP_server_AUTH.Mapping.Converters
+namespace KIP_server_Auth.Mapping.Converters
 {
     /// <summary>
     /// Convert KhPI CurrentRank model to the KIP model.

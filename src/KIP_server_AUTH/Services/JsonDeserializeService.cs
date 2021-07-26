@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using KIP_server_AUTH.Extensions;
-using KIP_server_AUTH.Interfaces;
+using KIP_server_Auth.Extensions;
+using KIP_server_Auth.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace KIP_server_AUTH.Services
+namespace KIP_server_Auth.Services
 {
     /// <summary>
     /// Convert json format of data to model.

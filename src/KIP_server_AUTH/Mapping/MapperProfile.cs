@@ -3,11 +3,11 @@
 // </copyright>
 
 using AutoMapper;
-using KIP_server_AUTH.Mapping.Converters;
-using KIP_server_AUTH.Models.KHPI;
-using KIP_server_AUTH.Models.KIP;
+using KIP_server_Auth.Mapping.Converters;
+using KIP_server_Auth.Models.KHPI;
+using KIP_server_Auth.Models.KIP;
 
-namespace KIP_server_AUTH.Mapping
+namespace KIP_server_Auth.Mapping
 {
     /// <summary>
     /// MapperProfile.

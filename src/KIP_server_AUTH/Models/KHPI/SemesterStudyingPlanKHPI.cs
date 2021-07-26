@@ -4,7 +4,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace KIP_server_AUTH.Models.KHPI
+namespace KIP_server_Auth.Models.KHPI
 {
     /// <summary>
     /// Semester Studying Plan KHPI.

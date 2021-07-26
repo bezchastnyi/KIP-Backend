@@ -1,12 +1,12 @@
 ﻿using System;
 using AutoMapper;
-using KIP_server_AUTH.Interfaces;
-using KIP_server_AUTH.V1.Controllers;
+using KIP_server_Auth.Interfaces;
+using KIP_server_Auth.V1.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace KIP_server_AUTH.Tests.V1.Controllers
+namespace KIP_server_Auth.Tests.V1.Controllers
 {
     public class PersonalInformationControllerTests
     {

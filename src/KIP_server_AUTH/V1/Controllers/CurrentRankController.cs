@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_Backend.Constants;
-using KIP_server_AUTH.Constants;
-using KIP_server_AUTH.Extensions;
-using KIP_server_AUTH.Interfaces;
-using KIP_server_AUTH.Models.KHPI;
-using KIP_server_AUTH.Models.KIP;
+using KIP_server_Auth.Constants;
+using KIP_server_Auth.Extensions;
+using KIP_server_Auth.Interfaces;
+using KIP_server_Auth.Models.KHPI;
+using KIP_server_Auth.Models.KIP;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.V1.Controllers
+namespace KIP_server_Auth.V1.Controllers
 {
     /// <summary>
     /// Current Rank controller.

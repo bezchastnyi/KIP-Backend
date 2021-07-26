@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using KIP_server_AUTH.Constants;
+using KIP_server_Auth.Constants;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.Extensions
+namespace KIP_server_Auth.Extensions
 {
     /// <summary>
     /// Logger extensions.

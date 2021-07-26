@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9A2F9FA7-014B-47B7-BED8-0D2A2CEAF7EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_GET", "src\KIP_server_GET\KIP_server_GET.csproj", "{ED7D1D0D-D526-43F4-95F0-610CA6CC1AAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_NoAuth", "src\KIP_server_NoAuth\KIP_server_NoAuth.csproj", "{ED7D1D0D-D526-43F4-95F0-610CA6CC1AAD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_AUTH", "src\KIP_server_AUTH\KIP_server_AUTH.csproj", "{685F2B88-BC73-4623-AB67-44643EEF9B19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_Auth", "src\KIP_server_Auth\KIP_server_Auth.csproj", "{685F2B88-BC73-4623-AB67-44643EEF9B19}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_TB", "src\KIP_server_TB\KIP_server_TB.csproj", "{9A72B6E9-205C-4A60-B9BB-1AE682DA66CC}"
 EndProject
@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KIP_Backend", "src\KIP_Back
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0AD68C06-80D6-43C5-B22A-3254245B4D55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_GET.Tests", "test\KIP_server_GET.Tests\KIP_server_GET.Tests.csproj", "{041BB436-3E59-43AC-A9EB-CFCD00C17CB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_NoAuth.Tests", "test\KIP_server_NoAuth.Tests\KIP_server_NoAuth.Tests.csproj", "{041BB436-3E59-43AC-A9EB-CFCD00C17CB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_AUTH.Tests", "test\KIP_server_AUTH.Tests\KIP_server_AUTH.Tests.csproj", "{EC94DECA-6EF5-4C26-A7FF-21859163192F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_Auth.Tests", "test\KIP_server_Auth.Tests\KIP_server_Auth.Tests.csproj", "{EC94DECA-6EF5-4C26-A7FF-21859163192F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KIP_server_TB.Tests", "test\KIP_server_TB.Tests\KIP_server_TB.Tests.csproj", "{3069ACDC-1FE8-4114-989B-CC4E53A896E8}"
 EndProject

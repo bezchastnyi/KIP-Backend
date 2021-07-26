@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace KIP_server_AUTH
+namespace KIP_server_Auth
 {
     /// <summary>
     /// Configures the Swagger generation options.

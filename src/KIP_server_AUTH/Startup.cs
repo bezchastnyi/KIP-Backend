@@ -7,9 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using KIP_Backend.Extensions;
-using KIP_server_AUTH.Interfaces;
-using KIP_server_AUTH.Mapping;
-using KIP_server_AUTH.Services;
+using KIP_server_Auth.Interfaces;
+using KIP_server_Auth.Mapping;
+using KIP_server_Auth.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +23,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace KIP_server_AUTH
+namespace KIP_server_Auth
 {
     /// <summary>
     /// KIP_server_AUTH startup.
