@@ -22,7 +22,7 @@ namespace KIP_server_NoAuth.Migrations
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.Audience", b =>
                 {
-                    b.Property<int>("AudienceID")
+                    b.Property<int>("AudienceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
@@ -31,7 +31,7 @@ namespace KIP_server_NoAuth.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
-                    b.Property<int>("BuildingID")
+                    b.Property<int>("BuildingId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("NumberOfSeats")
@@ -45,33 +45,33 @@ namespace KIP_server_NoAuth.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("AudienceID");
+                    b.HasKey("AudienceId");
 
-                    b.HasIndex("AudienceID")
+                    b.HasIndex("AudienceId")
                         .IsUnique();
 
-                    b.HasIndex("BuildingID");
+                    b.HasIndex("BuildingId");
 
                     b.ToTable("Audience");
                 });
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.AudienceSchedule", b =>
                 {
-                    b.Property<int>("AudienceScheduleID")
+                    b.Property<int>("AudienceScheduleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
-                    b.Property<int>("AudienceID")
+                    b.Property<int>("AudienceId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("BuildingID")
+                    b.Property<int>("BuildingId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Day")
                         .HasColumnType("integer");
 
-                    b.Property<List<Nullable<int>>>("GroupID")
+                    b.Property<List<Nullable<int>>>("GroupId")
                         .HasColumnType("integer[]");
 
                     b.Property<string>("GroupNames")
@@ -80,7 +80,7 @@ namespace KIP_server_NoAuth.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ProfID")
+                    b.Property<int?>("ProfId")
                         .HasColumnType("integer");
 
                     b.Property<string>("ProfName")
@@ -102,22 +102,22 @@ namespace KIP_server_NoAuth.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("AudienceScheduleID");
+                    b.HasKey("AudienceScheduleId");
 
-                    b.HasIndex("AudienceID");
+                    b.HasIndex("AudienceId");
 
-                    b.HasIndex("BuildingID");
+                    b.HasIndex("BuildingId");
 
-                    b.HasIndex("ProfID");
+                    b.HasIndex("ProfId");
 
-                    b.HasIndex("AudienceID", "Day");
+                    b.HasIndex("AudienceId", "Day");
 
                     b.ToTable("AudienceSchedule");
                 });
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.Building", b =>
                 {
-                    b.Property<int>("BuildingID")
+                    b.Property<int>("BuildingId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
@@ -129,14 +129,17 @@ namespace KIP_server_NoAuth.Migrations
                     b.Property<string>("BuildingShortName")
                         .HasColumnType("varchar(5)");
 
+                    b.Property<int?>("NumberOfAudiences")
+                        .HasColumnType("integer");
+
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("BuildingID");
+                    b.HasKey("BuildingId");
 
-                    b.HasIndex("BuildingID")
+                    b.HasIndex("BuildingId")
                         .IsUnique();
 
                     b.ToTable("Building");
@@ -144,7 +147,7 @@ namespace KIP_server_NoAuth.Migrations
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.Cathedra", b =>
                 {
-                    b.Property<int>("CathedraID")
+                    b.Property<int>("CathedraId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
@@ -156,7 +159,7 @@ namespace KIP_server_NoAuth.Migrations
                     b.Property<string>("CathedraShortName")
                         .HasColumnType("varchar(7)");
 
-                    b.Property<int>("FacultyID")
+                    b.Property<int>("FacultyId")
                         .HasColumnType("integer");
 
                     b.Property<uint>("xmin")
@@ -164,19 +167,19 @@ namespace KIP_server_NoAuth.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("CathedraID");
+                    b.HasKey("CathedraId");
 
-                    b.HasIndex("CathedraID")
+                    b.HasIndex("CathedraId")
                         .IsUnique();
 
-                    b.HasIndex("FacultyID");
+                    b.HasIndex("FacultyId");
 
                     b.ToTable("Cathedra");
                 });
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.Faculty", b =>
                 {
-                    b.Property<int>("FacultyID")
+                    b.Property<int>("FacultyId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
@@ -193,9 +196,9 @@ namespace KIP_server_NoAuth.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("FacultyID");
+                    b.HasKey("FacultyId");
 
-                    b.HasIndex("FacultyID")
+                    b.HasIndex("FacultyId")
                         .IsUnique();
 
                     b.ToTable("Faculty");
@@ -203,7 +206,7 @@ namespace KIP_server_NoAuth.Migrations
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.Group", b =>
                 {
-                    b.Property<int>("GroupID")
+                    b.Property<int>("GroupId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
@@ -211,7 +214,7 @@ namespace KIP_server_NoAuth.Migrations
                     b.Property<int>("Course")
                         .HasColumnType("integer");
 
-                    b.Property<int>("FacultyID")
+                    b.Property<int>("FacultyId")
                         .HasColumnType("integer");
 
                     b.Property<string>("GroupName")
@@ -226,11 +229,11 @@ namespace KIP_server_NoAuth.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("GroupID");
+                    b.HasKey("GroupId");
 
-                    b.HasIndex("FacultyID");
+                    b.HasIndex("FacultyId");
 
-                    b.HasIndex("GroupID")
+                    b.HasIndex("GroupId")
                         .IsUnique();
 
                     b.ToTable("Group");
@@ -238,12 +241,12 @@ namespace KIP_server_NoAuth.Migrations
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.Prof", b =>
                 {
-                    b.Property<int>("ProfID")
+                    b.Property<int>("ProfId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
-                    b.Property<int>("CathedraID")
+                    b.Property<int>("CathedraId")
                         .HasColumnType("integer");
 
                     b.Property<string>("ProfName")
@@ -265,11 +268,11 @@ namespace KIP_server_NoAuth.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("ProfID");
+                    b.HasKey("ProfId");
 
-                    b.HasIndex("CathedraID");
+                    b.HasIndex("CathedraId");
 
-                    b.HasIndex("ProfID")
+                    b.HasIndex("ProfId")
                         .IsUnique();
 
                     b.ToTable("Prof");
@@ -277,24 +280,24 @@ namespace KIP_server_NoAuth.Migrations
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.ProfSchedule", b =>
                 {
-                    b.Property<int>("ProfScheduleID")
+                    b.Property<int>("ProfScheduleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
-                    b.Property<int?>("AudienceID")
+                    b.Property<int?>("AudienceId")
                         .HasColumnType("integer");
 
                     b.Property<string>("AudienceName")
                         .HasColumnType("text");
 
-                    b.Property<int?>("BuildingID")
+                    b.Property<int?>("BuildingId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Day")
                         .HasColumnType("integer");
 
-                    b.Property<List<Nullable<int>>>("GroupID")
+                    b.Property<List<Nullable<int>>>("GroupId")
                         .HasColumnType("integer[]");
 
                     b.Property<string>("GroupNames")
@@ -303,7 +306,7 @@ namespace KIP_server_NoAuth.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProfID")
+                    b.Property<int>("ProfId")
                         .HasColumnType("integer");
 
                     b.Property<string>("SubjectName")
@@ -322,45 +325,45 @@ namespace KIP_server_NoAuth.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("ProfScheduleID");
+                    b.HasKey("ProfScheduleId");
 
-                    b.HasIndex("AudienceID");
+                    b.HasIndex("AudienceId");
 
-                    b.HasIndex("BuildingID");
+                    b.HasIndex("BuildingId");
 
-                    b.HasIndex("ProfID");
+                    b.HasIndex("ProfId");
 
-                    b.HasIndex("ProfID", "Day");
+                    b.HasIndex("ProfId", "Day");
 
                     b.ToTable("ProfSchedule");
                 });
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.StudentSchedule", b =>
                 {
-                    b.Property<int>("StudentScheduleID")
+                    b.Property<int>("StudentScheduleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
-                    b.Property<int?>("AudienceID")
+                    b.Property<int?>("AudienceId")
                         .HasColumnType("integer");
 
                     b.Property<string>("AudienceName")
                         .HasColumnType("text");
 
-                    b.Property<int?>("BuildingID")
+                    b.Property<int?>("BuildingId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Day")
                         .HasColumnType("integer");
 
-                    b.Property<int>("GroupID")
+                    b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Number")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ProfID")
+                    b.Property<int?>("ProfId")
                         .HasColumnType("integer");
 
                     b.Property<string>("ProfName")
@@ -382,17 +385,17 @@ namespace KIP_server_NoAuth.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid");
 
-                    b.HasKey("StudentScheduleID");
+                    b.HasKey("StudentScheduleId");
 
-                    b.HasIndex("AudienceID");
+                    b.HasIndex("AudienceId");
 
-                    b.HasIndex("BuildingID");
+                    b.HasIndex("BuildingId");
 
-                    b.HasIndex("GroupID");
+                    b.HasIndex("GroupId");
 
-                    b.HasIndex("ProfID");
+                    b.HasIndex("ProfId");
 
-                    b.HasIndex("GroupID", "Day");
+                    b.HasIndex("GroupId", "Day");
 
                     b.ToTable("StudentSchedule");
                 });
@@ -445,7 +448,7 @@ namespace KIP_server_NoAuth.Migrations
                 {
                     b.HasOne("KIP_Backend.Models.KIP.Building", null)
                         .WithMany()
-                        .HasForeignKey("BuildingID")
+                        .HasForeignKey("BuildingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -454,26 +457,26 @@ namespace KIP_server_NoAuth.Migrations
                 {
                     b.HasOne("KIP_Backend.Models.KIP.Audience", null)
                         .WithMany()
-                        .HasForeignKey("AudienceID")
+                        .HasForeignKey("AudienceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("KIP_Backend.Models.KIP.Building", null)
                         .WithMany()
-                        .HasForeignKey("BuildingID")
+                        .HasForeignKey("BuildingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("KIP_Backend.Models.KIP.Prof", null)
                         .WithMany()
-                        .HasForeignKey("ProfID");
+                        .HasForeignKey("ProfId");
                 });
 
             modelBuilder.Entity("KIP_Backend.Models.KIP.Cathedra", b =>
                 {
                     b.HasOne("KIP_Backend.Models.KIP.Faculty", null)
                         .WithMany()
-                        .HasForeignKey("FacultyID")
+                        .HasForeignKey("FacultyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -482,7 +485,7 @@ namespace KIP_server_NoAuth.Migrations
                 {
                     b.HasOne("KIP_Backend.Models.KIP.Faculty", null)
                         .WithMany()
-                        .HasForeignKey("FacultyID")
+                        .HasForeignKey("FacultyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -491,7 +494,7 @@ namespace KIP_server_NoAuth.Migrations
                 {
                     b.HasOne("KIP_Backend.Models.KIP.Cathedra", null)
                         .WithMany()
-                        .HasForeignKey("CathedraID")
+                        .HasForeignKey("CathedraId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -500,15 +503,15 @@ namespace KIP_server_NoAuth.Migrations
                 {
                     b.HasOne("KIP_Backend.Models.KIP.Audience", null)
                         .WithMany()
-                        .HasForeignKey("AudienceID");
+                        .HasForeignKey("AudienceId");
 
                     b.HasOne("KIP_Backend.Models.KIP.Building", null)
                         .WithMany()
-                        .HasForeignKey("BuildingID");
+                        .HasForeignKey("BuildingId");
 
                     b.HasOne("KIP_Backend.Models.KIP.Prof", null)
                         .WithMany()
-                        .HasForeignKey("ProfID")
+                        .HasForeignKey("ProfId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -517,21 +520,21 @@ namespace KIP_server_NoAuth.Migrations
                 {
                     b.HasOne("KIP_Backend.Models.KIP.Audience", null)
                         .WithMany()
-                        .HasForeignKey("AudienceID");
+                        .HasForeignKey("AudienceId");
 
                     b.HasOne("KIP_Backend.Models.KIP.Building", null)
                         .WithMany()
-                        .HasForeignKey("BuildingID");
+                        .HasForeignKey("BuildingId");
 
                     b.HasOne("KIP_Backend.Models.KIP.Group", null)
                         .WithMany()
-                        .HasForeignKey("GroupID")
+                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("KIP_Backend.Models.KIP.Prof", null)
                         .WithMany()
-                        .HasForeignKey("ProfID");
+                        .HasForeignKey("ProfId");
                 });
 #pragma warning restore 612, 618
         }

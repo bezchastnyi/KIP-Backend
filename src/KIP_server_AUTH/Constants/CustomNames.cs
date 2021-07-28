@@ -6,7 +6,7 @@ namespace KIP_server_Auth.Constants
     /// Custom name constants.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class CustomNames
+    public static class CustomNames
     {
         /// <summary>
         /// Cabinet url.

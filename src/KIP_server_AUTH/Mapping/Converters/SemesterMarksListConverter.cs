@@ -5,25 +5,24 @@
 using System;
 using AutoMapper;
 using KIP_Backend.Extensions;
-using KIP_server_Auth.Models.KHPI;
-using KIP_server_Auth.Models.KIP;
+using KIP_Backend.Models.KIP.Auth;
+using KIP_server_Auth.Models.KhPI;
 
 namespace KIP_server_Auth.Mapping.Converters
 {
     /// <summary>
     /// Convert KhPI SemesterMarksList model to the KIP model.
     /// </summary>
-    public class SemesterMarksListConverter :
-        ITypeConverter<SemesterMarksListKHPI, SemesterMarksList>
+    public class SemesterMarksListConverter : ITypeConverter<SemesterMarksListKhPI, SemesterMarksList>
     {
         /// <summary>
-        /// Convert model of SemesterMarksList from KHPI to KIP.
+        /// Convert model of SemesterMarksList from KhPI to KIP.
         /// </summary>
-        /// <param name="source">The model of KHPI SemesterMarksList.</param>
+        /// <param name="source">The model of KhPI SemesterMarksList.</param>
         /// <param name = "destination">The model of KIP SemesterMarksList.</param>
         /// <param name= "context">The context. </param>
         /// <returns>Object of the KIP SemesterMarksList model.</returns>
-        public SemesterMarksList Convert(SemesterMarksListKHPI source, SemesterMarksList destination, ResolutionContext context)
+        public SemesterMarksList Convert(SemesterMarksListKhPI source, SemesterMarksList destination, ResolutionContext context)
         {
             if (source == null)
             {

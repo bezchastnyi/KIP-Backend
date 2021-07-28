@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 using AutoMapper;
-using KIP_Backend.Models.KIP;
+using KIP_Backend.Models.KIP.NoAuth;
 using KIP_server_NoAuth.Mapping.Converters;
 using KIP_server_NoAuth.Models.KhPI;
 
@@ -20,15 +20,15 @@ namespace KIP_server_NoAuth.Mapping
         /// </summary>
         public MapperProfile()
         {
-            this.CreateMap<FacultyKhPI, Faculty>().ConvertUsing<FacultyKHPIToKIPConverter>();
-            this.CreateMap<CathedraKHPI, Cathedra>().ConvertUsing<CathedraKHPIToKIPConverter>();
-            this.CreateMap<GroupKHPI, Group>().ConvertUsing<GroupByFacultyKHPIToKIPConverter>();
-            this.CreateMap<BuildingKHPI, Building>().ConvertUsing<BuildingKHPIToKIPConverter>();
-            this.CreateMap<AudienceKHPI, Audience>().ConvertUsing<AudienceConverter>();
-            this.CreateMap<ProfKHPI, Prof>().ConvertUsing<ProfKHPIToKIPConverter>();
-            this.CreateMap<ScheduleByGroupKHPI, List<StudentSchedule>>().ConvertUsing<ScheduleByGroupKHPIToKIPConverter>();
-            this.CreateMap<ScheduleByProfKHPI, List<ProfSchedule>>().ConvertUsing<ScheduleByProfKHPIToKIPConverter>();
-            this.CreateMap<ScheduleByAudienceKHPI, List<AudienceSchedule>>().ConvertUsing<ScheduleByAudienceKHPIToKIPConverter>();
+            this.CreateMap<FacultyKhPI, Faculty>().ConvertUsing<FacultyConverter>();
+            this.CreateMap<CathedraKhPI, Cathedra>().ConvertUsing<CathedraConverter>();
+            this.CreateMap<GroupKhPI, Group>().ConvertUsing<GroupConverter>();
+            this.CreateMap<BuildingKhPI, Building>().ConvertUsing<BuildingConverter>();
+            this.CreateMap<AudienceKhPI, Audience>().ConvertUsing<AudienceConverter>();
+            this.CreateMap<ProfKhPI, Prof>().ConvertUsing<ProfConverter>();
+            this.CreateMap<ScheduleKhPI, List<StudentSchedule>>().ConvertUsing<ScheduleByGroupConverter>();
+            this.CreateMap<ScheduleKhPI, List<ProfSchedule>>().ConvertUsing<ScheduleByProfConverter>();
+            this.CreateMap<ScheduleKhPI, List<AudienceSchedule>>().ConvertUsing<ScheduleByAudienceConverter>();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Schedule on Monday.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "<KHPIDB>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1649:File name should match first type name", Justification = "KhPI Db")]
     public class Monday
     {
         /// <summary>
@@ -50,7 +50,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Schedule on Tuesday.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Tuesday
     {
         /// <summary>
@@ -93,7 +93,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Schedule on Wednesday.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Wednesday
     {
         /// <summary>
@@ -136,7 +136,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Schedule on Thursday.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Thursday
     {
         /// <summary>
@@ -179,7 +179,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Schedule on Friday.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Friday
     {
         /// <summary>
@@ -222,7 +222,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Para 1.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Para1
     {
         /// <summary>
@@ -241,7 +241,7 @@ namespace KIP_server_NoAuth.Models.KhPI
         /// Gets or sets the type of 1 para.
         /// </summary>
         /// <value>Type of 1 para.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "KhPI Db")]
         public string vid { get; set; }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Para 2.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Para2
     {
         /// <summary>
@@ -273,7 +273,7 @@ namespace KIP_server_NoAuth.Models.KhPI
         /// Gets or sets the type of 2 para.
         /// </summary>
         /// <value>Type of 2 para.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "KhPI Db")]
         public string vid { get; set; }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Para 3.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Para3
     {
         /// <summary>
@@ -305,7 +305,7 @@ namespace KIP_server_NoAuth.Models.KhPI
         /// Gets or sets the type of 3 para.
         /// </summary>
         /// <value>Type of 3 para.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "KhPI Db")]
         public string vid { get; set; }
 
         /// <summary>
@@ -318,7 +318,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Para 4.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Para4
     {
         /// <summary>
@@ -337,7 +337,7 @@ namespace KIP_server_NoAuth.Models.KhPI
         /// Gets or sets the type of 4 para.
         /// </summary>
         /// <value>Type of 4 para.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "KhPI Db")]
         public string vid { get; set; }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Para 5.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Para5
     {
         /// <summary>
@@ -369,7 +369,7 @@ namespace KIP_server_NoAuth.Models.KhPI
         /// Gets or sets the type of 5 para.
         /// </summary>
         /// <value>Type of 5 para.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "KhPI Db")]
         public string vid { get; set; }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace KIP_server_NoAuth.Models.KhPI
     /// <summary>
     /// Para 6.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Ожидание>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "KhPI Db")]
     public class Para6
     {
         /// <summary>
@@ -401,7 +401,7 @@ namespace KIP_server_NoAuth.Models.KhPI
         /// Gets or sets the type of 6 para.
         /// </summary>
         /// <value>Type of 6 para.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "<KHPIDB>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:Element should begin with upper-case letter", Justification = "KhPI Db")]
         public string vid { get; set; }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace KIP_server_NoAuth
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private readonly string assenmblyName = Assembly.GetEntryAssembly()?.GetName().Name;
+        private readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
 
         private readonly bool enableSwagger;
         private readonly bool enableTokens;
@@ -117,8 +117,7 @@ namespace KIP_server_NoAuth
             if (this.enableTokens)
             {
                 app.UseTokens(this.Configuration["Tokens:EntryToken"]);
-                var message = $"{this.assenmblyName} uses Tokens Protection";
-                logger.Log(LogLevel.Information, message);
+                logger.LogInformation($"{this.assemblyName} uses Tokens Protection");
             }
 
             if (this.enableSwagger)

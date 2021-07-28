@@ -2,7 +2,7 @@
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
-using KIP_Backend.Models.KIP.Helpers;
+using KIP_Backend.Models.KIP.NoAuth.Helpers;
 
 namespace KIP_server_NoAuth.Models.Output
 {

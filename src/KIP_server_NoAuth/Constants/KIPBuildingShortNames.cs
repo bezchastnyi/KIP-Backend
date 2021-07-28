@@ -9,7 +9,7 @@ namespace KIP_server_NoAuth.Constants
     /// <summary>
     /// KIP short names for building constants.
     /// </summary>
-    public class KIPBuildingShortNames
+    public static class KIPBuildingShortNames
     {
         /// <summary>
         /// Gets short names of building.

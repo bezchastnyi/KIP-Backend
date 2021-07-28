@@ -41,18 +41,19 @@ namespace KIP_server_NoAuth
 
         private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
+            var assembly = Assembly.GetEntryAssembly();
             var info = new OpenApiInfo
             {
-                Title = $" {Assembly.GetEntryAssembly().GetName().Name}: " +
-                        $"v{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}",
-                Version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
+                Title = $" {assembly?.GetName().Name}: " +
+                        $"v{assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}",
+                Version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
                 Description = " Server \"GET\": providing common information for not auth mode",
                 Contact = new OpenApiContact
                 {
                     Name = " KIP ",
                     Email = " kip.ntu.khpi@gmail.com",
                 },
-                TermsOfService = new Uri("http://www.kpi.kharkov.ua/ukr/"),
+                TermsOfService = new Uri("https://www.kpi.kharkov.ua/ukr/"),
             };
 
             if (description.IsDeprecated)

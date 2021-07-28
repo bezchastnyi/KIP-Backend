@@ -7,14 +7,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
+using KIP_Backend.Models.KIP.Auth;
 using KIP_server_Auth.Constants;
 using KIP_server_Auth.Extensions;
 using KIP_server_Auth.Interfaces;
-using KIP_server_Auth.Models.KHPI;
-using KIP_server_Auth.Models.KIP;
+using KIP_server_Auth.Models.KhPI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
 namespace KIP_server_Auth.V1.Controllers
@@ -74,18 +73,17 @@ namespace KIP_server_Auth.V1.Controllers
             }
 
             var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.SemesterStudyingPlanPage}&semestr={semester}";
-            List<SemesterStudyingPlan> semesterStudyingPlan = null;
 
             try
             {
-                var semesterStudyingPlanKHPI = await this._deserializeService.ExecuteAsync<SemesterStudyingPlanKHPI>(path);
-                if (semesterStudyingPlanKHPI == null)
+                var semesterStudyingPlanKhPI = await this._deserializeService.ExecuteAsync<SemesterStudyingPlanKhPI>(path);
+                if (semesterStudyingPlanKhPI == null)
                 {
                     this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);
                     return this.BadRequest();
                 }
 
-                semesterStudyingPlan = this._mapper.Map<List<SemesterStudyingPlan>>(semesterStudyingPlanKHPI);
+                var semesterStudyingPlan = this._mapper.Map<List<SemesterStudyingPlan>>(semesterStudyingPlanKhPI);
                 if (semesterStudyingPlan?.Count == 0)
                 {
                     this._logger.LogMapDataError(ActionNames.MapData, email, password);

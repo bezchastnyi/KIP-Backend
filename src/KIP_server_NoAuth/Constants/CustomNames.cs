@@ -3,17 +3,17 @@
     /// <summary>
     /// Custom name constants.
     /// </summary>
-    public class CustomNames
+    public static class CustomNames
     {
         /// <summary>
         /// KIP DB.
         /// </summary>
-        public const string KIP_database = "KIP_database";
+        public const string KIPDatabase = "KIPDatabase";
 
         /// <summary>
         /// DB system.
         /// </summary>
-        public const string PostgreSQL = "PostgreSQL";
+        public const string PostgreSql = "PostgreSql";
 
         /// <summary>
         /// Healthy status.

@@ -1,4 +1,4 @@
-﻿namespace KIP_Backend.Models.UI
+﻿namespace KIP_Backend.Models.NoAuth.UI
 {
     /// <summary>
     /// TelegramUser.

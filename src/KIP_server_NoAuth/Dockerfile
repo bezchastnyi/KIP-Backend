@@ -18,4 +18,4 @@ COPY --from=build /app/out ./
 LABEL maintainer="Alexei Bezchastnyi(alekseybezchastnyy9@gmail.com)"
 
 
-ENTRYPOINT ["dotnet", "KIP_server_GET.dll"]
+ENTRYPOINT ["dotnet", "KIP_server_NoAuth.dll"]

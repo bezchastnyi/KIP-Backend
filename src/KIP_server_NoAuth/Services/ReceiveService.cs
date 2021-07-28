@@ -32,7 +32,7 @@ namespace KIP_server_NoAuth.Services
         private const string Schedule2ByAudienceUrl = @"http://schedule.kpi.kharkov.ua/JSON/Schedule2A/";
 
         /// <summary>
-        /// Getting a list of faculties using asynchrony.
+        /// Getting a list of faculties using asynchronous.
         /// </summary>
         /// <returns>List of faculties.</returns>
         /// <param name="logger">Group ID.</param>
@@ -42,178 +42,164 @@ namespace KIP_server_NoAuth.Services
         }
 
         /// <summary>
-        /// Getting a list of groups by faculty ID using asynchrony.
+        /// Getting a list of groups by faculty ID using asynchronous.
         /// </summary>
         /// <returns>List of list of groups by faculty.</returns>
         /// <param name="facultyId">Faculty ID.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<IEnumerable<GroupKHPI>> GetGroupsAsync(int facultyId, ILogger<DbUpdateController> logger)
+        public static async Task<IEnumerable<GroupKhPI>> GetGroupsAsync(int facultyId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToListOfModelsAsync<GroupKHPI>(GroupListByFacultyUrl + facultyId, logger);
+            return await ConvertJsonDataToListOfModelsAsync<GroupKhPI>(GroupListByFacultyUrl + facultyId, logger);
         }
 
         /// <summary>
-        /// Getting a list of departments by faculty ID using asynchrony.
+        /// Getting a list of departments by faculty ID using asynchronous.
         /// </summary>
         /// <returns>List of list of departments by faculty.</returns>
         /// <param name="facultyId">Faculty ID.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<IEnumerable<CathedraKHPI>> GetCathedrasAsync(int facultyId, ILogger<DbUpdateController> logger)
+        public static async Task<IEnumerable<CathedraKhPI>> GetCathedrasAsync(int facultyId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToListOfModelsAsync<CathedraKHPI>(CathedrasListByFacultyUrl + facultyId, logger);
+            return await ConvertJsonDataToListOfModelsAsync<CathedraKhPI>(CathedrasListByFacultyUrl + facultyId, logger);
         }
 
         /// <summary>
-        /// Getting a group schedule for an unpaired week using asynchrony.
+        /// Getting a group schedule for an unpaired week using asynchronous.
         /// </summary>
         /// <returns>Schedule of groups for an unpaired week.</returns>
         /// <param name="groupId">Group ID.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<ScheduleByGroupKHPI> GetScheduleByGroupAsync(int groupId, ILogger<DbUpdateController> logger)
+        public static async Task<ScheduleKhPI> GetScheduleByGroupAsync(int groupId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToModelAsync<ScheduleByGroupKHPI>(ScheduleByGroupUrl + groupId, logger);
+            return await ConvertJsonDataToModelAsync<ScheduleKhPI>(ScheduleByGroupUrl + groupId, logger);
         }
 
         /// <summary>
-        /// Getting a group schedule for a paired week using asynchrony.
+        /// Getting a group schedule for a paired week using asynchronous.
         /// </summary>
         /// <returns>Schedule of groups for a paired week.</returns>
         /// <param name="groupId">Group ID.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<ScheduleByGroupKHPI> GetSchedule2ByGroupAsync(int groupId, ILogger<DbUpdateController> logger)
+        public static async Task<ScheduleKhPI> GetSchedule2ByGroupAsync(int groupId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToModelAsync<ScheduleByGroupKHPI>(Schedule2ByGroupUrl + groupId, logger);
+            return await ConvertJsonDataToModelAsync<ScheduleKhPI>(Schedule2ByGroupUrl + groupId, logger);
         }
 
         /// <summary>
-        /// Getting a teachers schedulefor an unpaired week using asynchrony.
+        /// Getting a teachers schedule for an unpaired week using asynchronous.
         /// </summary>
         /// <returns>Schedule of teachers for an unpaired week.</returns>
         /// <param name="profId">Teacher ID.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<ScheduleByProfKHPI> GetScheduleByProfAsync(int profId, ILogger<DbUpdateController> logger)
+        public static async Task<ScheduleKhPI> GetScheduleByProfAsync(int profId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToModelAsync<ScheduleByProfKHPI>(ScheduleByProfUrl + profId, logger);
+            return await ConvertJsonDataToModelAsync<ScheduleKhPI>(ScheduleByProfUrl + profId, logger);
         }
 
         /// <summary>
-        /// Getting a teachers schedule for a paired week using asynchrony.
+        /// Getting a teachers schedule for a paired week using asynchronous.
         /// </summary>
         /// <returns>Schedule of teachers for a paired week.</returns>
         /// <param name="profId">Teacher ID.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<ScheduleByProfKHPI> GetSchedule2ByProfAsync(int profId, ILogger<DbUpdateController> logger)
+        public static async Task<ScheduleKhPI> GetSchedule2ByProfAsync(int profId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToModelAsync<ScheduleByProfKHPI>(Schedule2ByProfUrl + profId, logger);
+            return await ConvertJsonDataToModelAsync<ScheduleKhPI>(Schedule2ByProfUrl + profId, logger);
         }
 
         /// <summary>
-        /// Getting an audience schedule for an unpaired week using asynchrony.
+        /// Getting an audience schedule for an unpaired week using asynchronous.
         /// </summary>
         /// <returns>Schedule of teachers for an unpaired week.</returns>
         /// <param name="audienceId">Audience ID.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<ScheduleByAudienceKHPI> GetScheduleByAudienceAsync(int audienceId, ILogger<DbUpdateController> logger)
+        public static async Task<ScheduleKhPI> GetScheduleByAudienceAsync(int audienceId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToModelAsync<ScheduleByAudienceKHPI>(ScheduleByAudienceUrl + audienceId, logger);
+            return await ConvertJsonDataToModelAsync<ScheduleKhPI>(ScheduleByAudienceUrl + audienceId, logger);
         }
 
         /// <summary>
-        /// Getting an audience schedule for an paired week using asynchrony.
+        /// Getting an audience schedule for an paired week using asynchronous.
         /// </summary>
         /// <returns>Schedule of teachers for an unpaired week.</returns>
         /// <param name="audienceId">Audience ID.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<ScheduleByAudienceKHPI> GetSchedule2ByAudienceAsync(int audienceId, ILogger<DbUpdateController> logger)
+        public static async Task<ScheduleKhPI> GetSchedule2ByAudienceAsync(int audienceId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToModelAsync<ScheduleByAudienceKHPI>(Schedule2ByAudienceUrl + audienceId, logger);
+            return await ConvertJsonDataToModelAsync<ScheduleKhPI>(Schedule2ByAudienceUrl + audienceId, logger);
         }
 
         /// <summary>
-        /// Getting the list of buildings using asynchrony.
+        /// Getting the list of buildings using asynchronous.
         /// </summary>
         /// <returns>List of buildings.</returns>
         /// <param name="logger">Group ID.</param>
-        public static async Task<IEnumerable<BuildingKHPI>> GetBuildingsAsync(ILogger<DbUpdateController> logger)
+        public static async Task<IEnumerable<BuildingKhPI>> GetBuildingsAsync(ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToListOfModelsAsync<BuildingKHPI>(BuildingListUrl, logger);
+            return await ConvertJsonDataToListOfModelsAsync<BuildingKhPI>(BuildingListUrl, logger);
         }
 
         /// <summary>
-        /// Getting a list of audiences in the building using asynchrony.
+        /// Getting a list of audiences in the building using asynchronous.
         /// </summary>
         /// <returns>List of audiences in the building.</returns>
         /// <param name="buildingId">Building Id.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<IEnumerable<AudienceKHPI>> GetAudiencesAsync(int buildingId, ILogger<DbUpdateController> logger)
+        public static async Task<IEnumerable<AudienceKhPI>> GetAudiencesAsync(int buildingId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToListOfModelsAsync<AudienceKHPI>(AudienceListByBuildingUrl + buildingId, logger);
+            return await ConvertJsonDataToListOfModelsAsync<AudienceKhPI>(AudienceListByBuildingUrl + buildingId, logger);
         }
 
         /// <summary>
-        /// Getting a list of teachers of the department using asynchrony.
+        /// Getting a list of teachers of the department using asynchronous.
         /// </summary>
         /// <returns>List of teachers of the department.</returns>
         /// <param name="cathedraId">Cathedra Id.</param>
         /// <param name="logger">Group ID.</param>
-        public static async Task<IEnumerable<ProfKHPI>> GetProfsAsync(int cathedraId, ILogger<DbUpdateController> logger)
+        public static async Task<IEnumerable<ProfKhPI>> GetProfsAsync(int cathedraId, ILogger<DbUpdateController> logger)
         {
-            return await ConvertJsonDataToListOfModelsAsync<ProfKHPI>(ProfListByCathedraUrl + cathedraId, logger);
+            return await ConvertJsonDataToListOfModelsAsync<ProfKhPI>(ProfListByCathedraUrl + cathedraId, logger);
         }
 
         /// <summary>
-        /// Getting list data from json using asynchrony.
+        /// Getting list data from json using asynchronous.
         /// </summary>
         /// <returns>List data from json.</returns>
         /// <param name="url">Link to json.</param>
         /// <param name="logger">Link to json.</param>
         private static async Task<IEnumerable<T>> ConvertJsonDataToListOfModelsAsync<T>(string url, ILogger<DbUpdateController> logger)
         {
-            using (var web = new WebClient())
+            using var web = new WebClient();
+            try
             {
-                try
-                {
-                    var jsonData = await web.DownloadStringTaskAsync(url);
-                    if (jsonData.Contains("<!DOCTYPE html>"))
-                    {
-                        return null;
-                    }
-
-                    return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonData);
-                }
-                catch (Exception e)
-                {
-                    logger.LogError($"'ConvertJsonDataToModelAsync': Url: {url} Message: {e.Message} StackTrace: {e.StackTrace}");
-                    return default;
-                }
+                var jsonData = await web.DownloadStringTaskAsync(url);
+                return jsonData.Contains("<!DOCTYPE html>") ? null : JsonConvert.DeserializeObject<IEnumerable<T>>(jsonData);
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"'ConvertJsonDataToModelAsync': Url: {url} Message: {e.Message} StackTrace: {e.StackTrace}");
+                return default;
             }
         }
 
         /// <summary>
-        /// Getting data from json using asynchrony.
+        /// Getting data from json using asynchronous.
         /// </summary>
         /// <returns>Data from json.</returns>
         /// <param name="url">Link to json.</param>
         /// <param name="logger">Link to json.</param>
         private static async Task<T> ConvertJsonDataToModelAsync<T>(string url, ILogger<DbUpdateController> logger)
         {
-            using (var web = new WebClient())
+            using var web = new WebClient();
+            try
             {
-                try
-                {
-                    var jsonData = await web.DownloadStringTaskAsync(url);
-                    if (jsonData.Contains("<!DOCTYPE html>"))
-                    {
-                        return default;
-                    }
-
-                    return JsonConvert.DeserializeObject<T>(jsonData);
-                }
-                catch (Exception e)
-                {
-                    logger.LogError($"'ConvertJsonDataToModelAsync': Url: {url} Message: {e.Message} StackTrace: {e.StackTrace}");
-                    return default;
-                }
+                var jsonData = await web.DownloadStringTaskAsync(url);
+                return jsonData.Contains("<!DOCTYPE html>") ? default : JsonConvert.DeserializeObject<T>(jsonData);
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"'ConvertJsonDataToModelAsync': Url: {url} Message: {e.Message} StackTrace: {e.StackTrace}");
+                return default;
             }
         }
     }

@@ -1,9 +1,12 @@
-﻿namespace KIP_server_TB.Constants
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace KIP_server_TB.Constants
 {
     /// <summary>
     /// DialogflowConstants.
     /// </summary>
 #pragma warning disable SA1124 // Do not use regions
+    [ExcludeFromCodeCoverage]
     public static class DialogflowConstants
     {
         #region No auth mode

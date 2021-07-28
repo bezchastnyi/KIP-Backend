@@ -9,7 +9,7 @@ namespace KIP_server_NoAuth.Constants
     /// <summary>
     /// KIP short names for faculties constants.
     /// </summary>
-    public class KIPFacultiesShortNames
+    public static class KIPFacultiesShortNames
     {
         /// <summary>
         /// Gets short names of faculties.

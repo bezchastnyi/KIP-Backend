@@ -14,7 +14,7 @@ namespace KIP_server_Auth
     /// The server AUTH.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// Entry point.
@@ -33,10 +33,8 @@ namespace KIP_server_Auth
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+            var url = $"https://0.0.0.0:{port}";
 
-            var url = string.Format("https://0.0.0.0:{0}", port);
-
-            // var url = string.Format("http://0.0.0.0:{0}", port);
             return Host.CreateDefaultBuilder(args)
                     .UseSerilog(
                         (context, configuration) =>

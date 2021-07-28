@@ -2,7 +2,7 @@
 using System.Linq;
 using KIP_Backend.Attributes;
 using KIP_Backend.DB;
-using KIP_Backend.Models.KIP;
+using KIP_Backend.Models.KIP.NoAuth;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +38,7 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// <summary>
         /// All audiences.
         /// </summary>
-        /// <returns>All audienses.</returns>
+        /// <returns>All audiences.</returns>
         [HttpGet]
         [Route("Audience")]
         [ProducesResponseType(typeof(Audience), StatusCodes.Status200OK)]
@@ -71,17 +71,13 @@ namespace KIP_server_NoAuth.V1.Controllers
         {
             if (this._context.Audience != null)
             {
-                var list = this._context.Audience
-                    .Where(i => i.AudienceID == id).AsNoTracking().ToHashSet();
-
+                var list = this._context.Audience.Where(i => i.AudienceId == id).AsNoTracking().ToHashSet();
                 if (list.Count == 0)
                 {
                     return this.NotFound();
                 }
-                else
-                {
-                    return new JsonResult(list);
-                }
+
+                return new JsonResult(list);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -105,16 +101,13 @@ namespace KIP_server_NoAuth.V1.Controllers
         {
             if (this._context.Audience != null)
             {
-                var list = this._context.Audience.Where(i => i.BuildingID == id).AsNoTracking().ToHashSet();
-
+                var list = this._context.Audience.Where(i => i.BuildingId == id).AsNoTracking().ToHashSet();
                 if (list.Count == 0)
                 {
                     return this.NotFound();
                 }
-                else
-                {
-                    return new JsonResult(list);
-                }
+
+                return new JsonResult(list);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

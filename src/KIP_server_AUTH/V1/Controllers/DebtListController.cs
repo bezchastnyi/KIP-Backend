@@ -7,14 +7,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
+using KIP_Backend.Models.KIP.Auth;
 using KIP_server_Auth.Constants;
 using KIP_server_Auth.Extensions;
 using KIP_server_Auth.Interfaces;
-using KIP_server_Auth.Models.KHPI;
-using KIP_server_Auth.Models.KIP;
+using KIP_server_Auth.Models.KhPI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
 namespace KIP_server_Auth.V1.Controllers
@@ -68,18 +67,17 @@ namespace KIP_server_Auth.V1.Controllers
             }
 
             var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.DebtListPage}";
-            List<DebtList> debtList = null;
 
             try
             {
-                var debtListKHPI = await this._deserializeService.ExecuteAsync<DebtListKHPI>(path);
-                if (debtListKHPI == null)
+                var debtListKhPI = await this._deserializeService.ExecuteAsync<DebtListKhPI>(path);
+                if (debtListKhPI == null)
                 {
                     this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);
                     return this.BadRequest();
                 }
 
-                debtList = this._mapper.Map<List<DebtList>>(debtListKHPI);
+                var debtList = this._mapper.Map<List<DebtList>>(debtListKhPI);
                 if (debtList?.Count == 0)
                 {
                     this._logger.LogMapDataError(ActionNames.MapData, email, password);

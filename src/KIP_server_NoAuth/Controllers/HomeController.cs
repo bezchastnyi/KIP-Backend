@@ -59,7 +59,6 @@ namespace KIP_server_NoAuth.Controllers
                 try
                 {
                     connection.Open();
-
                     if (connection.State.ToString() == "Open")
                     {
                         status = CustomNames.HealthyStatus;
@@ -77,13 +76,11 @@ namespace KIP_server_NoAuth.Controllers
                 }
             }
 
-            var health_check = new HealthCheck();
-            health_check.Databases.Add(new DataBase(CustomNames.KIP_database, CustomNames.PostgreSQL, this._configuration.GetConnectionString("PostgresVersion"), status));
+            var healthCheck = new HealthCheck();
+            healthCheck.Databases.Add(new DataBase(CustomNames.KIPDatabase, CustomNames.PostgreSql, this._configuration.GetConnectionString("PostgresVersion"), status));
 
-            var message = $"{CustomNames.KIP_database} status: {status}";
-            this._logger.Log(LogLevel.Information, message);
-
-            return this.Json(health_check);
+            this._logger.Log(LogLevel.Information, $"{CustomNames.KIPDatabase} status: {status}");
+            return this.Json(healthCheck);
         }
     }
 }

@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KIP_Backend.DB;
-using KIP_Backend.Models.KIP;
+using KIP_Backend.Models.KIP.NoAuth;
 
 namespace KIP_server_NoAuth.Services
 {
@@ -37,7 +37,7 @@ namespace KIP_server_NoAuth.Services
         {
             await SendFacultyDataToDbAsync(context, dataList.facultyList);
             await SendCathedraDataToDbAsync(context, dataList.cathedraList);
-            await SendGroupDataToDBAsync(context, dataList.groupList);
+            await SendGroupDataToDbAsync(context, dataList.groupList);
             await SendBuildingDataToDbAsync(context, dataList.buildingList);
             await SendAudienceDataToDbAsync(context, dataList.audienceList);
             await SendProfDataToDbAsync(context, dataList.profList);
@@ -67,7 +67,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendGroupDataToDBAsync(KIPDbContext context, HashSet<Group> objects)
+        public static async Task SendGroupDataToDbAsync(KIPDbContext context, HashSet<Group> objects)
         {
             await context.Group.AddRangeAsync(objects);
             await context.SaveChangesAsync();

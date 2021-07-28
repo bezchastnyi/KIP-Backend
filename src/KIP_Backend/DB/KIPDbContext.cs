@@ -1,5 +1,5 @@
-﻿using KIP_Backend.Models.KIP;
-using KIP_Backend.Models.UI;
+﻿using KIP_Backend.Models.KIP.NoAuth;
+using KIP_Backend.Models.NoAuth.UI;
 using Microsoft.EntityFrameworkCore;
 
 namespace KIP_Backend.DB
@@ -73,43 +73,43 @@ namespace KIP_Backend.DB
         {
             modelBuilder.Entity<Audience>(entity =>
             {
-                entity.HasKey(e => e.AudienceID);
-                entity.Property(e => e.AudienceID).IsRequired();
+                entity.HasKey(e => e.AudienceId);
+                entity.Property(e => e.AudienceId).IsRequired();
 
-                entity.Property(e => e.BuildingID).IsRequired();
+                entity.Property(e => e.BuildingId).IsRequired();
                 entity.HasOne<Building>()
                       .WithMany()
-                      .HasForeignKey(e => e.BuildingID);
+                      .HasForeignKey(e => e.BuildingId);
 
                 entity.Property(e => e.AudienceName).HasColumnType("varchar(100)").IsRequired();
                 entity.Property(e => e.NumberOfSeats);
                 entity.Property(e => e.ScheduleIsPresent);
 
-                entity.HasIndex(e => e.AudienceID).IsUnique();
-                entity.HasIndex(e => e.BuildingID);
+                entity.HasIndex(e => e.AudienceId).IsUnique();
+                entity.HasIndex(e => e.BuildingId);
 
                 entity.UseXminAsConcurrencyToken();
             });
 
             modelBuilder.Entity<AudienceSchedule>(entity =>
             {
-                entity.HasKey(e => e.AudienceScheduleID);
-                entity.Property(e => e.AudienceScheduleID).ValueGeneratedOnAdd().IsRequired();
+                entity.HasKey(e => e.AudienceScheduleId);
+                entity.Property(e => e.AudienceScheduleId).ValueGeneratedOnAdd().IsRequired();
 
-                entity.Property(e => e.BuildingID);
+                entity.Property(e => e.BuildingId);
                 entity.HasOne<Building>()
                       .WithMany()
-                      .HasForeignKey(e => e.BuildingID);
+                      .HasForeignKey(e => e.BuildingId);
 
-                entity.Property(e => e.AudienceID).IsRequired();
+                entity.Property(e => e.AudienceId).IsRequired();
                 entity.HasOne<Audience>()
                       .WithMany()
-                      .HasForeignKey(e => e.AudienceID);
+                      .HasForeignKey(e => e.AudienceId);
 
-                entity.Property(e => e.ProfID);
+                entity.Property(e => e.ProfId);
                 entity.HasOne<Prof>()
                       .WithMany()
-                      .HasForeignKey(e => e.ProfID);
+                      .HasForeignKey(e => e.ProfId);
 
                 entity.Property(e => e.SubjectName).HasColumnType("varchar(200)").IsRequired();
                 entity.Property(e => e.Week).IsRequired();
@@ -118,119 +118,120 @@ namespace KIP_Backend.DB
                 entity.Property(e => e.Number).IsRequired();
                 entity.Property(e => e.GroupNames);
                 entity.Property(e => e.ProfName);
-                entity.Property(e => e.GroupID);
+                entity.Property(e => e.GroupId);
 
-                entity.HasIndex(e => e.AudienceID);
-                entity.HasIndex(e => new { e.AudienceID, e.Day });
+                entity.HasIndex(e => e.AudienceId);
+                entity.HasIndex(e => new { AudienceID = e.AudienceId, e.Day });
 
                 entity.UseXminAsConcurrencyToken();
             });
 
             modelBuilder.Entity<Building>(entity =>
             {
-                entity.HasKey(e => e.BuildingID);
-                entity.Property(e => e.BuildingID).IsRequired();
+                entity.HasKey(e => e.BuildingId);
+                entity.Property(e => e.BuildingId).IsRequired();
 
                 entity.Property(e => e.BuildingName).HasColumnType("varchar(100)").IsRequired();
                 entity.Property(e => e.BuildingShortName).HasColumnType("varchar(5)");
+                entity.Property(e => e.NumberOfAudiences);
 
-                entity.HasIndex(e => e.BuildingID).IsUnique();
+                entity.HasIndex(e => e.BuildingId).IsUnique();
 
                 entity.UseXminAsConcurrencyToken();
             });
 
             modelBuilder.Entity<Cathedra>(entity =>
             {
-                entity.HasKey(e => e.CathedraID);
-                entity.Property(e => e.CathedraID).IsRequired();
+                entity.HasKey(e => e.CathedraId);
+                entity.Property(e => e.CathedraId).IsRequired();
 
-                entity.Property(e => e.FacultyID).IsRequired();
+                entity.Property(e => e.FacultyId).IsRequired();
                 entity.HasOne<Faculty>()
                       .WithMany()
-                      .HasForeignKey(e => e.FacultyID);
+                      .HasForeignKey(e => e.FacultyId);
 
                 entity.Property(e => e.CathedraName).HasColumnType("varchar(100)").IsRequired();
                 entity.Property(e => e.CathedraShortName).HasColumnType("varchar(7)");
 
-                entity.HasIndex(e => e.CathedraID).IsUnique();
-                entity.HasIndex(e => e.FacultyID);
+                entity.HasIndex(e => e.CathedraId).IsUnique();
+                entity.HasIndex(e => e.FacultyId);
 
                 entity.UseXminAsConcurrencyToken();
             });
 
             modelBuilder.Entity<Faculty>(entity =>
             {
-                entity.HasKey(e => e.FacultyID);
-                entity.Property(e => e.FacultyID).IsRequired();
+                entity.HasKey(e => e.FacultyId);
+                entity.Property(e => e.FacultyId).IsRequired();
 
                 entity.Property(e => e.FacultyName).HasColumnType("varchar(100)").IsRequired();
                 entity.Property(e => e.FacultyShortName).HasColumnType("varchar(7)");
 
-                entity.HasIndex(e => e.FacultyID).IsUnique();
+                entity.HasIndex(e => e.FacultyId).IsUnique();
 
                 entity.UseXminAsConcurrencyToken();
             });
 
             modelBuilder.Entity<Group>(entity =>
             {
-                entity.HasKey(e => e.GroupID);
-                entity.Property(e => e.GroupID).IsRequired();
+                entity.HasKey(e => e.GroupId);
+                entity.Property(e => e.GroupId).IsRequired();
 
-                entity.Property(e => e.FacultyID).IsRequired();
+                entity.Property(e => e.FacultyId).IsRequired();
                 entity.HasOne<Faculty>()
                       .WithMany()
-                      .HasForeignKey(e => e.FacultyID);
+                      .HasForeignKey(e => e.FacultyId);
 
                 entity.Property(e => e.GroupName).HasColumnType("varchar(100)").IsRequired();
                 entity.Property(e => e.Course).IsRequired();
                 entity.Property(e => e.ScheduleIsPresent);
 
-                entity.HasIndex(e => e.GroupID).IsUnique();
-                entity.HasIndex(e => e.FacultyID);
+                entity.HasIndex(e => e.GroupId).IsUnique();
+                entity.HasIndex(e => e.FacultyId);
 
                 entity.UseXminAsConcurrencyToken();
             });
 
             modelBuilder.Entity<Prof>(entity =>
             {
-                entity.HasKey(e => e.ProfID);
-                entity.Property(e => e.ProfID).IsRequired();
+                entity.HasKey(e => e.ProfId);
+                entity.Property(e => e.ProfId).IsRequired();
 
-                entity.Property(e => e.CathedraID).IsRequired();
+                entity.Property(e => e.CathedraId).IsRequired();
                 entity.HasOne<Cathedra>()
                       .WithMany()
-                      .HasForeignKey(e => e.CathedraID);
+                      .HasForeignKey(e => e.CathedraId);
 
                 entity.Property(e => e.ProfSurname).HasColumnType("varchar(100)").IsRequired();
                 entity.Property(e => e.ProfName).HasColumnType("varchar(100)").IsRequired();
                 entity.Property(e => e.ProfPatronymic).HasColumnType("varchar(100)");
                 entity.Property(e => e.ScheduleIsPresent);
 
-                entity.HasIndex(e => e.ProfID).IsUnique();
-                entity.HasIndex(e => e.CathedraID);
+                entity.HasIndex(e => e.ProfId).IsUnique();
+                entity.HasIndex(e => e.CathedraId);
 
                 entity.UseXminAsConcurrencyToken();
             });
 
             modelBuilder.Entity<ProfSchedule>(entity =>
             {
-                entity.HasKey(e => e.ProfScheduleID);
-                entity.Property(e => e.ProfScheduleID).ValueGeneratedOnAdd().IsRequired();
+                entity.HasKey(e => e.ProfScheduleId);
+                entity.Property(e => e.ProfScheduleId).ValueGeneratedOnAdd().IsRequired();
 
-                entity.Property(e => e.BuildingID);
+                entity.Property(e => e.BuildingId);
                 entity.HasOne<Building>()
                       .WithMany()
-                      .HasForeignKey(e => e.BuildingID);
+                      .HasForeignKey(e => e.BuildingId);
 
-                entity.Property(e => e.AudienceID);
+                entity.Property(e => e.AudienceId);
                 entity.HasOne<Audience>()
                       .WithMany()
-                      .HasForeignKey(e => e.AudienceID);
+                      .HasForeignKey(e => e.AudienceId);
 
-                entity.Property(e => e.ProfID).IsRequired();
+                entity.Property(e => e.ProfId).IsRequired();
                 entity.HasOne<Prof>()
                       .WithMany()
-                      .HasForeignKey(e => e.ProfID);
+                      .HasForeignKey(e => e.ProfId);
 
                 entity.Property(e => e.SubjectName).HasColumnType("varchar(200)").IsRequired();
                 entity.Property(e => e.Week).IsRequired();
@@ -239,38 +240,38 @@ namespace KIP_Backend.DB
                 entity.Property(e => e.Number).IsRequired();
                 entity.Property(e => e.GroupNames);
                 entity.Property(e => e.AudienceName);
-                entity.Property(e => e.GroupID);
+                entity.Property(e => e.GroupId);
 
-                entity.HasIndex(e => e.ProfID);
-                entity.HasIndex(e => new { e.ProfID, e.Day });
+                entity.HasIndex(e => e.ProfId);
+                entity.HasIndex(e => new { ProfID = e.ProfId, e.Day });
 
                 entity.UseXminAsConcurrencyToken();
             });
 
             modelBuilder.Entity<StudentSchedule>(entity =>
             {
-                entity.HasKey(e => e.StudentScheduleID);
-                entity.Property(e => e.StudentScheduleID).ValueGeneratedOnAdd().IsRequired();
+                entity.HasKey(e => e.StudentScheduleId);
+                entity.Property(e => e.StudentScheduleId).ValueGeneratedOnAdd().IsRequired();
 
-                entity.Property(e => e.BuildingID);
+                entity.Property(e => e.BuildingId);
                 entity.HasOne<Building>()
                       .WithMany()
-                      .HasForeignKey(e => e.BuildingID);
+                      .HasForeignKey(e => e.BuildingId);
 
-                entity.Property(e => e.AudienceID);
+                entity.Property(e => e.AudienceId);
                 entity.HasOne<Audience>()
                       .WithMany()
-                      .HasForeignKey(e => e.AudienceID);
+                      .HasForeignKey(e => e.AudienceId);
 
-                entity.Property(e => e.GroupID).IsRequired();
+                entity.Property(e => e.GroupId).IsRequired();
                 entity.HasOne<Group>()
                       .WithMany()
-                      .HasForeignKey(e => e.GroupID);
+                      .HasForeignKey(e => e.GroupId);
 
-                entity.Property(e => e.ProfID);
+                entity.Property(e => e.ProfId);
                 entity.HasOne<Prof>()
                       .WithMany()
-                      .HasForeignKey(e => e.ProfID);
+                      .HasForeignKey(e => e.ProfId);
 
                 entity.Property(e => e.SubjectName).HasColumnType("varchar(200)").IsRequired();
                 entity.Property(e => e.Week).IsRequired();
@@ -280,8 +281,8 @@ namespace KIP_Backend.DB
                 entity.Property(e => e.ProfName);
                 entity.Property(e => e.AudienceName);
 
-                entity.HasIndex(e => e.GroupID);
-                entity.HasIndex(e => new { e.GroupID, e.Day });
+                entity.HasIndex(e => e.GroupId);
+                entity.HasIndex(e => new { GroupID = e.GroupId, e.Day });
 
                 entity.UseXminAsConcurrencyToken();
             });

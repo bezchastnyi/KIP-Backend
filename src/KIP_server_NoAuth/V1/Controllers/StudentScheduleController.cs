@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using KIP_Backend.Attributes;
 using KIP_Backend.DB;
-using KIP_Backend.Models.KIP;
-using KIP_Backend.Models.KIP.Helpers;
+using KIP_Backend.Models.KIP.NoAuth;
+using KIP_Backend.Models.KIP.NoAuth.Helpers;
 using KIP_server_NoAuth.Models.Output;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -46,7 +46,7 @@ namespace KIP_server_NoAuth.V1.Controllers
         [ProducesResponseType(typeof(OkObjectResult), StatusCodes.Status200OK)]
         public IActionResult StudentSchedule()
         {
-            var info = $"{nameof(KIP_Backend.Models.KIP.StudentSchedule)}";
+            var info = $"{nameof(KIP_Backend.Models.KIP.NoAuth.StudentSchedule)}";
             return this.Ok(info);
         }
 
@@ -64,16 +64,13 @@ namespace KIP_server_NoAuth.V1.Controllers
         {
             if (this._context.StudentSchedule != null)
             {
-                var list = this._context.StudentSchedule.Where(i => i.GroupID == id).AsNoTracking().ToHashSet();
-
+                var list = this._context.StudentSchedule.Where(i => i.GroupId == id).AsNoTracking().ToHashSet();
                 if (list.Count == 0)
                 {
                     return this.NotFound();
                 }
-                else
-                {
-                    return new JsonResult(list);
-                }
+
+                return new JsonResult(list);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -98,31 +95,24 @@ namespace KIP_server_NoAuth.V1.Controllers
         {
             if (this._context.StudentSchedule != null && day >= 0 && day < 6)
             {
-                var list = this._context.StudentSchedule.Where(i => i.GroupID == id && i.Day == (Day)day).AsNoTracking().ToHashSet();
-
+                var list = this._context.StudentSchedule.Where(i => i.GroupId == id && i.Day == (Day)day).AsNoTracking().ToHashSet();
                 if (list.Count == 0)
                 {
                     return this.NotFound();
                 }
-                else
-                {
-                    var outList = new List<StudentScheduleOutput>();
-                    foreach (var l in list)
-                    {
-                        var output = new StudentScheduleOutput()
-                        {
-                            SubjectName = l.SubjectName,
-                            Type = l.Type,
-                            Number = l.Number,
-                            Week = l.Week,
-                            AudienceName = l.AudienceName,
-                            ProfName = l.ProfName,
-                        };
-                        outList.Add(output);
-                    }
 
-                    return new JsonResult(outList);
-                }
+                var outList = list.Select(l => new StudentScheduleOutput
+                {
+                    SubjectName = l.SubjectName,
+                    Type = l.Type,
+                    Number = l.Number,
+                    Week = l.Week,
+                    AudienceName = l.AudienceName,
+                    ProfName = l.ProfName,
+                })
+                .ToList();
+
+                return new JsonResult(outList);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

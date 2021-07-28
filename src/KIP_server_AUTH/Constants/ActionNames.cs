@@ -6,7 +6,7 @@ namespace KIP_server_Auth.Constants
     /// Action name constants.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class ActionNames
+    public static class ActionNames
     {
         /// <summary>
         /// Get CurrentRank.

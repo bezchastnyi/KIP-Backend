@@ -2,7 +2,7 @@
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
-namespace KIP_Backend.Models.KIP.Helpers
+namespace KIP_Backend.Models.KIP.NoAuth.Helpers
 {
     /// <summary>
     /// Pairing of the week.

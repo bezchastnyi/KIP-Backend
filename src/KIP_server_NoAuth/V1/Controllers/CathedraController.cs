@@ -2,7 +2,7 @@
 using System.Linq;
 using KIP_Backend.Attributes;
 using KIP_Backend.DB;
-using KIP_Backend.Models.KIP;
+using KIP_Backend.Models.KIP.NoAuth;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -71,16 +71,13 @@ namespace KIP_server_NoAuth.V1.Controllers
         {
             if (this._context.Cathedra != null)
             {
-                var list = this._context.Cathedra.Where(i => i.CathedraID == id).AsNoTracking().ToHashSet();
-
+                var list = this._context.Cathedra.Where(i => i.CathedraId == id).AsNoTracking().ToHashSet();
                 if (list.Count == 0)
                 {
                     return this.NotFound();
                 }
-                else
-                {
-                    return new JsonResult(list);
-                }
+
+                return new JsonResult(list);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -104,16 +101,13 @@ namespace KIP_server_NoAuth.V1.Controllers
         {
             if (this._context.Cathedra != null)
             {
-                var list = this._context.Cathedra.Where(i => i.FacultyID == id).AsNoTracking().ToHashSet();
-
+                var list = this._context.Cathedra.Where(i => i.FacultyId == id).AsNoTracking().ToHashSet();
                 if (list.Count == 0)
                 {
                     return this.NotFound();
                 }
-                else
-                {
-                    return new JsonResult(list);
-                }
+
+                return new JsonResult(list);
             }
 
             var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();

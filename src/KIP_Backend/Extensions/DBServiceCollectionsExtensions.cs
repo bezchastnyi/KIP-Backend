@@ -32,12 +32,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, nameof(connectionString)));
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEmptyErrorMessage, nameof(connectionString)));
             }
 
             if (string.IsNullOrEmpty(pgVersionString))
             {
-                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, nameof(pgVersionString)));
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEmptyErrorMessage, nameof(pgVersionString)));
             }
 
             var pgVersion = new Version(pgVersionString);

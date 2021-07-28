@@ -32,26 +32,16 @@ namespace KIP_server_Auth.Services
         /// <inheritdoc/>
         public async Task<IEnumerable<T>> ExecuteAsync<T>(string url)
         {
-            using (var web = new WebClient())
+            using var web = new WebClient();
+            try
             {
-                var jsonData = string.Empty;
-
-                try
-                {
-                    jsonData = await web.DownloadStringTaskAsync(url);
-
-                    if (jsonData.Contains("<!DOCTYPE html>"))
-                    {
-                        return default;
-                    }
-
-                    return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonData);
-                }
-                catch (Exception ex)
-                {
-                    this._logger.LogJsonDeserializeUnexpectedError(url, ex);
-                    return default;
-                }
+                var jsonData = await web.DownloadStringTaskAsync(url);
+                return jsonData.Contains("<!DOCTYPE html>") ? default : JsonConvert.DeserializeObject<IEnumerable<T>>(jsonData);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogJsonDeserializeUnexpectedError(url, ex);
+                return default;
             }
         }
     }

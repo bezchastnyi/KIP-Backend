@@ -14,8 +14,8 @@ using Google.Protobuf;
 using KIP_Backend.Attributes;
 using KIP_Backend.DB;
 using KIP_Backend.Extensions;
-using KIP_Backend.Models.KIP.Helpers;
-using KIP_Backend.Models.UI;
+using KIP_Backend.Models.KIP.NoAuth.Helpers;
+using KIP_Backend.Models.NoAuth.UI;
 using KIP_server_TB.Constants;
 using KIP_server_TB.Services;
 using Microsoft.AspNetCore.Http;
@@ -196,7 +196,7 @@ namespace KIP_server_TB.V1.Controllers
                     #endregion
 
                     var userFaculty = this._dbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == user.Faculty);
-                    var groups = this._dbContext.Group.Where(g => g.Course == user.Course && g.FacultyID == userFaculty.FacultyID).OrderBy(g => g.GroupName);
+                    var groups = this._dbContext.Group.Where(g => g.Course == user.Course && g.FacultyId == userFaculty.FacultyId).OrderBy(g => g.GroupName);
 
                     var inlineButtons = new List<List<InlineKeyboardButton>>();
                     foreach (var g in groups)
@@ -256,7 +256,7 @@ namespace KIP_server_TB.V1.Controllers
                     var group = this._dbContext.Group.FirstOrDefault(i => i.GroupName == user.Group);
 
                     var day = Enum.Parse<Day>(message);
-                    var schedule = this._dbContext.StudentSchedule.Where(i => i.GroupID == group.GroupID && i.Day == day).AsNoTracking().ToList();
+                    var schedule = this._dbContext.StudentSchedule.Where(i => i.GroupId == group.GroupId && i.Day == day).AsNoTracking().ToList();
 
                     if (schedule.Count == 0)
                     {
@@ -302,14 +302,14 @@ namespace KIP_server_TB.V1.Controllers
                 {
                     var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                     var faculty = this._dbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == user.Faculty);
-                    var cathedras = this._dbContext.Cathedra.Where(c => c.FacultyID == faculty.FacultyID).OrderBy(c => c.CathedraName).AsNoTracking().ToList();
+                    var cathedras = this._dbContext.Cathedra.Where(c => c.FacultyId == faculty.FacultyId).OrderBy(c => c.CathedraName).AsNoTracking().ToList();
 
                     var inlineButtons = new List<List<InlineKeyboardButton>>();
                     foreach (var c in cathedras)
                     {
                         inlineButtons.Add(new List<InlineKeyboardButton>
                         {
-                            InlineKeyboardButton.WithCallbackData(c.CathedraName, c.CathedraID.ToString()),
+                            InlineKeyboardButton.WithCallbackData(c.CathedraName, c.CathedraId.ToString()),
                         });
                     }
 
@@ -326,8 +326,8 @@ namespace KIP_server_TB.V1.Controllers
                 if (intent == DialogflowConstants.ProfScheduleIntentCathedra)
                 {
                     var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    var cathedra = this._dbContext.Cathedra.FirstOrDefault(c => c.CathedraID == ConvertExtensions.StringToInt(message));
-                    var profs = this._dbContext.Prof.Where(p => p.CathedraID == cathedra.CathedraID).OrderBy(p => p.ProfSurname).AsNoTracking().ToList();
+                    var cathedra = this._dbContext.Cathedra.FirstOrDefault(c => c.CathedraId == ConvertExtensions.StringToInt(message));
+                    var profs = this._dbContext.Prof.Where(p => p.CathedraId == cathedra.CathedraId).OrderBy(p => p.ProfSurname).AsNoTracking().ToList();
 
                     var inlineButtons = new List<List<InlineKeyboardButton>>();
                     foreach (var p in profs)
@@ -353,7 +353,7 @@ namespace KIP_server_TB.V1.Controllers
                     var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                     var prof = this._dbContext.Prof.FirstOrDefault(p => p.ProfSurname == message);
 
-                    user.TempProfValue = prof.ProfID;
+                    user.TempProfValue = prof.ProfId;
                     await this._dbContext.SaveChangesAsync();
 
                     await TelegramRequestProcessing.OutputDaysButtons(this._telegramBotClient, chatId);
@@ -367,10 +367,10 @@ namespace KIP_server_TB.V1.Controllers
                 if (intent == DialogflowConstants.ProfScheduleIntentDay)
                 {
                     var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    var prof = this._dbContext.Prof.FirstOrDefault(i => i.ProfID == user.TempProfValue);
+                    var prof = this._dbContext.Prof.FirstOrDefault(i => i.ProfId == user.TempProfValue);
 
                     var day = Enum.Parse<Day>(message);
-                    var list = this._dbContext.ProfSchedule.Where(i => i.ProfID == user.TempProfValue && i.Day == day).AsNoTracking().ToList();
+                    var list = this._dbContext.ProfSchedule.Where(i => i.ProfId == user.TempProfValue && i.Day == day).AsNoTracking().ToList();
 
                     if (list.Count == 0)
                     {
@@ -421,7 +421,7 @@ namespace KIP_server_TB.V1.Controllers
                     {
                         inlineButtons.Add(new List<InlineKeyboardButton>
                         {
-                            InlineKeyboardButton.WithCallbackData($"{b.BuildingName} ({b.BuildingShortName})", b.BuildingID.ToString()),
+                            InlineKeyboardButton.WithCallbackData($"{b.BuildingName} ({b.BuildingShortName})", b.BuildingId.ToString()),
                         });
                     }
 
@@ -441,7 +441,7 @@ namespace KIP_server_TB.V1.Controllers
                     user.TempBuildingValue = ConvertExtensions.StringToInt(message);
                     await this._dbContext.SaveChangesAsync();
 
-                    var audiences = this._dbContext.Audience.Where(a => a.BuildingID == user.TempBuildingValue).OrderBy(a => a.AudienceName)
+                    var audiences = this._dbContext.Audience.Where(a => a.BuildingId == user.TempBuildingValue).OrderBy(a => a.AudienceName)
                         .AsNoTracking().ToList();
 
                     var inlineButtons = new List<List<InlineKeyboardButton>>();
@@ -471,7 +471,7 @@ namespace KIP_server_TB.V1.Controllers
 
                     var audience = this._dbContext.Audience.FirstOrDefault(a => a.AudienceName.Contains(message));
 
-                    user.TempAudienceValue = audience.AudienceID;
+                    user.TempAudienceValue = audience.AudienceId;
                     await this._dbContext.SaveChangesAsync();
 
                     await TelegramRequestProcessing.OutputDaysButtons(this._telegramBotClient, chatId);
@@ -485,10 +485,10 @@ namespace KIP_server_TB.V1.Controllers
                 if (intent == DialogflowConstants.AudienceScheduleIntentDay)
                 {
                     var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    var audience = this._dbContext.Audience.FirstOrDefault(a => a.AudienceID == user.TempAudienceValue);
+                    var audience = this._dbContext.Audience.FirstOrDefault(a => a.AudienceId == user.TempAudienceValue);
 
                     var day = Enum.Parse<Day>(message);
-                    var schedule = this._dbContext.AudienceSchedule.Where(i => i.AudienceID == user.TempAudienceValue && i.Day == day).AsNoTracking().ToList();
+                    var schedule = this._dbContext.AudienceSchedule.Where(i => i.AudienceId == user.TempAudienceValue && i.Day == day).AsNoTracking().ToList();
 
                     if (schedule.Count == 0)
                     {

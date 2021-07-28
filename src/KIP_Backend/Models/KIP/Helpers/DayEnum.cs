@@ -2,7 +2,7 @@
 // Copyright (c) KIP. All rights reserved.
 // </copyright>
 
-namespace KIP_Backend.Models.KIP.Helpers
+namespace KIP_Backend.Models.KIP.NoAuth.Helpers
 {
     /// <summary>
     /// Days of week.
@@ -33,10 +33,5 @@ namespace KIP_Backend.Models.KIP.Helpers
         /// Friday.
         /// </summary>
         Friday,
-
-        /// <summary>
-        /// Saturday.
-        /// </summary>
-        Saturday,
     }
 }

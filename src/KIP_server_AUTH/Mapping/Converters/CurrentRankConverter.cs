@@ -5,24 +5,24 @@
 using System;
 using AutoMapper;
 using KIP_Backend.Extensions;
-using KIP_server_Auth.Models.KHPI;
-using KIP_server_Auth.Models.KIP;
+using KIP_Backend.Models.KIP.Auth;
+using KIP_server_Auth.Models.KhPI;
 
 namespace KIP_server_Auth.Mapping.Converters
 {
     /// <summary>
     /// Convert KhPI CurrentRank model to the KIP model.
     /// </summary>
-    public class CurrentRankConverter : ITypeConverter<CurrentRankKHPI, CurrentRank>
+    public class CurrentRankConverter : ITypeConverter<CurrentRankKhPI, CurrentRank>
     {
         /// <summary>
-        /// Convert model of CurrentRank from KHPI to KIP.
+        /// Convert model of CurrentRank from KhPI to KIP.
         /// </summary>
-        /// <param name="source">The model of KHPI CurrentRank.</param>
+        /// <param name="source">The model of KhPI CurrentRank.</param>
         /// <param name = "destination">The model of KIP CurrentRank.</param>
         /// <param name= "context">The context. </param>
         /// <returns>Object of the KIP CurrentRank model.</returns>
-        public CurrentRank Convert(CurrentRankKHPI source, CurrentRank destination, ResolutionContext context)
+        public CurrentRank Convert(CurrentRankKhPI source, CurrentRank destination, ResolutionContext context)
         {
             if (source == null)
             {

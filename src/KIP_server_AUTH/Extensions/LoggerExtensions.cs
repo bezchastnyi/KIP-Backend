@@ -12,9 +12,6 @@ namespace KIP_server_Auth.Extensions
     [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Logging")]
     public static class LoggerExtensions
     {
-        #region Debug
-        #endregion
-
         #region Information
 
         private static readonly Action<ILogger, string, string, string, Exception> DataGetSuccess =
@@ -26,7 +23,7 @@ namespace KIP_server_Auth.Extensions
                 "Password: '{PASSWORD}'.");
 
         /// <summary>
-        /// Log when an error has occurred while retreiving data from KhPI Db.
+        /// Log when an error has occurred while retrieving data from KhPI Db.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="actionName">The action name.</param>
@@ -40,9 +37,6 @@ namespace KIP_server_Auth.Extensions
 
         #endregion
 
-        #region Warning
-        #endregion
-
         #region Error
 
         private static readonly Action<ILogger, string, string, string, Exception> RetrieveDataFromKhPIDbError =
@@ -54,7 +48,7 @@ namespace KIP_server_Auth.Extensions
                 "Password: '{PASSWORD}'.");
 
         /// <summary>
-        /// Log when an error has occurred while retreiving data from KhPI Db.
+        /// Log when an error has occurred while retrieving data from KhPI Db.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="actionName">The action name.</param>

@@ -31,8 +31,8 @@ namespace KIP_server_Auth
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private readonly bool enableSwagger;
-        private readonly bool enableTokens;
+        private readonly bool _enableSwagger;
+        private readonly bool _enableTokens;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -42,10 +42,10 @@ namespace KIP_server_Auth
         {
             this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-            this.enableSwagger =
+            this._enableSwagger =
                 (this.Configuration["EnableSwagger"]?.Equals("true", StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault();
 
-            this.enableTokens =
+            this._enableTokens =
                 (this.Configuration["Tokens:EnableTokens"]?.Equals("true", StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault();
         }
 
@@ -82,7 +82,7 @@ namespace KIP_server_Auth
                     options.SubstituteApiVersionInUrl = true;
                 });
 
-            if (this.enableSwagger)
+            if (this._enableSwagger)
             {
                 services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
                     .AddSwaggerGen();
@@ -119,14 +119,13 @@ namespace KIP_server_Auth
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            if (this.enableTokens)
+            if (this._enableTokens)
             {
                 app.UseTokens(this.Configuration["Tokens:EntryToken"]);
-                var message = $"{Assembly.GetEntryAssembly().GetName().Name} uses Tokens Protection";
-                logger.Log(LogLevel.Information, message);
+                logger.LogInformation($"{Assembly.GetEntryAssembly()?.GetName().Name} uses Tokens Protection");
             }
 
-            if (this.enableSwagger)
+            if (this._enableSwagger)
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(options =>

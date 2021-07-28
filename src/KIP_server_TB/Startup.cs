@@ -20,7 +20,7 @@ namespace KIP_server_TB
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private static string assenmblyName = Assembly.GetEntryAssembly()?.GetName().Name;
+        private static readonly string AssemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
         private TelegramBotClient _telegramBotClient;
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace KIP_server_TB
             var telegramConnectionString = this.Configuration.GetConnectionString("TelegramConnection");
             if (string.IsNullOrEmpty(telegramConnectionString))
             {
-                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, nameof(telegramConnectionString)));
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEmptyErrorMessage, nameof(telegramConnectionString)));
             }
 
             this._telegramBotClient = new TelegramBotClient(telegramConnectionString);
@@ -100,7 +100,7 @@ namespace KIP_server_TB
 
             if (this._telegramBotClient != null)
             {
-                logger.LogInformation($"{assenmblyName} starts listening {this._telegramBotClient.GetMeAsync().Result.Username}");
+                logger.LogInformation($"{AssemblyName} starts listening {this._telegramBotClient.GetMeAsync().Result.Username}");
             }
 
             app.UseEndpoints(builder =>

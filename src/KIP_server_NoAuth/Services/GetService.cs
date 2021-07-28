@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using KIP_Backend.Models.KIP;
-using KIP_Backend.Models.KIP.Helpers;
+using KIP_Backend.Models.KIP.NoAuth;
+using KIP_Backend.Models.KIP.NoAuth.Helpers;
 using KIP_server_NoAuth.V1.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -66,34 +66,32 @@ namespace KIP_server_NoAuth.Services
         public static async Task CleanDbAsync(ILogger<DbUpdateController> logger, IConfiguration config)
         {
             var connectionString = config.GetConnectionString("PostgresConnection");
-            using (var connection = new NpgsqlConnection(connectionString))
+            await using var connection = new NpgsqlConnection(connectionString);
+            connection.Open();
+
+            if (connection.State.ToString() == "Open")
             {
-                connection.Open();
-                if (connection.State.ToString() == "Open")
-                {
-                    logger.Log(LogLevel.Information, "Connection opened");
-                    using (var command = new NpgsqlCommand(
-                        $"TRUNCATE TABLE " +
-                        $"\"{nameof(Audience)}\", " +
-                        $"\"{nameof(Building)}\", " +
-                        $"\"{nameof(Cathedra)}\", " +
-                        $"\"{nameof(Faculty)}\", " +
-                        $"\"{nameof(Group)}\", " +
-                        $"\"{nameof(Prof)}\", " +
-                        $"\"{nameof(AudienceSchedule)}\", " +
-                        $"\"{nameof(ProfSchedule)}\", " +
-                        $"\"{nameof(StudentSchedule)}\";", connection))
-                    {
-                        logger.Log(LogLevel.Information, $"Executing query: {command.CommandText}");
-                        await command.ExecuteNonQueryAsync();
+                logger.Log(LogLevel.Information, "Connection opened");
+                await using var command = new NpgsqlCommand(
+                    $"TRUNCATE TABLE " +
+                    $"\"{nameof(Audience)}\", " +
+                    $"\"{nameof(Building)}\", " +
+                    $"\"{nameof(Cathedra)}\", " +
+                    $"\"{nameof(Faculty)}\", " +
+                    $"\"{nameof(Group)}\", " +
+                    $"\"{nameof(Prof)}\", " +
+                    $"\"{nameof(AudienceSchedule)}\", " +
+                    $"\"{nameof(ProfSchedule)}\", " +
+                    $"\"{nameof(StudentSchedule)}\";", connection);
 
-                        logger.Log(LogLevel.Information, "DataBase is cleaned");
-                        return;
-                    }
-                }
+                logger.Log(LogLevel.Information, $"Executing query: {command.CommandText}");
+                await command.ExecuteNonQueryAsync();
 
-                logger.Log(LogLevel.Error, "Unable to open connection to DB");
+                logger.Log(LogLevel.Information, "DataBase is cleaned");
+                return;
             }
+
+            logger.Log(LogLevel.Error, "Unable to open connection to DB");
         }
 
         /// <summary>
@@ -106,23 +104,20 @@ namespace KIP_server_NoAuth.Services
         public static async Task CleanTableAsync(ILogger<DbUpdateController> logger, IConfiguration config, string tableName)
         {
             var connectionString = config.GetConnectionString("PostgresConnection");
-            using (var connection = new NpgsqlConnection(connectionString))
+            await using var connection = new NpgsqlConnection(connectionString);
+            connection.Open();
+            if (connection.State.ToString() == "Open")
             {
-                connection.Open();
-                if (connection.State.ToString() == "Open")
-                {
-                    logger.Log(LogLevel.Information, "Connection opened");
-                    using (var command = new NpgsqlCommand($"TRUNCATE TABLE \"{tableName}\";", connection))
-                    {
-                        logger.Log(LogLevel.Information, $"Executing query: {command.CommandText}");
+                logger.Log(LogLevel.Information, "Connection opened");
 
-                        await command.ExecuteNonQueryAsync();
-                        logger.Log(LogLevel.Information, "DataBase is cleaned");
-                    }
-                }
+                await using var command = new NpgsqlCommand($"TRUNCATE TABLE \"{tableName}\";", connection);
+                logger.Log(LogLevel.Information, $"Executing query: {command.CommandText}");
 
-                logger.Log(LogLevel.Error, "Unable to open connection to DB");
+                await command.ExecuteNonQueryAsync();
+                logger.Log(LogLevel.Information, "DataBase is cleaned");
             }
+
+            logger.Log(LogLevel.Error, "Unable to open connection to DB");
         }
     }
 }

@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_Backend.DB;
-using KIP_Backend.Models.KIP;
-using KIP_Backend.Models.KIP.Helpers;
+using KIP_Backend.Models.KIP.NoAuth;
+using KIP_Backend.Models.KIP.NoAuth.Helpers;
 using KIP_server_NoAuth.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +63,22 @@ namespace KIP_server_NoAuth.V1.Controllers
                 // log
                 await GetService.CleanDbAsync(this._logger, this._config);
 
+                /*
+                var kipFacultyList = await MapService.GetFacultiesAsync(this._logger, this._mapper);
+                var kipGroupListByFaculty = await MapService.GetGroupsAsync(kipFacultyList, this._logger, this._mapper);
+                var kipCathedraListByFaculty = await MapService.GetCathedrasAsync(kipFacultyList, this._logger, this._mapper);
+                var kipBuildingList = await MapService.GetBuildingsAsync(this._logger, this._mapper);
+                var kipAudienceListByBuilding = await MapService.GetAudiencesAsync(kipBuildingList, this._logger, this._mapper);
+                var kipProfListByCathedra = await MapService.GetProfsAsync(kipCathedraListByFaculty, this._logger, this._mapper);
+
+                await SendService.SendFacultyDataToDbAsync(this._context, kipFacultyList);
+                await SendService.SendGroupDataToDbAsync(this._context, kipGroupListByFaculty);
+                await SendService.SendCathedraDataToDbAsync(this._context, kipCathedraListByFaculty);
+                await SendService.SendBuildingDataToDbAsync(this._context, kipBuildingList);
+                await SendService.SendAudienceDataToDbAsync(this._context, kipAudienceListByBuilding);
+                await SendService.SendProfDataToDbAsync(this._context, kipProfListByCathedra);
+                */
+
                 // log
                 var dataList = await GetService.GetAllDataAsync(this._logger, this._mapper);
 
@@ -96,8 +112,9 @@ namespace KIP_server_NoAuth.V1.Controllers
                 await GetService.CleanTableAsync(this._logger, this._config, nameof(AudienceSchedule));
 
                 // log
-                var (facultyList, groupList, cathedraList, buildingList, audienceList, profList, studentScheduleList,
-                    studentSchedule2List, profScheduleList, profSchedule2List, audienceScheduleList, audienceSchedule2List) = await GetService.GetAllDataAsync(this._logger, this._mapper);
+                var (_, _, _, _, _, _, studentScheduleList, studentSchedule2List,
+                    profScheduleList, profSchedule2List,
+                    audienceScheduleList, audienceSchedule2List) = await GetService.GetAllDataAsync(this._logger, this._mapper);
 
                 // log
                 await SendService.SendStudentScheduleDataToDbAsync(this._context, studentScheduleList);

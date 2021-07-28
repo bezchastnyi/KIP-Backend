@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
-using KIP_Backend.Models.KIP.Helpers;
+using System.Diagnostics.CodeAnalysis;
+using KIP_Backend.Models.KIP.NoAuth.Helpers;
 
 namespace KIP_server_TB.Constants
 {
     /// <summary>
     /// Time of lesson constants.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class KIPTelegramConstants
     {
         /// <summary>

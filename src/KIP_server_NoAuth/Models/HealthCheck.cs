@@ -16,9 +16,9 @@ namespace KIP_server_NoAuth.Models
         }
 
         /// <summary>
-        /// Gets or sets the database.
+        /// Gets the database.
         /// </summary>
         /// <value>Database.</value>
-        public List<DataBase> Databases { get; set; }
+        public List<DataBase> Databases { get; }
     }
 }
