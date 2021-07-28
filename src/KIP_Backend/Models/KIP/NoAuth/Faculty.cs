@@ -1,8 +1,4 @@
-﻿// <copyright file="Faculty.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-namespace KIP_Backend.Models.KIP.NoAuth
+﻿namespace KIP_Backend.Models.KIP.NoAuth
 {
     /// <summary>
     /// Faculties KIP.

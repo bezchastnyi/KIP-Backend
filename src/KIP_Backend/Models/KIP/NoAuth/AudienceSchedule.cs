@@ -1,8 +1,4 @@
-﻿// <copyright file="AudienceSchedule.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using KIP_Backend.Models.KIP.NoAuth.Helpers;
 
 namespace KIP_Backend.Models.KIP.NoAuth

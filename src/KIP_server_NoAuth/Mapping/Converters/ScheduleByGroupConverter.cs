@@ -1,8 +1,4 @@
-﻿// <copyright file="ScheduleByGroupConverter.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;

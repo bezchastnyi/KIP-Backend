@@ -1,8 +1,4 @@
-﻿// <copyright file="HomeController.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Net;
 using System.Reflection;

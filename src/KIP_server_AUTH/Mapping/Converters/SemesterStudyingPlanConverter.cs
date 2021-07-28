@@ -1,8 +1,4 @@
-﻿// <copyright file="SemesterStudyingPlanConverter.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using AutoMapper;
 using KIP_Backend.Extensions;
 using KIP_Backend.Models.KIP.Auth;

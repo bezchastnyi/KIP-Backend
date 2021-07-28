@@ -1,8 +1,4 @@
-﻿// <copyright file="AudienceConverter.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using KIP_Backend.Extensions;

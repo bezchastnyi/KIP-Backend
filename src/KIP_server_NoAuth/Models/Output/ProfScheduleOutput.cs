@@ -1,8 +1,4 @@
-﻿// <copyright file="ProfScheduleOutput.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using KIP_Backend.Models.KIP.NoAuth.Helpers;
+﻿using KIP_Backend.Models.KIP.NoAuth.Helpers;
 
 namespace KIP_server_NoAuth.Models.Output
 {

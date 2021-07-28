@@ -1,8 +1,4 @@
-﻿// <copyright file="KIPFacultiesShortNames.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace KIP_server_NoAuth.Constants
 {

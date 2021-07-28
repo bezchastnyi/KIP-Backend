@@ -1,8 +1,4 @@
-﻿// <copyright file="BuildingKhPI.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-namespace KIP_server_NoAuth.Models.KhPI
+﻿namespace KIP_server_NoAuth.Models.KhPI
 {
     /// <summary>
     /// Building KhPI.

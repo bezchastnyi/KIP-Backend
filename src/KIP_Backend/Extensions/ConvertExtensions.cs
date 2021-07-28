@@ -1,8 +1,4 @@
-﻿// <copyright file="ConvertExtensions.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 

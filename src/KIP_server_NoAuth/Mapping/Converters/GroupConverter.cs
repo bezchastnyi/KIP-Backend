@@ -1,8 +1,4 @@
-﻿// <copyright file="GroupConverter.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using AutoMapper;
 using KIP_Backend.Models.KIP.NoAuth;
 using KIP_server_NoAuth.Models.KhPI;

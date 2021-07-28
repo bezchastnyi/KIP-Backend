@@ -1,8 +1,4 @@
-﻿// <copyright file="StudentSchedule.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using KIP_Backend.Models.KIP.NoAuth.Helpers;
+﻿using KIP_Backend.Models.KIP.NoAuth.Helpers;
 
 namespace KIP_Backend.Models.KIP.NoAuth
 {

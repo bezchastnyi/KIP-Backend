@@ -1,8 +1,4 @@
-﻿// <copyright file="Audience.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace KIP_Backend.Models.KIP.NoAuth
 {

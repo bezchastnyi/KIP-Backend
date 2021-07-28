@@ -1,8 +1,4 @@
-﻿// <copyright file="SendService.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using KIP_Backend.DB;
 using KIP_Backend.Models.KIP.NoAuth;

@@ -1,8 +1,4 @@
-﻿// <copyright file="WeekEnum.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-namespace KIP_Backend.Models.KIP.NoAuth.Helpers
+﻿namespace KIP_Backend.Models.KIP.NoAuth.Helpers
 {
     /// <summary>
     /// Pairing of the week.

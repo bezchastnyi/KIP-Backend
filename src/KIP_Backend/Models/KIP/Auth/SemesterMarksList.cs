@@ -1,8 +1,4 @@
-﻿// <copyright file="SemesterMarksList.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace KIP_Backend.Models.KIP.Auth
 {

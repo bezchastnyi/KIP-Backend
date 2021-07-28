@@ -1,8 +1,4 @@
-﻿// <copyright file="MapperProfile.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AutoMapper;
 using KIP_Backend.Models.KIP.NoAuth;
 using KIP_server_NoAuth.Mapping.Converters;

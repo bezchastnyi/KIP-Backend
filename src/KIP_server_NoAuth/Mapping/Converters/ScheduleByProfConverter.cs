@@ -1,15 +1,9 @@
-﻿// <copyright file="ScheduleByProfConverter.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using KIP_Backend.Models.KIP.NoAuth;
 using KIP_Backend.Models.KIP.NoAuth.Helpers;
 using KIP_server_NoAuth.Models.KhPI;
-using KIP_server_NoAuth.Services;
 using KIP_server_NoAuth.V1.Controllers;
 
 namespace KIP_server_NoAuth.Mapping.Converters
@@ -17,7 +11,6 @@ namespace KIP_server_NoAuth.Mapping.Converters
     /// <summary>
     /// Building of the KIP schedule by teachers model from the KhPI schedule by teachers.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1123:Do not place regions within elements", Justification = "Days")]
     public class ScheduleByProfConverter : ITypeConverter<ScheduleKhPI, List<ProfSchedule>> // TODO check how it works
     {
         /// <summary>

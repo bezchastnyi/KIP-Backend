@@ -1,8 +1,4 @@
-﻿// <copyright file="ProfConverter.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AutoMapper;

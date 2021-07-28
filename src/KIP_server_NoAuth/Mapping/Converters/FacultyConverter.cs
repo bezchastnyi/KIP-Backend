@@ -1,8 +1,4 @@
-﻿// <copyright file="FacultyConverter.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Linq;
 using AutoMapper;
 using KIP_Backend.Models.KIP.NoAuth;
