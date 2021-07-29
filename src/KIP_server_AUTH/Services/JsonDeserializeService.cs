@@ -1,17 +1,13 @@
-﻿// <copyright file="JsonDeserializeService.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using KIP_server_AUTH.Extensions;
-using KIP_server_AUTH.Interfaces;
+using KIP_server_Auth.Extensions;
+using KIP_server_Auth.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace KIP_server_AUTH.Services
+namespace KIP_server_Auth.Services
 {
     /// <summary>
     /// Convert json format of data to model.
@@ -32,26 +28,16 @@ namespace KIP_server_AUTH.Services
         /// <inheritdoc/>
         public async Task<IEnumerable<T>> ExecuteAsync<T>(string url)
         {
-            using (var web = new WebClient())
+            using var web = new WebClient();
+            try
             {
-                var jsonData = string.Empty;
-
-                try
-                {
-                    jsonData = await web.DownloadStringTaskAsync(url);
-
-                    if (jsonData.Contains("<!DOCTYPE html>"))
-                    {
-                        return default;
-                    }
-
-                    return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonData);
-                }
-                catch (Exception ex)
-                {
-                    this._logger.LogJsonDeserializeUnexpectedError(url, ex);
-                    return default;
-                }
+                var jsonData = await web.DownloadStringTaskAsync(url);
+                return jsonData.Contains("<!DOCTYPE html>") ? default : JsonConvert.DeserializeObject<IEnumerable<T>>(jsonData);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogJsonDeserializeUnexpectedError(url, ex);
+                return default;
             }
         }
     }

@@ -1,57 +1,39 @@
-﻿using Google.Cloud.Dialogflow.V2;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Google.Cloud.Dialogflow.V2;
+using KIP_server_TB.Constants;
+using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace KIP_server_TB.Services
 {
     /// <summary>
-    /// Webhook controller.
+    /// TelegramRequestProcessing.
     /// </summary>
 #pragma warning disable SA1124 // Do not use regions
     public static class TelegramRequestProcessing
     {
-        /*
         /// <summary>
         /// Webhook controller.
         /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="jsonParser">The jsonParser.</param>
+        /// <param name="bot">The request.</param>
+        /// <param name="chatId">The request.</param>
         /// <returns>ChatId.</returns>
-        public static (bool result, string errorMessage, WebhookRequest telegramRequest) RequestIdentification(HttpRequest request, JsonParser jsonParser)
+        public static async Task OutputDaysButtons(ITelegramBotClient bot, string chatId)
         {
-            WebhookRequest telegramRequest;
-
-            using (var reader = new StreamReader(request.Body))
+            var inlineButtons = new List<List<InlineKeyboardButton>>();
+            foreach (var d in KIPTelegramConstants.DayUkrConstants)
             {
-                telegramRequest = jsonParser.Parse<WebhookRequest>(reader);
+                inlineButtons.Add(new List<InlineKeyboardButton>
+            {
+                InlineKeyboardButton.WithCallbackData(d.Value, d.Key.ToString()),
+            });
             }
 
-            var message = telegramRequest.QueryResult.QueryText;
-            var intent = telegramRequest.QueryResult.Intent.DisplayName;
+            var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
 
-            if (string.IsNullOrEmpty(message) || string.IsNullOrWhiteSpace(message))
-            {
-                // log
-                return this.Ok();
-            }
-
-            double userId = 0;
-
-            try
-            {
-                userId = GetUserIdFromInlineButton(telegramRequest);
-            }
-            catch
-            {
-                // log
-                userId = GetUserIdFromMessage(telegramRequest);
-            }
-
-            if (userId == 0)
-            {
-                // log
-                return this.Ok();
-            }
+            await bot.SendTextMessageAsync(chatId, "Оберіть день", replyMarkup: inlineKeyboard);
         }
-        */
 
         #region GetUserInfo
 
@@ -60,13 +42,19 @@ namespace KIP_server_TB.Services
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>ChatId.</returns>
-        public static double GetUserIdFromInlineButton(WebhookRequest request)
+        public static double? GetUserId(WebhookRequest request)
         {
-            return request.OriginalDetectIntentRequest.Payload
-                .Fields["data"].StructValue
-                .Fields["callback_query"].StructValue
-                .Fields["from"].StructValue
-                .Fields["id"].NumberValue;
+            double? userId = null;
+            try
+            {
+                userId = GetUserIdFromInlineButton(request);
+            }
+            catch
+            {
+                userId = GetUserIdFromMessage(request);
+            }
+
+            return userId;
         }
 
         /// <summary>
@@ -74,12 +62,19 @@ namespace KIP_server_TB.Services
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>ChatId.</returns>
-        public static double GetUserIdFromMessage(WebhookRequest request)
+        public static string GetChatId(WebhookRequest request)
         {
-            return request.OriginalDetectIntentRequest.Payload
-                .Fields["data"].StructValue
-                .Fields["from"].StructValue
-                .Fields["id"].NumberValue;
+            string chatId = null;
+            try
+            {
+                chatId = GetChatIdFromInlineButton(request);
+            }
+            catch
+            {
+                chatId = GetChatIdFromKeyboard(request);
+            }
+
+            return chatId;
         }
 
         /// <summary>
@@ -87,7 +82,22 @@ namespace KIP_server_TB.Services
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>ChatId.</returns>
-        public static string GetUserNameFromInlineButton(WebhookRequest request)
+        public static string GetUserName(WebhookRequest request)
+        {
+            string userName = null;
+            try
+            {
+                userName = GetUserNameFromInlineButton(request);
+            }
+            catch
+            {
+                return null;
+            }
+
+            return userName;
+        }
+
+        private static string GetUserNameFromInlineButton(WebhookRequest request)
         {
             return request.OriginalDetectIntentRequest.Payload
                 .Fields["data"].StructValue
@@ -96,12 +106,7 @@ namespace KIP_server_TB.Services
                 .Fields["username"].StringValue;
         }
 
-        /// <summary>
-        /// Webhook controller.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns>ChatId.</returns>
-        public static string GetChatIdFromInlineButton(WebhookRequest request)
+        private static string GetChatIdFromInlineButton(WebhookRequest request)
         {
             return request.OriginalDetectIntentRequest.Payload
                 .Fields["data"].StructValue
@@ -111,17 +116,29 @@ namespace KIP_server_TB.Services
                 .Fields["id"].StringValue;
         }
 
-        /// <summary>
-        /// Webhook controller.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns>ChatId.</returns>
-        public static string GetChatIdFromKeyboard(WebhookRequest request)
+        private static string GetChatIdFromKeyboard(WebhookRequest request)
         {
             return request.OriginalDetectIntentRequest.Payload
                 .Fields["data"].StructValue
                 .Fields["chat"].StructValue
                 .Fields["id"].StringValue;
+        }
+
+        private static double GetUserIdFromInlineButton(WebhookRequest request)
+        {
+            return request.OriginalDetectIntentRequest.Payload
+                .Fields["data"].StructValue
+                .Fields["callback_query"].StructValue
+                .Fields["from"].StructValue
+                .Fields["id"].NumberValue;
+        }
+
+        private static double GetUserIdFromMessage(WebhookRequest request)
+        {
+            return request.OriginalDetectIntentRequest.Payload
+                .Fields["data"].StructValue
+                .Fields["from"].StructValue
+                .Fields["id"].NumberValue;
         }
 
         #endregion

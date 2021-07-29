@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\KIP_server_AUTH\KIP_server_AUTH.csproj" />
+    <ProjectReference Include="..\..\src\KIP_server_Auth\KIP_server_Auth.csproj" />
   </ItemGroup>
 
 </Project>

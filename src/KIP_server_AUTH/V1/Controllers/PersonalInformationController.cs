@@ -1,23 +1,18 @@
-﻿// <copyright file="PersonalInformationController.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
-using KIP_server_AUTH.Constants;
-using KIP_server_AUTH.Extensions;
-using KIP_server_AUTH.Interfaces;
-using KIP_server_AUTH.Models.KHPI;
-using KIP_server_AUTH.Models.KIP;
+using KIP_Backend.Models.KIP.Auth;
+using KIP_server_Auth.Constants;
+using KIP_server_Auth.Extensions;
+using KIP_server_Auth.Interfaces;
+using KIP_server_Auth.Models.KhPI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.V1.Controllers
+namespace KIP_server_Auth.V1.Controllers
 {
     /// <summary>
     /// Personal Information controller.
@@ -68,18 +63,17 @@ namespace KIP_server_AUTH.V1.Controllers
             }
 
             var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.PersonalInformationPage}";
-            List<PersonalInformation> personalInformation = null;
 
             try
             {
-                var personalInformationKHPI = await this._deserializeService.ExecuteAsync<PersonalInformationKHPI>(path);
-                if (personalInformationKHPI == null)
+                var personalInformationKhPI = await this._deserializeService.ExecuteAsync<PersonalInformationKhPI>(path);
+                if (personalInformationKhPI == null)
                 {
                     this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);
                     return this.BadRequest();
                 }
 
-                personalInformation = this._mapper.Map<List<PersonalInformation>>(personalInformationKHPI);
+                var personalInformation = this._mapper.Map<List<PersonalInformation>>(personalInformationKhPI);
                 if (personalInformation?.Count == 0)
                 {
                     this._logger.LogMapDataError(ActionNames.MapData, email, password);

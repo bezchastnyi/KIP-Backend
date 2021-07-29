@@ -3,21 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Version>1.0</Version>
-    <ApplicationIcon>KIP.ico</ApplicationIcon>
     <Company>KIP</Company>
-    <Product>server AUTH</Product>
-    <RepositoryUrl>https://github.com/bezchastnyi/KIP-Backend</RepositoryUrl>
+    <Product>KIP_server_Auth</Product>
+    <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.1.4" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\KIP_Backend\KIP_Backend.csproj" />

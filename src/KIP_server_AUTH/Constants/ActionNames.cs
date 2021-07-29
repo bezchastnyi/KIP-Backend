@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace KIP_server_AUTH.Constants
+namespace KIP_server_Auth.Constants
 {
     /// <summary>
     /// Action name constants.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class ActionNames
+    public static class ActionNames
     {
         /// <summary>
         /// Get CurrentRank.

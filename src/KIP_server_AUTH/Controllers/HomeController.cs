@@ -1,8 +1,4 @@
-﻿// <copyright file="HomeController.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Net;
 using System.Reflection;
@@ -10,7 +6,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.Controllers
+namespace KIP_server_Auth.Controllers
 {
     /// <summary>
     /// Default controller.

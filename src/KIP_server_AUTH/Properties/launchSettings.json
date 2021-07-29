@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "KIP_server_AUTH": {
+    "KIP_server_Auth": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

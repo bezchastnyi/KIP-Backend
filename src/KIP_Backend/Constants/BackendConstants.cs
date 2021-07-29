@@ -6,11 +6,11 @@ namespace KIP_Backend.Constants
     /// Backend constants.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class BackendConstants
+    public static class BackendConstants
     {
         /// <summary>
-        /// NullOrEptyErrorMessage.
+        /// NullOrEmptyErrorMessage.
         /// </summary>
-        public const string NullOrEptyErrorMessage = "{0} must not be null or empty";
+        public const string NullOrEmptyErrorMessage = "{0} must not be null or empty";
     }
 }

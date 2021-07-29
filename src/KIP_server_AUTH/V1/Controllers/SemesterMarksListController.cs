@@ -1,23 +1,18 @@
-﻿// <copyright file="SemesterMarksListController.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
-using KIP_server_AUTH.Constants;
-using KIP_server_AUTH.Extensions;
-using KIP_server_AUTH.Interfaces;
-using KIP_server_AUTH.Models.KHPI;
-using KIP_server_AUTH.Models.KIP;
+using KIP_Backend.Models.KIP.Auth;
+using KIP_server_Auth.Constants;
+using KIP_server_Auth.Extensions;
+using KIP_server_Auth.Interfaces;
+using KIP_server_Auth.Models.KhPI;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.V1.Controllers
+namespace KIP_server_Auth.V1.Controllers
 {
     /// <summary>
     /// Semester Marks List controller.
@@ -55,7 +50,7 @@ namespace KIP_server_AUTH.V1.Controllers
         /// <returns>Semester Marks List.</returns>
         [HttpGet]
         [Route("SemesterMarksList/{email}/{password}/{semester:int}")]
-        [ProducesResponseType(typeof(SemesterMarksListKHPI), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SemesterMarksListKhPI), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SemesterMarksList(string email, string password, int semester)
         {
@@ -75,18 +70,17 @@ namespace KIP_server_AUTH.V1.Controllers
             }
 
             var path = $"{CustomNames.StudentCabinetUrl}email={email}&pass={password}&{CustomNames.SemesterMarksListPage}&semestr={semester}";
-            List<SemesterMarksList> semesterMarksList = null;
 
             try
             {
-                var semesterMarksListKHPI = await this._deserializeService.ExecuteAsync<SemesterMarksListKHPI>(path);
-                if (semesterMarksListKHPI == null)
+                var semesterMarksListKhPI = await this._deserializeService.ExecuteAsync<SemesterMarksListKhPI>(path);
+                if (semesterMarksListKhPI == null)
                 {
                     this._logger.LogRetrieveDataFromKhPIDbError(ActionNames.RetrieveDataFromKhPIDb, email, password);
                     return this.BadRequest();
                 }
 
-                semesterMarksList = this._mapper.Map<List<SemesterMarksList>>(semesterMarksListKHPI);
+                var semesterMarksList = this._mapper.Map<List<SemesterMarksList>>(semesterMarksListKhPI);
                 if (semesterMarksList?.Count == 0)
                 {
                     this._logger.LogMapDataError(ActionNames.MapData, email, password);

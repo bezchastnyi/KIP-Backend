@@ -1,20 +1,16 @@
-﻿// <copyright file="Program.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace KIP_server_AUTH
+namespace KIP_server_Auth
 {
     /// <summary>
     /// The server AUTH.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// Entry point.
@@ -33,10 +29,8 @@ namespace KIP_server_AUTH
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+            var url = $"https://0.0.0.0:{port}";
 
-            var url = string.Format("https://0.0.0.0:{0}", port);
-
-            // var url = string.Format("http://0.0.0.0:{0}", port);
             return Host.CreateDefaultBuilder(args)
                     .UseSerilog(
                         (context, configuration) =>

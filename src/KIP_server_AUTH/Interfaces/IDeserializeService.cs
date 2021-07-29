@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace KIP_server_AUTH.Interfaces
+namespace KIP_server_Auth.Interfaces
 {
     /// <summary>
     /// Interface of deserialize service.

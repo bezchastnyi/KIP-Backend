@@ -10,7 +10,7 @@ namespace KIP_server_TB
     /// The server GET.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// Entry point.
@@ -29,9 +29,8 @@ namespace KIP_server_TB
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+            var url = $"http://0.0.0.0:{port}";
 
-            // var url = string.Concat("https://0.0.0.0:", port);
-            var url = string.Concat("http://0.0.0.0:", port);
             return Host.CreateDefaultBuilder(args)
                     .UseSerilog(
                         (context, configuration) =>

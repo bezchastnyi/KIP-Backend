@@ -19,4 +19,4 @@ ENV Telegram:WebHookReceiverUrl=111
 
 LABEL maintainer="Alexei Bezchastnyi(alekseybezchastnyy9@gmail.com)"
 
-ENTRYPOINT ["dotnet", "KIP_telegram_bot.dll"]
+ENTRYPOINT ["dotnet", "KIP_server_TB.dll"]

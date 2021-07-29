@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
-namespace KIP_server_AUTH.Constants
+namespace KIP_server_Auth.Constants
 {
     /// <summary>
     /// Event identifiers.
@@ -9,9 +9,6 @@ namespace KIP_server_AUTH.Constants
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Logging")]
     public static class EventIds
     {
-        #region Debug
-        #endregion
-
         #region Information
 
         /// <summary>
@@ -19,9 +16,6 @@ namespace KIP_server_AUTH.Constants
         /// </summary>
         public static readonly EventId DataGetSuccessEventId = new EventId(2200, "DATA_GET_SUCCESSFUL");
 
-        #endregion
-
-        #region Warning
         #endregion
 
         #region Error

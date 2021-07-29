@@ -1,29 +1,24 @@
-﻿// <copyright file="SemesterStudyingPlanConverter.cs" company="KIP">
-// Copyright (c) KIP. All rights reserved.
-// </copyright>
-
-using System;
+﻿using System;
 using AutoMapper;
 using KIP_Backend.Extensions;
-using KIP_server_AUTH.Models.KHPI;
-using KIP_server_AUTH.Models.KIP;
+using KIP_Backend.Models.KIP.Auth;
+using KIP_server_Auth.Models.KhPI;
 
-namespace KIP_server_AUTH.Mapping.Converters
+namespace KIP_server_Auth.Mapping.Converters
 {
     /// <summary>
     /// Convert KhPI SemesterStudyingPlan model to the KIP model.
     /// </summary>
-    public class SemesterStudyingPlanConverter :
-        ITypeConverter<SemesterStudyingPlanKHPI, SemesterStudyingPlan>
+    public class SemesterStudyingPlanConverter : ITypeConverter<SemesterStudyingPlanKhPI, SemesterStudyingPlan>
     {
         /// <summary>
-        /// Convert model of SemesterStudyingPlan from KHPI to KIP.
+        /// Convert model of SemesterStudyingPlan from KhPI to KIP.
         /// </summary>
-        /// <param name="source">The model of KHPI SemesterStudyingPlan.</param>
+        /// <param name="source">The model of KhPI SemesterStudyingPlan.</param>
         /// <param name = "destination">The model of KIP SemesterStudyingPlan.</param>
         /// <param name= "context">The context. </param>
         /// <returns>Object of the KIP SemesterStudyingPlan model.</returns>
-        public SemesterStudyingPlan Convert(SemesterStudyingPlanKHPI source, SemesterStudyingPlan destination, ResolutionContext context)
+        public SemesterStudyingPlan Convert(SemesterStudyingPlanKhPI source, SemesterStudyingPlan destination, ResolutionContext context)
         {
             if (source == null)
             {
