@@ -37,12 +37,16 @@ namespace KIP_Backend.Secrets
             var token = context.Request.Query["token"];
             if (token != this.pattern || string.IsNullOrWhiteSpace(token))
             {
-                this._logger.Log(LogLevel.Error, "CREDENTIALS ERROR -> Entry Token is invalid");
+                var message = "CREDENTIALS ERROR -> Entry Token is invalid";
+                this._logger.Log(LogLevel.Error, message);
+
                 context.Response.StatusCode = 403;
             }
             else
             {
-                this._logger.Log(LogLevel.Information, "MESSAGE -> Authentication is SUCCESSFUL");
+                var message = "MESSAGE -> Authentication is SUCCESSFUL";
+                this._logger.Log(LogLevel.Information, message);
+
                 await this._next.Invoke(context);
             }
         }

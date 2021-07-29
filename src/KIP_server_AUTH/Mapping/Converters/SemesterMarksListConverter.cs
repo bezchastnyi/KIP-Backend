@@ -1,24 +1,29 @@
-﻿using System;
+﻿// <copyright file="SemesterMarksListConverter.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
+// </copyright>
+
+using System;
 using AutoMapper;
 using KIP_Backend.Extensions;
-using KIP_Backend.Models.KIP.Auth;
-using KIP_server_Auth.Models.KhPI;
+using KIP_server_AUTH.Models.KHPI;
+using KIP_server_AUTH.Models.KIP;
 
-namespace KIP_server_Auth.Mapping.Converters
+namespace KIP_server_AUTH.Mapping.Converters
 {
     /// <summary>
     /// Convert KhPI SemesterMarksList model to the KIP model.
     /// </summary>
-    public class SemesterMarksListConverter : ITypeConverter<SemesterMarksListKhPI, SemesterMarksList>
+    public class SemesterMarksListConverter :
+        ITypeConverter<SemesterMarksListKHPI, SemesterMarksList>
     {
         /// <summary>
-        /// Convert model of SemesterMarksList from KhPI to KIP.
+        /// Convert model of SemesterMarksList from KHPI to KIP.
         /// </summary>
-        /// <param name="source">The model of KhPI SemesterMarksList.</param>
+        /// <param name="source">The model of KHPI SemesterMarksList.</param>
         /// <param name = "destination">The model of KIP SemesterMarksList.</param>
         /// <param name= "context">The context. </param>
         /// <returns>Object of the KIP SemesterMarksList model.</returns>
-        public SemesterMarksList Convert(SemesterMarksListKhPI source, SemesterMarksList destination, ResolutionContext context)
+        public SemesterMarksList Convert(SemesterMarksListKHPI source, SemesterMarksList destination, ResolutionContext context)
         {
             if (source == null)
             {

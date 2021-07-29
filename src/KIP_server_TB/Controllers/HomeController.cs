@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Net;
 using System.Reflection;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace KIP_server_TB.Controllers
@@ -17,14 +15,17 @@ namespace KIP_server_TB.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public HomeController(ILogger<HomeController> logger)
+        /// <param name="configuration">The configuration.</param>
+        public HomeController(ILogger<HomeController> logger, IConfiguration configuration)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         /// <summary>
@@ -36,24 +37,9 @@ namespace KIP_server_TB.Controllers
         [Route("/")]
         public IActionResult Home()
         {
-            var info = $"{Assembly.GetEntryAssembly()?.GetName().Name}: " +
-                       $"{Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}";
+            var info = $"{Assembly.GetEntryAssembly().GetName().Name}: " +
+                       $"{Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}";
             return this.Ok(info);
-        }
-
-        /// <summary>
-        /// Error action.
-        /// </summary>
-        /// <returns>The action result.</returns>
-        [Route("/Home/Error")]
-        public IActionResult Error()
-        {
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.LogError(message);
-
-            return new ObjectResult(new { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier }) { StatusCode = (int)HttpStatusCode.BadRequest };
         }
     }
 }

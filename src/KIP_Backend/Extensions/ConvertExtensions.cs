@@ -1,6 +1,9 @@
-﻿using System;
+﻿// <copyright file="ConvertExtensions.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
+// </copyright>
+
+using System;
 using System.Globalization;
-using System.Linq;
 
 namespace KIP_Backend.Extensions
 {
@@ -17,7 +20,12 @@ namespace KIP_Backend.Extensions
         public static bool StringToBool(string value)
         {
             value = value.ToLower();
-            return value == "1" || value == "true";
+            if (value == "1" || value == "true")
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -32,7 +40,7 @@ namespace KIP_Backend.Extensions
                 return 0;
             }
 
-            int result;
+            var result = 0;
 
             try
             {
@@ -59,7 +67,7 @@ namespace KIP_Backend.Extensions
                 return null;
             }
 
-            int? result;
+            int? result = null;
 
             try
             {
@@ -86,7 +94,7 @@ namespace KIP_Backend.Extensions
                 return null;
             }
 
-            float? result;
+            float? result = null;
 
             try
             {
@@ -99,17 +107,6 @@ namespace KIP_Backend.Extensions
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// FixTitle.
-        /// </summary>
-        /// <param name="title">The title.</param>
-        /// <returns>Fixed title.</returns>
-        public static string FixTitle(string title)
-        {
-            var part = title.Split('[').FirstOrDefault();
-            return part ?? title;
         }
     }
 }

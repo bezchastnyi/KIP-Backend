@@ -9,8 +9,6 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class DbServiceCollectionsExtensions
     {
-        private const string MigrationsAssembly = "KIP_server_NoAuth";
-
         /// <summary>
         /// Adds the database services.
         /// </summary>
@@ -18,11 +16,12 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">The services.</param>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="pgVersionString">The postgres version string. Must contain 2-4 numerics separated by '.'.</param>
+        /// <param name="migrationsAssembly">The migrations assembly.</param>
         /// <typeparam name="T">The db context.</typeparam>
         /// <exception cref="ArgumentNullException">Services.</exception>
         /// <exception cref="ArgumentException">Connection string must be not null or empty - connectionString.</exception>
         public static IServiceCollection AddDbServices<T>(
-            this IServiceCollection services, string connectionString, string pgVersionString)
+            this IServiceCollection services, string connectionString, string pgVersionString, string migrationsAssembly)
             where T : DbContext
         {
             if (services == null)
@@ -32,12 +31,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new ArgumentException(string.Format(BackendConstants.NullOrEmptyErrorMessage, nameof(connectionString)));
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, nameof(connectionString)));
             }
 
             if (string.IsNullOrEmpty(pgVersionString))
             {
-                throw new ArgumentException(string.Format(BackendConstants.NullOrEmptyErrorMessage, nameof(pgVersionString)));
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, nameof(pgVersionString)));
             }
 
             var pgVersion = new Version(pgVersionString);
@@ -46,8 +45,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 contextOptions.UseNpgsql(connectionString, npgOptions =>
                 {
                     npgOptions.SetPostgresVersion(pgVersion);
-                    npgOptions.MigrationsAssembly(MigrationsAssembly)
-                        .EnableRetryOnFailure();
                 });
             });
 

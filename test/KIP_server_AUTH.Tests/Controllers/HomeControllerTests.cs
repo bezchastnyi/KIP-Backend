@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using KIP_server_Auth.Controllers;
+using KIP_server_AUTH.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace KIP_server_Auth.Tests.Controllers
+namespace KIP_server_AUTH.Tests.Controllers
 {
     public class HomeControllerTests
     {

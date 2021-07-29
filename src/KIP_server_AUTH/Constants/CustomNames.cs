@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace KIP_server_Auth.Constants
+namespace KIP_server_AUTH.Constants
 {
     /// <summary>
     /// Custom name constants.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public static class CustomNames
+    public class CustomNames
     {
         /// <summary>
         /// Cabinet url.

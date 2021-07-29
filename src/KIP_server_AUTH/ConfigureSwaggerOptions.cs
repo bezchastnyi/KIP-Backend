@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace KIP_server_Auth
+namespace KIP_server_AUTH
 {
     /// <summary>
     /// Configures the Swagger generation options.
@@ -48,13 +48,13 @@ namespace KIP_server_Auth
             {
                 Title = $" {name}: v{version}",
                 Version = version,
-                Description = " Server \"Auth\": providing information for individual student's cabinet from KhPI database",
+                Description = " Server \"AUTH\": providing information for individual student's cabinet from KhPI database",
                 Contact = new OpenApiContact
                 {
                     Name = " KIP ",
                     Email = " kip.ntu.khpi@gmail.com",
                 },
-                TermsOfService = new Uri("https://www.kpi.kharkov.ua/ukr/"),
+                TermsOfService = new Uri("http://www.kpi.kharkov.ua/ukr/"),
             };
 
             if (description.IsDeprecated)

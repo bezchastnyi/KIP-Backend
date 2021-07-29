@@ -1,24 +1,28 @@
-﻿using System;
+﻿// <copyright file="DebtListConverter.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
+// </copyright>
+
+using System;
 using AutoMapper;
 using KIP_Backend.Extensions;
-using KIP_Backend.Models.KIP.Auth;
-using KIP_server_Auth.Models.KhPI;
+using KIP_server_AUTH.Models.KHPI;
+using KIP_server_AUTH.Models.KIP;
 
-namespace KIP_server_Auth.Mapping.Converters
+namespace KIP_server_AUTH.Mapping.Converters
 {
     /// <summary>
     /// Convert KhPI DebtList model to the KIP model.
     /// </summary>
-    public class DebtListConverter : ITypeConverter<DebtListKhPI, DebtList>
+    public class DebtListConverter : ITypeConverter<DebtListKHPI, DebtList>
     {
         /// <summary>
-        /// Convert model of DebtList from KhPI to KIP.
+        /// Convert model of DebtList from KHPI to KIP.
         /// </summary>
-        /// <param name="source">The model of KhPI DebtList.</param>
+        /// <param name="source">The model of KHPI DebtList.</param>
         /// <param name = "destination">The model of KIP DebtList.</param>
         /// <param name= "context">The context. </param>
         /// <returns>Object of the KIP DebtList model.</returns>
-        public DebtList Convert(DebtListKhPI source, DebtList destination, ResolutionContext context)
+        public DebtList Convert(DebtListKHPI source, DebtList destination, ResolutionContext context)
         {
             if (source == null)
             {

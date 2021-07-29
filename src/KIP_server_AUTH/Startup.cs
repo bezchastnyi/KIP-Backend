@@ -1,11 +1,15 @@
-﻿using System;
+﻿// <copyright file="Startup.cs" company="KIP">
+// Copyright (c) KIP. All rights reserved.
+// </copyright>
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using KIP_Backend.Extensions;
-using KIP_server_Auth.Interfaces;
-using KIP_server_Auth.Mapping;
-using KIP_server_Auth.Services;
+using KIP_server_AUTH.Interfaces;
+using KIP_server_AUTH.Mapping;
+using KIP_server_AUTH.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +23,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace KIP_server_Auth
+namespace KIP_server_AUTH
 {
     /// <summary>
     /// KIP_server_AUTH startup.
@@ -27,8 +31,8 @@ namespace KIP_server_Auth
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private readonly bool _enableSwagger;
-        private readonly bool _enableTokens;
+        private readonly bool enableSwagger;
+        private readonly bool enableTokens;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -38,10 +42,10 @@ namespace KIP_server_Auth
         {
             this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-            this._enableSwagger =
+            this.enableSwagger =
                 (this.Configuration["EnableSwagger"]?.Equals("true", StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault();
 
-            this._enableTokens =
+            this.enableTokens =
                 (this.Configuration["Tokens:EnableTokens"]?.Equals("true", StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault();
         }
 
@@ -78,7 +82,7 @@ namespace KIP_server_Auth
                     options.SubstituteApiVersionInUrl = true;
                 });
 
-            if (this._enableSwagger)
+            if (this.enableSwagger)
             {
                 services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
                     .AddSwaggerGen();
@@ -115,13 +119,14 @@ namespace KIP_server_Auth
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            if (this._enableTokens)
+            if (this.enableTokens)
             {
                 app.UseTokens(this.Configuration["Tokens:EntryToken"]);
-                logger.LogInformation($"{Assembly.GetEntryAssembly()?.GetName().Name} uses Tokens Protection");
+                var message = $"{Assembly.GetEntryAssembly().GetName().Name} uses Tokens Protection";
+                logger.Log(LogLevel.Information, message);
             }
 
-            if (this._enableSwagger)
+            if (this.enableSwagger)
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(options =>

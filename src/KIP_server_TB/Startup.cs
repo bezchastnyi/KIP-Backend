@@ -2,7 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using KIP_Backend.Constants;
-using KIP_Backend.DB;
+using KIP_POST_APP.DB;
+using KIP_server_TB.DB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace KIP_server_TB
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private static readonly string AssemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
+        private static string assenmblyName = Assembly.GetEntryAssembly()?.GetName().Name;
         private TelegramBotClient _telegramBotClient;
 
         /// <summary>
@@ -44,7 +45,8 @@ namespace KIP_server_TB
 
             var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
             var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
-            services.AddDbServices<KIPDbContext>(pgConnectionString, pgVersionString);
+            services.AddDbServices<TelegramDbContext>(pgConnectionString, pgVersionString, assenmblyName);
+            services.AddDbServices<PostDbContext>(pgConnectionString, pgVersionString, assenmblyName);
 
             services.AddMvcCore()
                 .AddDataAnnotations()
@@ -70,7 +72,7 @@ namespace KIP_server_TB
             var telegramConnectionString = this.Configuration.GetConnectionString("TelegramConnection");
             if (string.IsNullOrEmpty(telegramConnectionString))
             {
-                throw new ArgumentException(string.Format(BackendConstants.NullOrEmptyErrorMessage, nameof(telegramConnectionString)));
+                throw new ArgumentException(string.Format(BackendConstants.NullOrEptyErrorMessage, nameof(telegramConnectionString)));
             }
 
             this._telegramBotClient = new TelegramBotClient(telegramConnectionString);
@@ -100,7 +102,7 @@ namespace KIP_server_TB
 
             if (this._telegramBotClient != null)
             {
-                logger.LogInformation($"{AssemblyName} starts listening {this._telegramBotClient.GetMeAsync().Result.Username}");
+                logger.LogInformation($"{assenmblyName} starts listening {this._telegramBotClient.GetMeAsync().Result.Username}");
             }
 
             app.UseEndpoints(builder =>

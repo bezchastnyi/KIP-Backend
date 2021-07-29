@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using KIP_server_Auth.Interfaces;
-using KIP_server_Auth.Models.KhPI;
-using KIP_Backend.Models.KIP.Auth;
-using KIP_server_Auth.V1.Controllers;
+using KIP_server_AUTH.Interfaces;
+using KIP_server_AUTH.Models.KHPI;
+using KIP_server_AUTH.Models.KIP;
+using KIP_server_AUTH.V1.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace KIP_server_Auth.Tests.V1.Controllers
+namespace KIP_server_AUTH.Tests.V1.Controllers
 {
     public class CurrentRankControllerTests
     {
@@ -58,9 +58,9 @@ namespace KIP_server_Auth.Tests.V1.Controllers
             var password = "password";
             var url = "url";
 
-            var curentRankKhPIList = new List<CurrentRankKhPI>()
+            var curentRankKhPIList = new List<CurrentRankKHPI>()
             {
-                new CurrentRankKhPI()
+                new CurrentRankKHPI()
                 {
                     n = "n",
                     studid = "studid",
@@ -71,7 +71,7 @@ namespace KIP_server_Auth.Tests.V1.Controllers
                     rating = "rating",
                 },
 
-                new CurrentRankKhPI()
+                new CurrentRankKHPI()
                 {
                     n = "n",
                     studid = "studid",
@@ -82,7 +82,7 @@ namespace KIP_server_Auth.Tests.V1.Controllers
                     rating = "rating",
                 },
 
-                new CurrentRankKhPI()
+                new CurrentRankKHPI()
                 {
                     n = "n",
                     studid = "studid",
@@ -101,7 +101,7 @@ namespace KIP_server_Auth.Tests.V1.Controllers
                 new CurrentRank(),
             };
 
-            this._deserializeServiceMock.Setup(service => service.ExecuteAsync<CurrentRankKhPI>(url))
+            this._deserializeServiceMock.Setup(service => service.ExecuteAsync<CurrentRankKHPI>(url))
                 .ReturnsAsync(curentRankKhPIList);
 
             this._mapperMock.Setup(service => service.Map<ICollection<CurrentRank>>(curentRankKhPIList))
