@@ -447,7 +447,7 @@ namespace KIP_server_NoAuth.Services
                 var schedule = await ReceiveService.GetScheduleByProfAsync(p.ProfId, logger);
                 if (schedule == null)
                 {
-                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByProfAsync), "get", nameof(ProfSchedule) + " [paired]", nameof(Prof), p.ProfId, p.ProfName));
+                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByProfAsync), "get", nameof(ProfSchedule) + " [paired]", nameof(Prof), p.ProfId, p.ProfSurname));
                     continue;
                 }
 
@@ -465,7 +465,7 @@ namespace KIP_server_NoAuth.Services
                     continue;
                 }
 
-                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByProfAsync), "map", nameof(ProfSchedule) + " [paired]", nameof(Prof), p.ProfId, p.ProfName));
+                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByProfAsync), "map", nameof(ProfSchedule) + " [paired]", nameof(Prof), p.ProfId, p.ProfSurname));
             }
 
             if (stringBuilder.Length != 0)
@@ -499,7 +499,7 @@ namespace KIP_server_NoAuth.Services
 
                 if (schedule == null)
                 {
-                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByProfAsync), "get", nameof(ProfSchedule) + " [unpaired]", nameof(Prof), p.ProfId, p.ProfName));
+                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByProfAsync), "get", nameof(ProfSchedule) + " [unpaired]", nameof(Prof), p.ProfId, p.ProfSurname));
                     continue;
                 }
 
@@ -517,7 +517,7 @@ namespace KIP_server_NoAuth.Services
                     continue;
                 }
 
-                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByProfAsync), "map", nameof(ProfSchedule) + " [unpaired]", nameof(Prof), p.ProfId, p.ProfName));
+                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByProfAsync), "map", nameof(ProfSchedule) + " [unpaired]", nameof(Prof), p.ProfId, p.ProfSurname));
             }
 
             if (stringBuilder.Length != 0)
