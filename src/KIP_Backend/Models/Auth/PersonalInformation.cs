@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace KIP_Backend.Models.KIP.Auth
+namespace KIP_Backend.Models.Auth
 {
     /// <summary>
     /// Personal Information KIP.

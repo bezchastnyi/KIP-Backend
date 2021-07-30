@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using KIP_Backend.Models.Auth;
 using KIP_server_Auth.Interfaces;
 using KIP_server_Auth.Models.KhPI;
-using KIP_Backend.Models.KIP.Auth;
 using KIP_server_Auth.V1.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;

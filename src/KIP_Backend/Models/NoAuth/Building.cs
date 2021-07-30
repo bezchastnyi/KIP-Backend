@@ -1,4 +1,4 @@
-﻿namespace KIP_Backend.Models.KIP.NoAuth
+﻿namespace KIP_Backend.Models.NoAuth
 {
     /// <summary>
     /// Buildings KIP.

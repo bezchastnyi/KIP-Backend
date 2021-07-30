@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using KIP_Backend.Attributes;
-using KIP_Backend.DB;
-using KIP_Backend.Models.KIP.NoAuth;
+using KIP_Backend.Models.NoAuth;
+using KIP_server_NoAuth.DB;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +21,7 @@ namespace KIP_server_NoAuth.V1.Controllers
     [ApiController]
     public class BuildingController : Controller
     {
-        private readonly KIPDbContext _context;
+        private readonly NoAuthDbContext _context;
         private readonly ILogger<BuildingController> _logger;
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public BuildingController(ILogger<BuildingController> logger, KIPDbContext context)
+        public BuildingController(ILogger<BuildingController> logger, NoAuthDbContext context)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._context = context ?? throw new ArgumentNullException(nameof(context));

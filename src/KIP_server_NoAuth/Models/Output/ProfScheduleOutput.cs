@@ -1,4 +1,4 @@
-﻿using KIP_Backend.Models.KIP.NoAuth.Helpers;
+﻿using KIP_Backend.Models.Helpers;
 
 namespace KIP_server_NoAuth.Models.Output
 {

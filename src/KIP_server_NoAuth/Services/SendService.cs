@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using KIP_Backend.DB;
-using KIP_Backend.Models.KIP.NoAuth;
+using KIP_Backend.Models.NoAuth;
+using KIP_server_NoAuth.DB;
 
 namespace KIP_server_NoAuth.Services
 {
@@ -17,7 +17,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="dataList">The list of data. </param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task SendDataToDbAsync(
-            KIPDbContext context,
+            NoAuthDbContext context,
             (HashSet<Faculty> facultyList,
             HashSet<Group> groupList,
             HashSet<Cathedra> cathedraList,
@@ -51,7 +51,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendFacultyDataToDbAsync(KIPDbContext context, HashSet<Faculty> objects)
+        public static async Task SendFacultyDataToDbAsync(NoAuthDbContext context, HashSet<Faculty> objects)
         {
             await context.Faculty.AddRangeAsync(objects);
             await context.SaveChangesAsync();
@@ -63,7 +63,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendGroupDataToDbAsync(KIPDbContext context, HashSet<Group> objects)
+        public static async Task SendGroupDataToDbAsync(NoAuthDbContext context, HashSet<Group> objects)
         {
             await context.Group.AddRangeAsync(objects);
             await context.SaveChangesAsync();
@@ -75,7 +75,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendCathedraDataToDbAsync(KIPDbContext context, HashSet<Cathedra> objects)
+        public static async Task SendCathedraDataToDbAsync(NoAuthDbContext context, HashSet<Cathedra> objects)
         {
             await context.Cathedra.AddRangeAsync(objects);
             await context.SaveChangesAsync();
@@ -87,7 +87,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendBuildingDataToDbAsync(KIPDbContext context, HashSet<Building> objects)
+        public static async Task SendBuildingDataToDbAsync(NoAuthDbContext context, HashSet<Building> objects)
         {
             await context.Building.AddRangeAsync(objects);
             await context.SaveChangesAsync();
@@ -99,7 +99,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendAudienceDataToDbAsync(KIPDbContext context, HashSet<Audience> objects)
+        public static async Task SendAudienceDataToDbAsync(NoAuthDbContext context, HashSet<Audience> objects)
         {
             await context.Audience.AddRangeAsync(objects);
             await context.SaveChangesAsync();
@@ -111,7 +111,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendProfDataToDbAsync(KIPDbContext context, HashSet<Prof> objects)
+        public static async Task SendProfDataToDbAsync(NoAuthDbContext context, HashSet<Prof> objects)
         {
             await context.Prof.AddRangeAsync(objects);
             await context.SaveChangesAsync();
@@ -123,7 +123,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendStudentScheduleDataToDbAsync(KIPDbContext context, HashSet<StudentSchedule> objects)
+        public static async Task SendStudentScheduleDataToDbAsync(NoAuthDbContext context, HashSet<StudentSchedule> objects)
         {
             await context.StudentSchedule.AddRangeAsync(objects);
             await context.SaveChangesAsync();
@@ -135,7 +135,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendProfScheduleDataToDbAsync(KIPDbContext context, HashSet<ProfSchedule> objects)
+        public static async Task SendProfScheduleDataToDbAsync(NoAuthDbContext context, HashSet<ProfSchedule> objects)
         {
             await context.ProfSchedule.AddRangeAsync(objects);
             await context.SaveChangesAsync();
@@ -147,7 +147,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendAudienceScheduleDataToDbAsync(KIPDbContext context, HashSet<AudienceSchedule> objects)
+        public static async Task SendAudienceScheduleDataToDbAsync(NoAuthDbContext context, HashSet<AudienceSchedule> objects)
         {
             await context.AudienceSchedule.AddRangeAsync(objects);
             await context.SaveChangesAsync();

@@ -1,16 +1,17 @@
-﻿using KIP_Backend.Models.KIP.NoAuth.Helpers;
+﻿using System.Collections.Generic;
+using KIP_Backend.Models.Helpers;
 
-namespace KIP_Backend.Models.KIP.NoAuth
+namespace KIP_Backend.Models.NoAuth
 {
     /// <summary>
-    /// Building of the schedule of groups model.
+    /// Building of the schedule of audience model.
     /// </summary>
-    public class StudentSchedule
+    public class AudienceSchedule
     {
         /// <summary>
-        /// Gets or sets the schedule or groups.
+        /// Gets or sets the schedule of audiences.
         /// </summary>
-        public int StudentScheduleId { get; set; }
+        public int AudienceScheduleId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of subject.
@@ -38,24 +39,24 @@ namespace KIP_Backend.Models.KIP.NoAuth
         public int Number { get; set; }
 
         /// <summary>
-        /// Gets or sets the id of group.
-        /// </summary>
-        public int GroupId { get; set; }
-
-        /// <summary>
         /// Gets or sets the id of building.
         /// </summary>
-        public int? BuildingId { get; set; }
+        public int BuildingId { get; set; }
 
         /// <summary>
         /// Gets or sets the id of audience.
         /// </summary>
-        public int? AudienceId { get; set; }
+        public int AudienceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of audience.
+        /// Gets or sets the id of group.
         /// </summary>
-        public string AudienceName { get; set; }
+        public List<int?> GroupId { get; set; }
+
+        /// <summary>
+        /// Gets or sets names of groups.
+        /// </summary>
+        public string GroupNames { get; set; }
 
         /// <summary>
         /// Gets or sets the id of teacher.

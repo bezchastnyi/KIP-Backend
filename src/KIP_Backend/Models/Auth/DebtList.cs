@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace KIP_Backend.Models.KIP.Auth
+namespace KIP_Backend.Models.Auth
 {
     /// <summary>
-    /// Semester Marks List KIP.
+    /// Debt List KIP.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class SemesterMarksList
+    public class DebtList
     {
         /// <summary>
         /// Gets or sets the id of subject.
@@ -34,24 +34,14 @@ namespace KIP_Backend.Models.KIP.Auth
         public string Cathedra { get; set; }
 
         /// <summary>
-        /// Gets or sets the short mark.
+        /// Gets or sets the course.
         /// </summary>
-        public int? ShortMark { get; set; }
+        public int Course { get; set; }
 
         /// <summary>
-        /// Gets or sets the national mark.
+        /// Gets or sets the Semester.
         /// </summary>
-        public string NationalMark { get; set; }
-
-        /// <summary>
-        /// Gets or sets the full mark.
-        /// </summary>
-        public int? FullMark { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ECTS mark.
-        /// </summary>
-        public string ECTSMark { get; set; }
+        public int Semester { get; set; }
 
         /// <summary>
         /// Gets or sets the credits.
@@ -62,11 +52,6 @@ namespace KIP_Backend.Models.KIP.Auth
         /// Gets or sets the control type.
         /// </summary>
         public string Control { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the debt is present.
-        /// </summary>
-        public bool IsDebt { get; set; }
 
         /// <summary>
         /// Gets or sets the date.

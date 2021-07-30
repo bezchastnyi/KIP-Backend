@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
-using KIP_Backend.DB;
-using KIP_Backend.Models.KIP.NoAuth;
-using KIP_Backend.Models.KIP.NoAuth.Helpers;
+using KIP_Backend.Models.Helpers;
+using KIP_Backend.Models.NoAuth;
+using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +22,7 @@ namespace KIP_server_NoAuth.V1.Controllers
     [ApiController]
     public class DbUpdateController : Controller
     {
-        private readonly KIPDbContext _context;
+        private readonly NoAuthDbContext _context;
         private readonly ILogger<DbUpdateController> _logger;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
@@ -34,7 +34,7 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// <param name="context">The context.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="config">The config.</param>
-        public DbUpdateController(ILogger<DbUpdateController> logger, KIPDbContext context, IConfiguration config, IMapper mapper)
+        public DbUpdateController(ILogger<DbUpdateController> logger, NoAuthDbContext context, IConfiguration config, IMapper mapper)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._context = context ?? throw new ArgumentNullException(nameof(context));

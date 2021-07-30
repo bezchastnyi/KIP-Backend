@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using KIP_Backend.Models.KIP.NoAuth;
-using KIP_Backend.Models.KIP.NoAuth.Helpers;
+using KIP_Backend.Models.Helpers;
+using KIP_Backend.Models.NoAuth;
 using KIP_server_NoAuth.Models.KhPI;
 using KIP_server_NoAuth.Services;
 using KIP_server_NoAuth.V1.Controllers;

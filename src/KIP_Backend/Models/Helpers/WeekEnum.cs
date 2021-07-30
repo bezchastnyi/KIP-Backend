@@ -1,4 +1,4 @@
-﻿namespace KIP_Backend.Models.KIP.NoAuth.Helpers
+﻿namespace KIP_Backend.Models.Helpers
 {
     /// <summary>
     /// Pairing of the week.

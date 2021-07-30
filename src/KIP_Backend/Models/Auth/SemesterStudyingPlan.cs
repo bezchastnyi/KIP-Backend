@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace KIP_Backend.Models.KIP.Auth
+namespace KIP_Backend.Models.Auth
 {
     /// <summary>
-    /// Debt List KIP.
+    /// Semester Studying Plan KIP.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class DebtList
+    public class SemesterStudyingPlan
     {
         /// <summary>
         /// Gets or sets the id of subject.
@@ -17,11 +17,6 @@ namespace KIP_Backend.Models.KIP.Auth
         /// Gets or sets the subject.
         /// </summary>
         public string Subject { get; set; }
-
-        /// <summary>
-        /// Gets or sets the prof.
-        /// </summary>
-        public string Prof { get; set; }
 
         /// <summary>
         /// Gets or sets the abbreviation of cathedra.
@@ -49,13 +44,13 @@ namespace KIP_Backend.Models.KIP.Auth
         public float? Credits { get; set; }
 
         /// <summary>
+        /// Gets or sets the audits.
+        /// </summary>
+        public float? Audits { get; set; }
+
+        /// <summary>
         /// Gets or sets the control type.
         /// </summary>
         public string Control { get; set; }
-
-        /// <summary>
-        /// Gets or sets the date.
-        /// </summary>
-        public string Date { get; set; }
     }
 }

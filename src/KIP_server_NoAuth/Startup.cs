@@ -2,15 +2,14 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using KIP_Backend.DB;
 using KIP_Backend.Extensions;
+using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,10 +25,10 @@ namespace KIP_server_NoAuth
     [ExcludeFromCodeCoverage]
     public class Startup
     {
-        private readonly string assemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
+        private static readonly string AssemblyName = Assembly.GetEntryAssembly()?.GetName().Name;
 
-        private readonly bool enableSwagger;
-        private readonly bool enableTokens;
+        private readonly bool _enableSwagger;
+        private readonly bool _enableTokens;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -39,10 +38,10 @@ namespace KIP_server_NoAuth
         {
             this.Configuration = configuration;
 
-            this.enableSwagger =
+            this._enableSwagger =
                 (this.Configuration["EnableSwagger"]?.Equals("true", StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault();
 
-            this.enableTokens =
+            this._enableTokens =
                 (this.Configuration["Tokens:EnableTokens"]?.Equals("true", StringComparison.InvariantCultureIgnoreCase)).GetValueOrDefault();
         }
 
@@ -68,7 +67,7 @@ namespace KIP_server_NoAuth
 
             var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
             var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
-            services.AddDbServices<KIPDbContext>(pgConnectionString, pgVersionString);
+            services.AddDbServices<NoAuthDbContext>(pgConnectionString, pgVersionString);
             services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddApiVersioning(o =>
@@ -81,7 +80,7 @@ namespace KIP_server_NoAuth
                     options.SubstituteApiVersionInUrl = true;
                 });
 
-            if (this.enableSwagger)
+            if (this._enableSwagger)
             {
                 services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
                     .AddSwaggerGen();
@@ -114,13 +113,13 @@ namespace KIP_server_NoAuth
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            if (this.enableTokens)
+            if (this._enableTokens)
             {
                 app.UseTokens(this.Configuration["Tokens:EntryToken"]);
-                logger.LogInformation($"{this.assemblyName} uses Tokens Protection");
+                logger.LogInformation($"{AssemblyName} uses Tokens Protection");
             }
 
-            if (this.enableSwagger)
+            if (this._enableSwagger)
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(options =>

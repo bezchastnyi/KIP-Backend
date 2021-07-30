@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
-using KIP_Backend.Models.KIP.NoAuth.Helpers;
+using KIP_Backend.Models.Helpers;
 
-namespace KIP_Backend.Models.KIP.NoAuth
+namespace KIP_Backend.Models.NoAuth
 {
     /// <summary>
-    /// Building of the schedule of audience model.
+    /// Building of the schedule of teachers model.
     /// </summary>
-    public class AudienceSchedule
+    public class ProfSchedule
     {
         /// <summary>
-        /// Gets or sets the schedule of audiences.
+        /// Gets or sets the id of schedule of teachers.
         /// </summary>
-        public int AudienceScheduleId { get; set; }
+        public int ProfScheduleId { get; set; }
 
         /// <summary>
         /// Gets or sets the name of subject.
@@ -39,14 +39,24 @@ namespace KIP_Backend.Models.KIP.NoAuth
         public int Number { get; set; }
 
         /// <summary>
+        /// Gets or sets the id of teacher.
+        /// </summary>
+        public int ProfId { get; set; }
+
+        /// <summary>
         /// Gets or sets the id of building.
         /// </summary>
-        public int BuildingId { get; set; }
+        public int? BuildingId { get; set; }
 
         /// <summary>
         /// Gets or sets the id of audience.
         /// </summary>
-        public int AudienceId { get; set; }
+        public int? AudienceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of audience.
+        /// </summary>
+        public string AudienceName { get; set; }
 
         /// <summary>
         /// Gets or sets the id of group.
@@ -57,15 +67,5 @@ namespace KIP_Backend.Models.KIP.NoAuth
         /// Gets or sets names of groups.
         /// </summary>
         public string GroupNames { get; set; }
-
-        /// <summary>
-        /// Gets or sets the id of teacher.
-        /// </summary>
-        public int? ProfId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of teacher.
-        /// </summary>
-        public string ProfName { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using KIP_Backend.Constants;
-using KIP_Backend.DB;
+using KIP_server_TB.DB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,7 @@ using Telegram.Bot;
 namespace KIP_server_TB
 {
     /// <summary>
-    /// KIP_telegram_bot startup.
+    /// KIP_server_TB startup.
     /// </summary>
     [ExcludeFromCodeCoverage]
     public class Startup
@@ -44,7 +44,7 @@ namespace KIP_server_TB
 
             var pgConnectionString = this.Configuration.GetConnectionString("PostgresConnection");
             var pgVersionString = this.Configuration.GetConnectionString("PostgresVersion");
-            services.AddDbServices<KIPDbContext>(pgConnectionString, pgVersionString);
+            services.AddDbServices<TelegramApiDbContext>(pgConnectionString, pgVersionString);
 
             services.AddMvcCore()
                 .AddDataAnnotations()

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,15 +7,17 @@ using System.Threading.Tasks;
 using Google.Cloud.Dialogflow.V2;
 using Google.Protobuf;
 using KIP_Backend.Attributes;
-using KIP_Backend.DB;
 using KIP_Backend.Extensions;
-using KIP_Backend.Models.KIP.NoAuth.Helpers;
-using KIP_Backend.Models.NoAuth.UI;
+using KIP_Backend.Models.Helpers;
+using KIP_Backend.Models.NoAuth;
 using KIP_server_TB.Constants;
+using KIP_server_TB.DB;
+using KIP_server_TB.Models;
 using KIP_server_TB.Services;
+using KIP_server_TB.V1.NoAuth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -32,26 +33,28 @@ namespace KIP_server_TB.V1.Controllers
     [ApiController]
     public class WebhookController : Controller
     {
+        private readonly string _noAuthServerUrl;
+
         private readonly ILogger<WebhookController> _logger;
-        private readonly KIPDbContext _dbContext;
+        private readonly TelegramApiDbContext _dbContext;
         private readonly ITelegramBotClient _telegramBotClient;
 
-        private readonly JsonParser jsonParser = new JsonParser(JsonParser.Settings.Default.WithIgnoreUnknownFields(true));
+        private readonly JsonParser _jsonParser = new JsonParser(JsonParser.Settings.Default.WithIgnoreUnknownFields(true));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebhookController"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="postDbContext">The POST db context.</param>
+        /// <param name="dbContext">The db context.</param>
         /// <param name="telegramBotClient">The telegramBotClient.</param>
-        public WebhookController(
-            ILogger<WebhookController> logger,
-            KIPDbContext postDbContext,
-            ITelegramBotClient telegramBotClient)
+        /// <param name="configuration">The configuration.</param>
+        public WebhookController(ILogger<WebhookController> logger, TelegramApiDbContext dbContext, ITelegramBotClient telegramBotClient, IConfiguration configuration)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this._dbContext = postDbContext ?? throw new ArgumentNullException(nameof(postDbContext));
+            this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             this._telegramBotClient = telegramBotClient ?? throw new ArgumentNullException(nameof(telegramBotClient));
+
+            this._noAuthServerUrl = configuration?.GetConnectionString("KIP-Backend-NoAuth");
         }
 
         /// <summary>
@@ -64,15 +67,14 @@ namespace KIP_server_TB.V1.Controllers
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1123:Do not place regions within elements", Justification = "Webhook receive")]
         public async Task<OkResult> ReceiveAsync()
         {
-            WebhookRequest request;
-
             try
             {
                 #region User registration
 
+                WebhookRequest request;
                 using (var reader = new StreamReader(this.Request.Body))
                 {
-                    request = this.jsonParser.Parse<WebhookRequest>(reader);
+                    request = this._jsonParser.Parse<WebhookRequest>(reader);
                 }
 
                 var message = request.QueryResult.QueryText;
@@ -105,29 +107,33 @@ namespace KIP_server_TB.V1.Controllers
 
                 #endregion
 
-                // No auth mode
-                #region Faculty output
+                #region No auth mode
 
-                if (intent == DialogflowConstants.NoAuthModeIntent)
+                switch (intent)
                 {
-                    var faculties = this._dbContext.Faculty.OrderBy(f => f.FacultyShortName).AsNoTracking().ToList();
-
-                    var inlineButtons = new List<List<InlineKeyboardButton>>();
-                    foreach (var f in faculties)
+                    case DialogflowConstants.NoAuthModeIntent:
                     {
-                        inlineButtons.Add(new List<InlineKeyboardButton>
+                        var faculties = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Faculty>($"{this._noAuthServerUrl}{RoutConstants.AllFaculties}", this._logger);
+
+                        var inlineButtons = faculties.Select(f => new List<InlineKeyboardButton>
                         {
                             InlineKeyboardButton.WithCallbackData(f.FacultyShortName, f.FacultyShortName),
-                        });
+                        }).ToList();
+
+                        var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свій факультет", replyMarkup: inlineKeyboard);
+                        return this.Ok();
                     }
 
-                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свій факультет", replyMarkup: inlineKeyboard);
-                    return this.Ok();
+                    default:
+                    {
+                        // log
+                        return this.Ok();
+                    }
                 }
 
-                #endregion
+                /*
 
                 #region Course output
 
@@ -519,7 +525,7 @@ namespace KIP_server_TB.V1.Controllers
 
                     await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
                     return this.Ok();
-                }
+                }*/
 
                 #endregion
             }
@@ -529,9 +535,6 @@ namespace KIP_server_TB.V1.Controllers
                 Console.WriteLine(ex.Message);
                 return this.Ok();
             }
-
-            // log
-            return this.Ok();
         }
     }
 }

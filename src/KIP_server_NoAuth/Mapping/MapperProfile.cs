@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
-using KIP_Backend.Models.KIP.NoAuth;
+using KIP_Backend.Models.NoAuth;
 using KIP_server_NoAuth.Mapping.Converters;
 using KIP_server_NoAuth.Models.KhPI;
 

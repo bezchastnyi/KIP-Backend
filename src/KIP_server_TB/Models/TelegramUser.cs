@@ -1,4 +1,4 @@
-﻿namespace KIP_Backend.Models.NoAuth.UI
+﻿namespace KIP_server_TB.Models
 {
     /// <summary>
     /// TelegramUser.
@@ -9,6 +9,16 @@
         /// Gets or sets UserId.
         /// </summary>
         public int UserId { get; set; }
+
+        /// <summary>
+        /// Gets or sets UserEmail.
+        /// </summary>
+        public string UserEmail { get; set; }
+
+        /// <summary>
+        /// Gets or sets UserName.
+        /// </summary>
+        public string UserPassword { get; set; }
 
         /// <summary>
         /// Gets or sets UserName.

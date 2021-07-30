@@ -1,19 +1,18 @@
-﻿using KIP_Backend.Models.KIP.NoAuth;
-using KIP_Backend.Models.NoAuth.UI;
+﻿using KIP_Backend.Models.NoAuth;
 using Microsoft.EntityFrameworkCore;
 
-namespace KIP_Backend.DB
+namespace KIP_server_NoAuth.DB
 {
     /// <summary>
     /// KIP Db context.
     /// </summary>
-    public class KIPDbContext : DbContext
+    public class NoAuthDbContext : DbContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="KIPDbContext"/> class.
+        /// Initializes a new instance of the <see cref="NoAuthDbContext"/> class.
         /// </summary>
         /// <param name="options">DB context options.</param>
-        public KIPDbContext(DbContextOptions<KIPDbContext> options)
+        public NoAuthDbContext(DbContextOptions<NoAuthDbContext> options)
             : base(options)
         {
         }
@@ -62,11 +61,6 @@ namespace KIP_Backend.DB
         /// Gets or sets the schedule by audience.
         /// </summary>
         public virtual DbSet<AudienceSchedule> AudienceSchedule { get; set; }
-
-        /// <summary>
-        /// Gets or sets the audience.
-        /// </summary>
-        public virtual DbSet<TelegramUser> Users { get; set; }
 
         /// <inheritdoc/>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -286,25 +280,6 @@ namespace KIP_Backend.DB
 
                 entity.UseXminAsConcurrencyToken();
             });
-
-            modelBuilder.Entity<TelegramUser>(entity =>
-            {
-                entity.HasKey(e => e.UserId);
-                entity.Property(e => e.UserId).IsRequired();
-
-                entity.Property(e => e.UserName);
-                entity.Property(e => e.Faculty);
-                entity.Property(e => e.Course);
-                entity.Property(e => e.Group);
-                entity.Property(e => e.TempProfValue).HasDefaultValue(null);
-                entity.Property(e => e.TempBuildingValue).HasDefaultValue(null);
-                entity.Property(e => e.TempAudienceValue).HasDefaultValue(null);
-                entity.Property(e => e.TempDayValue).HasDefaultValue(null);
-
-                entity.HasIndex(e => e.UserId).IsUnique();
-
-                entity.UseXminAsConcurrencyToken();
-            });
         }
     }
 }
@@ -313,6 +288,6 @@ namespace KIP_Backend.DB
  * DB Entity Framework Migration script
  *
  * dotnet tool install --global dotnet-ef / dotnet tool update --global dotnet-ef
- * dotnet ef migrations add KIP_DB_Migration
+ * dotnet ef migrations add KIP_DB_NoAuth_Migration
  * dotnet ef database update
  */

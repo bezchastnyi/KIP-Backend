@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using KIP_Backend.Extensions;
-using KIP_Backend.Models.KIP.Auth;
+using KIP_Backend.Models.Auth;
 using KIP_server_Auth.Models.KhPI;
 
 namespace KIP_server_Auth.Mapping.Converters

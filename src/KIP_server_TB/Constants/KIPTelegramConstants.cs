@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using KIP_Backend.Models.KIP.NoAuth.Helpers;
+using KIP_Backend.Models.Helpers;
 
 namespace KIP_server_TB.Constants
 {

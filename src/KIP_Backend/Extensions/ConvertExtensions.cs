@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace KIP_Backend.Extensions
 {
@@ -9,6 +14,50 @@ namespace KIP_Backend.Extensions
     /// </summary>
     public static class ConvertExtensions
     {
+        /// <summary>
+        /// Getting list data from json using asynchronous.
+        /// </summary>
+        /// <returns>List data from json.</returns>
+        /// <typeparam name="T">T.</typeparam>
+        /// <param name="url">Link to json.</param>
+        /// <param name="logger">Link to json.</param>
+        public static async Task<IEnumerable<T>> ConvertJsonDataToListOfModelsAsync<T>(string url, ILogger logger)
+        {
+            using var web = new WebClient();
+            try
+            {
+                var jsonData = await web.DownloadStringTaskAsync(url);
+                return jsonData.Contains("<!DOCTYPE html>") ? null : JsonConvert.DeserializeObject<IEnumerable<T>>(jsonData);
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"'ConvertJsonDataToModelAsync': Url: {url} Message: {e.Message} StackTrace: {e.StackTrace}");
+                return default;
+            }
+        }
+
+        /// <summary>
+        /// Getting data from json using asynchronous.
+        /// </summary>
+        /// <returns>Data from json.</returns>
+        /// <typeparam name="T">T.</typeparam>
+        /// <param name="url">Link to json.</param>
+        /// <param name="logger">Link to json.</param>
+        public static async Task<T> ConvertJsonDataToModelAsync<T>(string url, ILogger logger)
+        {
+            using var web = new WebClient();
+            try
+            {
+                var jsonData = await web.DownloadStringTaskAsync(url);
+                return jsonData.Contains("<!DOCTYPE html>") ? default : JsonConvert.DeserializeObject<T>(jsonData);
+            }
+            catch (Exception e)
+            {
+                logger.LogError($"'ConvertJsonDataToModelAsync': Url: {url} Message: {e.Message} StackTrace: {e.StackTrace}");
+                return default;
+            }
+        }
+
         /// <summary>
         /// Convert string to bool.
         /// </summary>

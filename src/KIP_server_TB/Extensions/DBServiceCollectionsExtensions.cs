@@ -9,8 +9,6 @@ namespace Microsoft.Extensions.DependencyInjection
     /// </summary>
     public static class DbServiceCollectionsExtensions
     {
-        private const string MigrationsAssembly = "KIP_server_NoAuth";
-
         /// <summary>
         /// Adds the database services.
         /// </summary>
@@ -46,7 +44,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 contextOptions.UseNpgsql(connectionString, npgOptions =>
                 {
                     npgOptions.SetPostgresVersion(pgVersion);
-                    npgOptions.MigrationsAssembly(MigrationsAssembly)
+                    npgOptions.MigrationsAssembly("KIP_server_TB")
                         .EnableRetryOnFailure();
                 });
             });

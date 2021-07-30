@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
-using KIP_Backend.Models.KIP.Auth;
+using KIP_Backend.Models.Auth;
 using KIP_server_Auth.Constants;
 using KIP_server_Auth.Extensions;
 using KIP_server_Auth.Interfaces;

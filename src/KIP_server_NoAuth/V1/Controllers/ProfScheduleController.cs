@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using KIP_Backend.Attributes;
-using KIP_Backend.DB;
-using KIP_Backend.Models.KIP.NoAuth;
-using KIP_Backend.Models.KIP.NoAuth.Helpers;
+using KIP_Backend.Models.Helpers;
+using KIP_Backend.Models.NoAuth;
+using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Models.Output;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +22,7 @@ namespace KIP_server_NoAuth.V1.Controllers
     [ApiController]
     public class ProfScheduleController : Controller
     {
-        private readonly KIPDbContext _context;
+        private readonly NoAuthDbContext _context;
         private readonly ILogger<ProfScheduleController> _logger;
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="context">The context.</param>
-        public ProfScheduleController(ILogger<ProfScheduleController> logger, KIPDbContext context)
+        public ProfScheduleController(ILogger<ProfScheduleController> logger, NoAuthDbContext context)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._context = context ?? throw new ArgumentNullException(nameof(context));
@@ -45,7 +45,7 @@ namespace KIP_server_NoAuth.V1.Controllers
         [ProducesResponseType(typeof(OkObjectResult), StatusCodes.Status200OK)]
         public IActionResult ProfSchedule()
         {
-            var info = $"{nameof(KIP_Backend.Models.KIP.NoAuth.ProfSchedule)}";
+            var info = $"{nameof(KIP_Backend.Models.NoAuth.ProfSchedule)}";
             return this.Ok(info);
         }
 
