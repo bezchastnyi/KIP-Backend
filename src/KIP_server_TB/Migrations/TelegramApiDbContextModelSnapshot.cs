@@ -29,10 +29,19 @@ namespace KIP_server_TB.Migrations
                     b.Property<int?>("Course")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Faculty")
+                    b.Property<int?>("FacultyId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FacultyName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Group")
+                    b.Property<string>("FacultyShortName")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("GroupName")
                         .HasColumnType("text");
 
                     b.Property<int?>("TempAudienceValue")

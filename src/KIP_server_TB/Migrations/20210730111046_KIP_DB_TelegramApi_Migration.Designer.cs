@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KIP_server_TB.Migrations
 {
     [DbContext(typeof(TelegramApiDbContext))]
-    [Migration("20210730075400_KIP_DB_TelegramApi_Migration")]
+    [Migration("20210730111046_KIP_DB_TelegramApi_Migration")]
     partial class KIP_DB_TelegramApi_Migration
     {
         /// <inheritdoc />
@@ -32,10 +32,19 @@ namespace KIP_server_TB.Migrations
                     b.Property<int?>("Course")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Faculty")
+                    b.Property<int?>("FacultyId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("FacultyName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Group")
+                    b.Property<string>("FacultyShortName")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("GroupName")
                         .HasColumnType("text");
 
                     b.Property<int?>("TempAudienceValue")

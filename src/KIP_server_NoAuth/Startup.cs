@@ -100,7 +100,7 @@ namespace KIP_server_NoAuth
             IWebHostEnvironment env,
             IApiVersionDescriptionProvider apiDescriptionProvider)
         {
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseRouting();
 
             if (env.IsDevelopment())

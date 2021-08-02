@@ -6,9 +6,9 @@
     public static class RoutConstants
     {
         /// <summary>
-        /// AllAudiences.
+        /// AllBuildings.
         /// </summary>
-        public const string AllAudiences = "v1/Audience";
+        public const string AllBuildings = "v1/Building";
 
         /// <summary>
         /// AudienceById.
@@ -16,13 +16,48 @@
         public const string AudienceById = "v1/Audience/{0}";
 
         /// <summary>
-        /// AudienceByBuildingId.
+        /// AudiencesByBuildingId.
         /// </summary>
-        public const string AudienceByBuildingId = "v1/Audience/Building/{0}";
+        public const string AudiencesByBuildingId = "v1/Audience/Building/{0}";
 
         /// <summary>
         /// AllFaculties.
         /// </summary>
         public const string AllFaculties = "v1/Faculty";
+
+        /// <summary>
+        /// FacultyById.
+        /// </summary>
+        public const string FacultyById = "v1/Faculty/{0}";
+
+        /// <summary>
+        /// GroupsByFacultyId.
+        /// </summary>
+        public const string GroupsByFacultyId = "v1/Group/Faculty/{0}";
+
+        /// <summary>
+        /// StudentScheduleByGroupIdAndDay.
+        /// </summary>
+        public const string StudentScheduleByGroupIdAndDay = "v1/StudentSchedule/Group/{0}/Day/{1}";
+
+        /// <summary>
+        /// CathedrasByFacultyId.
+        /// </summary>
+        public const string CathedrasByFacultyId = "v1/Cathedra/Faculty/{0}";
+
+        /// <summary>
+        /// ProfById.
+        /// </summary>
+        public const string ProfById = "v1/Prof/{0}";
+
+        /// <summary>
+        /// ProfsByCathedraId.
+        /// </summary>
+        public const string ProfsByCathedraId = "v1/Prof/Cathedra/{0}";
+
+        /// <summary>
+        /// ProfScheduleByProfIdAndDay.
+        /// </summary>
+        public const string ProfScheduleByProfIdAndDay = "v1/ProfSchedule/Prof/{0}/Day/{1}";
     }
 }

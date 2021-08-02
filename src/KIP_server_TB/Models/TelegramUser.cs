@@ -26,9 +26,19 @@
         public string UserName { get; set; }
 
         /// <summary>
-        /// Gets or sets Faculty.
+        /// Gets or sets FacultyId.
         /// </summary>
-        public string Faculty { get; set; }
+        public int? FacultyId { get; set; }
+
+        /// <summary>
+        /// Gets or sets FacultyName.
+        /// </summary>
+        public string FacultyName { get; set; }
+
+        /// <summary>
+        /// Gets or sets FacultyShortName.
+        /// </summary>
+        public string FacultyShortName { get; set; }
 
         /// <summary>
         /// Gets or sets Course.
@@ -36,9 +46,14 @@
         public int? Course { get; set; }
 
         /// <summary>
-        /// Gets or sets Group.
+        /// Gets or sets GroupId.
         /// </summary>
-        public string Group { get; set; }
+        public int? GroupId { get; set; }
+
+        /// <summary>
+        /// Gets or sets GroupId.
+        /// </summary>
+        public string GroupName { get; set; }
 
         /// <summary>
         /// Gets or sets TempProfValue.

@@ -71,11 +71,8 @@ namespace KIP_server_TB.V1.Controllers
             {
                 #region User registration
 
-                WebhookRequest request;
-                using (var reader = new StreamReader(this.Request.Body))
-                {
-                    request = this._jsonParser.Parse<WebhookRequest>(reader);
-                }
+                using var reader = new StreamReader(this.Request.Body);
+                var request = this._jsonParser.Parse<WebhookRequest>(await reader.ReadToEndAsync());
 
                 var message = request.QueryResult.QueryText;
                 if (string.IsNullOrEmpty(message))
@@ -111,18 +108,502 @@ namespace KIP_server_TB.V1.Controllers
 
                 switch (intent)
                 {
+                    // Faculty output
                     case DialogflowConstants.NoAuthModeIntent:
                     {
-                        var faculties = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Faculty>($"{this._noAuthServerUrl}{RoutConstants.AllFaculties}", this._logger);
+                        var faculties = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Faculty>(
+                            $"{this._noAuthServerUrl}/{RoutConstants.AllFaculties}", this._logger);
 
+                        faculties = faculties.OrderBy(f => f.FacultyShortName);
                         var inlineButtons = faculties.Select(f => new List<InlineKeyboardButton>
                         {
-                            InlineKeyboardButton.WithCallbackData(f.FacultyShortName, f.FacultyShortName),
+                            InlineKeyboardButton.WithCallbackData($"{f.FacultyShortName}", $"FacultyId:{f.FacultyId}"),
                         }).ToList();
 
                         var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
 
                         await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свій факультет", replyMarkup: inlineKeyboard);
+                        return this.Ok();
+                    }
+
+                    // Course output
+                    case DialogflowConstants.FacultyIntent:
+                    {
+                        var facultyId = ConvertExtensions.StringToInt(message.Split(':')[1]);
+                        var faculties = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Faculty>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.FacultyById, facultyId)}",
+                            this._logger);
+
+                        var faculty = faculties.FirstOrDefault();
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            user = new TelegramUser
+                            {
+                                UserId = (int)userId,
+                                UserName = TelegramRequestProcessing.GetUserName(request),
+                                FacultyId = faculty?.FacultyId,
+                                FacultyName = faculty?.FacultyName,
+                                FacultyShortName = faculty?.FacultyShortName,
+                            };
+
+                            await this._dbContext.Users.AddAsync(user);
+                            await this._dbContext.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            user.FacultyId = faculty?.FacultyId;
+                            user.FacultyName = faculty?.FacultyName;
+                            user.FacultyShortName = faculty?.FacultyShortName;
+
+                            await this._dbContext.SaveChangesAsync();
+                        }
+
+                        var inlineButtons = new List<List<InlineKeyboardButton>>();
+                        for (var i = 1; i <= KIPTelegramConstants.MaxCourse; i++)
+                        {
+                            inlineButtons.Add(new List<InlineKeyboardButton>
+                            {
+                                InlineKeyboardButton.WithCallbackData($"{i.ToString()} курс", $"Course:{i.ToString()}"),
+                            });
+                        }
+
+                        var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свій курс", replyMarkup: inlineKeyboard);
+                        return this.Ok();
+                    }
+
+                    // Group output
+                    case DialogflowConstants.CourseIntent:
+                    {
+                        var course = ConvertExtensions.StringToInt(message.Split(':')[1]);
+
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        user.Course = course;
+                        await this._dbContext.SaveChangesAsync();
+
+                        var groups = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Group>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.GroupsByFacultyId, user.FacultyId)}",
+                            this._logger);
+
+                        groups = groups.Where(g => g.Course == user.Course).OrderBy(g => g.GroupName);
+                        var inlineButtons = groups.Select(g => new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData(g.GroupName, $"Group:{g.GroupId}:{g.GroupName}"),
+                        }).ToList();
+
+                        var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свою групу", replyMarkup: inlineKeyboard);
+                        return this.Ok();
+                    }
+
+                    // Group registration
+                    case DialogflowConstants.CourseIntentFallback:
+                    {
+                        var data = message.Split(':');
+
+                        var groupId = ConvertExtensions.StringToInt(data[1]);
+                        var groupName = data[2];
+
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        user.GroupId = groupId;
+                        user.GroupName = groupName;
+                        await this._dbContext.SaveChangesAsync();
+
+                        var outputSb = new StringBuilder();
+
+                        outputSb.AppendLine($"Ваш профіль {user.UserName ?? string.Empty}");
+                        outputSb.AppendLine($"Факультет: {user.FacultyShortName} ({user.FacultyName})");
+                        outputSb.AppendLine($"Курс: {user.Course}");
+                        outputSb.AppendLine($"Група: {user.GroupName}");
+
+                        var inlineButtons = new List<List<InlineKeyboardButton>>
+                        {
+                            new List<InlineKeyboardButton>
+                            {
+                                InlineKeyboardButton.WithCallbackData("Вірно ✅", DialogflowConstants.ScheduleIntent),
+                                InlineKeyboardButton.WithCallbackData("Невірно ❌", "Гостьовий режим"),
+                            },
+                        };
+
+                        var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString(), replyMarkup: inlineKeyboard);
+                        return this.Ok();
+                    }
+
+                    // Group schedule
+                    // Day output
+                    case DialogflowConstants.GroupScheduleIntent:
+                    {
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\n Оновити профіль: /start");
+                            return this.Ok();
+                        }
+
+                        await TelegramRequestProcessing.OutputDaysButtons(this._telegramBotClient, chatId, "GroupSchedule");
+                        return this.Ok();
+                    }
+
+                    // Group schedule
+                    case DialogflowConstants.GroupScheduleIntentFallback:
+                    {
+                        message = message.Split(':')[1];
+                        var day = Enum.Parse<Day>(message);
+
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<StudentSchedule>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.StudentScheduleByGroupIdAndDay, user.GroupId, (int)day)}",
+                            this._logger);
+
+                        var schedule = schedules?.ToList();
+                        if (schedule?.Count == 0)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(
+                                chatId,
+                                $"Вибачте, але в базі даних немає розкладу для вашої групи {user.GroupName} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
+
+                            return this.Ok();
+                        }
+
+                        var week0List = schedule?.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
+                        var week1List = schedule?.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
+
+                        var outputSb = new StringBuilder();
+
+                        outputSb.AppendLine($"{user.GroupName}\n");
+                        outputSb.AppendLine("Непарный тиждень:\n");
+                        foreach (var l in week0List)
+                        {
+                            outputSb.AppendLine(
+                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                            outputSb.AppendLine($"  Викладач: {l.ProfName}");
+                            outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
+                        }
+
+                        outputSb.AppendLine("\nПарный тиждень:\n");
+                        foreach (var l in week1List)
+                        {
+                            outputSb.AppendLine(
+                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                            outputSb.AppendLine($"  Викладач: {l.ProfName}");
+                            outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
+                        }
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
+                        return this.Ok();
+                    }
+
+                    // Prof schedule
+                    // Cathedras output
+                    case DialogflowConstants.ProfScheduleIntent:
+                    {
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\n Оновити профіль: /start");
+                            return this.Ok();
+                        }
+
+                        var cathedras = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Cathedra>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.CathedrasByFacultyId, user.FacultyId)}",
+                            this._logger);
+
+                        cathedras = cathedras.OrderBy(c => c.CathedraName);
+                        var inlineButtons = cathedras.Select(c => new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData(c.CathedraName, $"CathedraId:{c.CathedraId}"),
+                        }).ToList();
+
+                        var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть кафедру", replyMarkup: inlineKeyboard);
+                        return this.Ok();
+                    }
+
+                    // Profs output
+                    case DialogflowConstants.ProfScheduleIntentCathedra:
+                    {
+                        var cathedraId = ConvertExtensions.StringToInt(message.Split(':')[1]);
+
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        var profs = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Prof>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfsByCathedraId, cathedraId)}",
+                            this._logger);
+
+                        profs = profs.OrderBy(p => p.ProfSurname);
+                        var inlineButtons = profs.Select(p => new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData(
+                                $"{p.ProfSurname} {p.ProfName} {p.ProfPatronymic}", $"ProfId:{p.ProfId}"),
+                        }).ToList();
+
+                        var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть викладача", replyMarkup: inlineKeyboard);
+                        return this.Ok();
+                    }
+
+                    // Day output
+                    case DialogflowConstants.ProfScheduleIntentProf:
+                    {
+                        var profId = ConvertExtensions.StringToInt(message.Split(':')[1]);
+
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        user.TempProfValue = profId;
+                        await this._dbContext.SaveChangesAsync();
+
+                        await TelegramRequestProcessing.OutputDaysButtons(this._telegramBotClient, chatId, "ProfSchedule");
+                        return this.Ok();
+                    }
+
+                    // Prof schedule
+                    case DialogflowConstants.ProfScheduleIntentProfFallback:
+                    {
+                        message = message.Split(':')[1];
+                        var day = Enum.Parse<Day>(message);
+
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        var profs = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Prof>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfById, user.TempProfValue)}",
+                            this._logger);
+
+                        var prof = profs?.First();
+
+                        var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<ProfSchedule>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfScheduleByProfIdAndDay, user.TempProfValue, (int)day)}",
+                            this._logger);
+
+                        var schedule = schedules?.ToList();
+                        if (schedule?.Count == 0)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(
+                                chatId,
+                                $"Вибачте, але в базі даних немає розкладу для {prof?.ProfSurname} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
+
+                            return this.Ok();
+                        }
+
+                        var outputSb = new StringBuilder();
+
+                        var week0List = schedule?.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
+                        var week1List = schedule?.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
+
+                        outputSb.AppendLine($"{prof?.ProfSurname} {prof?.ProfName} {prof?.ProfPatronymic}\n");
+                        outputSb.AppendLine("Непарный тиждень:\n");
+                        foreach (var l in week0List)
+                        {
+                            outputSb.AppendLine(
+                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                            outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
+                            outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
+                        }
+
+                        outputSb.AppendLine("\nПарный тиждень:\n");
+                        foreach (var l in week1List)
+                        {
+                            outputSb.AppendLine(
+                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                            outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
+                            outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
+                        }
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
+                        return this.Ok();
+                    }
+
+                    // Audience schedule
+                    // Buildings output
+                    case DialogflowConstants.AudienceScheduleIntent:
+                    {
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\n Оновити профіль: /start");
+                            return this.Ok();
+                        }
+
+                        var buildings = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Building>(
+                            $"{this._noAuthServerUrl}/{RoutConstants.AllBuildings}", this._logger);
+
+                        buildings = buildings.OrderBy(b => b.BuildingShortName);
+                        var inlineButtons = buildings.Select(b => new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData($"{b.BuildingName} ({b.BuildingShortName})", $"BuildingId:{b.BuildingId}"),
+                        }).ToList();
+
+                        var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть навчальний корпус", replyMarkup: inlineKeyboard);
+                        return this.Ok();
+                    }
+
+                    // Audiences output
+                    case DialogflowConstants.AudienceScheduleIntentBuilding:
+                    {
+                        var buildingId = ConvertExtensions.StringToInt(message.Split(':')[1]);
+
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        user.TempBuildingValue = buildingId;
+                        await this._dbContext.SaveChangesAsync();
+
+                        var audiences = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Audience>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudiencesByBuildingId, buildingId)}",
+                            this._logger);
+
+                        audiences = audiences.OrderBy(a => a.AudienceName);
+                        var inlineButtons = audiences.Select(a => new List<InlineKeyboardButton>
+                        {
+                            InlineKeyboardButton.WithCallbackData($"{a.AudienceName}", $"AudienceId:{a.AudienceId}"),
+                        }).ToList();
+
+                        var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть навчальну аудиторію", replyMarkup: inlineKeyboard);
+                        return this.Ok();
+                    }
+
+                    // Day output
+                    case DialogflowConstants.AudienceScheduleIntentAudience:
+                    {
+                        var audienceId = ConvertExtensions.StringToInt(message.Split(':')[1]);
+
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        user.TempAudienceValue = audienceId;
+                        await this._dbContext.SaveChangesAsync();
+
+                        await TelegramRequestProcessing.OutputDaysButtons(this._telegramBotClient, chatId, "AudienceSchedule");
+                        return this.Ok();
+                    }
+
+                    // Audience schedule
+                    case DialogflowConstants.AudienceScheduleIntentAudienceFallback:
+                    {
+                        message = message.Split(':')[1];
+                        var day = Enum.Parse<Day>(message);
+
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        var audiences = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Audience>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceById, user.TempAudienceValue)}",
+                            this._logger);
+
+                        var audience = audiences?.First();
+
+                        var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<AudienceSchedule>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfScheduleByProfIdAndDay, user.TempAudienceValue, (int)day)}",
+                            this._logger);
+
+                        var schedule = schedules?.ToList();
+                        if (schedule?.Count == 0)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(
+                                chatId,
+                                $"Вибачте, але в базі даних немає розкладу для {audience?.AudienceName} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
+
+                            return this.Ok();
+                        }
+
+                        var outputSb = new StringBuilder();
+
+                        var week0List = schedule?.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
+                        var week1List = schedule?.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
+
+                        outputSb.AppendLine($"{audience?.AudienceName}\n");
+                        outputSb.AppendLine("Непарный тиждень:\n");
+                        foreach (var l in week0List)
+                        {
+                            outputSb.AppendLine(
+                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                            outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
+                            outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
+                        }
+
+                        outputSb.AppendLine("\nПарный тиждень:\n");
+                        foreach (var l in week1List)
+                        {
+                            outputSb.AppendLine(
+                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                            outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
+                            outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
+                        }
+
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
+                        return this.Ok();
+                    }
+
+                    // Buildings output
+                    case DialogflowConstants.ExitIntent:
+                    {
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        if (user == null)
+                        {
+                            // log
+                            return this.Ok();
+                        }
+
+                        this._dbContext.Users.Remove(user);
+                        await this._dbContext.SaveChangesAsync();
                         return this.Ok();
                     }
 
@@ -132,400 +613,6 @@ namespace KIP_server_TB.V1.Controllers
                         return this.Ok();
                     }
                 }
-
-                /*
-
-                #region Course output
-
-                if (intent == DialogflowConstants.FacultyIntent)
-                {
-                    #region FacultyRegistration
-
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    if (user == null)
-                    {
-                        user = new TelegramUser
-                        {
-                            UserId = (int)userId,
-                            UserName = TelegramRequestProcessing.GetUserName(request),
-                            Faculty = message,
-                        };
-
-                        await this._dbContext.Users.AddAsync(user);
-                        await this._dbContext.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        user.Faculty = message;
-                        await this._dbContext.SaveChangesAsync();
-                    }
-
-                    #endregion
-
-                    var inlineButtons = new List<List<InlineKeyboardButton>>();
-                    for (var i = 1; i <= KIPTelegramConstants.MaxCourse; i++)
-                    {
-                        inlineButtons.Add(new List<InlineKeyboardButton>
-                        {
-                            InlineKeyboardButton.WithCallbackData(i.ToString(), i.ToString()),
-                        });
-                    }
-
-                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свій курс", replyMarkup: inlineKeyboard);
-                    return this.Ok();
-                }
-
-                #endregion
-
-                #region Group output
-
-                if (intent == DialogflowConstants.CourseIntent)
-                {
-                    #region CourseRegistration
-
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    if (user == null)
-                    {
-                        // log
-                        return this.Ok();
-                    }
-
-                    user.Course = ConvertExtensions.StringToInt(message);
-                    await this._dbContext.SaveChangesAsync();
-
-                    #endregion
-
-                    var userFaculty = this._dbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == user.Faculty);
-                    var groups = this._dbContext.Group.Where(g => g.Course == user.Course && g.FacultyId == userFaculty.FacultyId).OrderBy(g => g.GroupName);
-
-                    var inlineButtons = new List<List<InlineKeyboardButton>>();
-                    foreach (var g in groups)
-                    {
-                        inlineButtons.Add(new List<InlineKeyboardButton>
-                        {
-                            InlineKeyboardButton.WithCallbackData(g.GroupName, g.GroupName),
-                        });
-                    }
-
-                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть свою групу", replyMarkup: inlineKeyboard);
-                    return this.Ok();
-                }
-
-                #endregion
-
-                #region Group registration
-
-                if (intent == DialogflowConstants.CourseIntentFallback)
-                {
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    user.Group = message;
-                    await this._dbContext.SaveChangesAsync();
-
-                    var outputSb = new StringBuilder();
-
-                    outputSb.AppendLine($"Ваш профіль {user.UserName ?? string.Empty}");
-                    outputSb.AppendLine($"Факультет: {user.Faculty}");
-                    outputSb.AppendLine($"Курс: {user.Course}");
-                    outputSb.AppendLine($"Група: {user.Group}");
-
-                    var inlineButtons = new List<List<InlineKeyboardButton>>
-                    {
-                        new List<InlineKeyboardButton>
-                        {
-                            InlineKeyboardButton.WithCallbackData("Вірно ✅", DialogflowConstants.ScheduleIntent),
-                            InlineKeyboardButton.WithCallbackData("Невірно ❌", "Гостьовий режим"),
-                        },
-                    };
-
-                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString(), replyMarkup: inlineKeyboard);
-                    return this.Ok();
-                }
-
-                #endregion
-
-                // Group schedule
-                #region Group schedule
-
-                if (intent == DialogflowConstants.GroupScheduleIntentFallback)
-                {
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    var group = this._dbContext.Group.FirstOrDefault(i => i.GroupName == user.Group);
-
-                    var day = Enum.Parse<Day>(message);
-                    var schedule = this._dbContext.StudentSchedule.Where(i => i.GroupId == group.GroupId && i.Day == day).AsNoTracking().ToList();
-
-                    if (schedule.Count == 0)
-                    {
-                        await this._telegramBotClient.SendTextMessageAsync(
-                            chatId,
-                            $"Вибачте, але в базі даних немає розкладу для вашої групи {group.GroupName} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
-
-                        return this.Ok();
-                    }
-
-                    var week0List = schedule.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
-                    var week1List = schedule.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
-
-                    var outputSb = new StringBuilder();
-
-                    outputSb.AppendLine($"{group.GroupName}\n");
-                    outputSb.AppendLine("Непарный тиждень:\n");
-                    foreach (var l in week0List)
-                    {
-                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
-                        outputSb.AppendLine($"  Викладач: {l.ProfName}");
-                        outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
-                    }
-
-                    outputSb.AppendLine("\nПарный тиждень:\n");
-                    foreach (var l in week1List)
-                    {
-                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
-                        outputSb.AppendLine($"  Викладач: {l.ProfName}");
-                        outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
-                    }
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
-                    return this.Ok();
-                }
-
-                #endregion
-
-                // Prof schedule
-                #region Cathedras output
-
-                if (intent == DialogflowConstants.ProfScheduleIntent)
-                {
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    var faculty = this._dbContext.Faculty.FirstOrDefault(f => f.FacultyShortName == user.Faculty);
-                    var cathedras = this._dbContext.Cathedra.Where(c => c.FacultyId == faculty.FacultyId).OrderBy(c => c.CathedraName).AsNoTracking().ToList();
-
-                    var inlineButtons = new List<List<InlineKeyboardButton>>();
-                    foreach (var c in cathedras)
-                    {
-                        inlineButtons.Add(new List<InlineKeyboardButton>
-                        {
-                            InlineKeyboardButton.WithCallbackData(c.CathedraName, c.CathedraId.ToString()),
-                        });
-                    }
-
-                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть кафедру", replyMarkup: inlineKeyboard);
-                    return this.Ok();
-                }
-
-                #endregion
-
-                #region ProfsOutput
-
-                if (intent == DialogflowConstants.ProfScheduleIntentCathedra)
-                {
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    var cathedra = this._dbContext.Cathedra.FirstOrDefault(c => c.CathedraId == ConvertExtensions.StringToInt(message));
-                    var profs = this._dbContext.Prof.Where(p => p.CathedraId == cathedra.CathedraId).OrderBy(p => p.ProfSurname).AsNoTracking().ToList();
-
-                    var inlineButtons = new List<List<InlineKeyboardButton>>();
-                    foreach (var p in profs)
-                    {
-                        inlineButtons.Add(new List<InlineKeyboardButton>
-                        {
-                            InlineKeyboardButton.WithCallbackData($"{p.ProfSurname} {p.ProfName} {p.ProfPatronymic}", p.ProfSurname),
-                        });
-                    }
-
-                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть викладача", replyMarkup: inlineKeyboard);
-                    return this.Ok();
-                }
-
-                #endregion
-
-                #region Day output
-
-                if (intent == DialogflowConstants.ProfScheduleIntentProf)
-                {
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    var prof = this._dbContext.Prof.FirstOrDefault(p => p.ProfSurname == message);
-
-                    user.TempProfValue = prof.ProfId;
-                    await this._dbContext.SaveChangesAsync();
-
-                    await TelegramRequestProcessing.OutputDaysButtons(this._telegramBotClient, chatId);
-                    return this.Ok();
-                }
-
-                #endregion
-
-                #region Prof schedule
-
-                if (intent == DialogflowConstants.ProfScheduleIntentDay)
-                {
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    var prof = this._dbContext.Prof.FirstOrDefault(i => i.ProfId == user.TempProfValue);
-
-                    var day = Enum.Parse<Day>(message);
-                    var list = this._dbContext.ProfSchedule.Where(i => i.ProfId == user.TempProfValue && i.Day == day).AsNoTracking().ToList();
-
-                    if (list.Count == 0)
-                    {
-                        await this._telegramBotClient.SendTextMessageAsync(
-                            chatId,
-                            $"Вибачте, але в базі даних немає розкладу для {prof.ProfSurname} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
-
-                        return this.Ok();
-                    }
-
-                    var outputSb = new StringBuilder();
-
-                    var week0List = list.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
-                    var week1List = list.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
-
-                    outputSb.AppendLine($"{prof.ProfSurname} {prof.ProfName} {prof.ProfPatronymic}\n");
-                    outputSb.AppendLine("Непарный тиждень:\n");
-                    foreach (var l in week0List)
-                    {
-                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
-                        outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
-                        outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
-                    }
-
-                    outputSb.AppendLine("\nПарный тиждень:\n");
-                    foreach (var l in week1List)
-                    {
-                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
-                        outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
-                        outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
-                    }
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
-                    return this.Ok();
-                }
-
-                #endregion
-
-                // Audience schedule
-                #region Buildings output
-
-                if (intent == DialogflowConstants.AudienceScheduleIntent)
-                {
-                    var buildings = this._dbContext.Building.OrderBy(b => b.BuildingShortName).AsNoTracking().ToList();
-
-                    var inlineButtons = new List<List<InlineKeyboardButton>>();
-                    foreach (var b in buildings)
-                    {
-                        inlineButtons.Add(new List<InlineKeyboardButton>
-                        {
-                            InlineKeyboardButton.WithCallbackData($"{b.BuildingName} ({b.BuildingShortName})", b.BuildingId.ToString()),
-                        });
-                    }
-
-                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть навчальний корпус", replyMarkup: inlineKeyboard);
-                    return this.Ok();
-                }
-
-                #endregion
-
-                #region Audiences output
-
-                if (intent == DialogflowConstants.AudienceScheduleIntentBuilding)
-                {
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    user.TempBuildingValue = ConvertExtensions.StringToInt(message);
-                    await this._dbContext.SaveChangesAsync();
-
-                    var audiences = this._dbContext.Audience.Where(a => a.BuildingId == user.TempBuildingValue).OrderBy(a => a.AudienceName)
-                        .AsNoTracking().ToList();
-
-                    var inlineButtons = new List<List<InlineKeyboardButton>>();
-                    foreach (var a in audiences)
-                    {
-                        inlineButtons.Add(new List<InlineKeyboardButton>
-                        {
-                            InlineKeyboardButton.WithCallbackData($"{a.AudienceName}", $"Audience:{a.AudienceName}"),
-                        });
-                    }
-
-                    var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, "Оберіть навчальну аудиторію", replyMarkup: inlineKeyboard);
-                    return this.Ok();
-                }
-
-                #endregion
-
-                #region Day output
-
-                if (intent == DialogflowConstants.AudienceScheduleIntentAudience)
-                {
-                    message = message.Split(':')[1];
-
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-
-                    var audience = this._dbContext.Audience.FirstOrDefault(a => a.AudienceName.Contains(message));
-
-                    user.TempAudienceValue = audience.AudienceId;
-                    await this._dbContext.SaveChangesAsync();
-
-                    await TelegramRequestProcessing.OutputDaysButtons(this._telegramBotClient, chatId);
-                    return this.Ok();
-                }
-
-                #endregion
-
-                #region Audience schedule
-
-                if (intent == DialogflowConstants.AudienceScheduleIntentDay)
-                {
-                    var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
-                    var audience = this._dbContext.Audience.FirstOrDefault(a => a.AudienceId == user.TempAudienceValue);
-
-                    var day = Enum.Parse<Day>(message);
-                    var schedule = this._dbContext.AudienceSchedule.Where(i => i.AudienceId == user.TempAudienceValue && i.Day == day).AsNoTracking().ToList();
-
-                    if (schedule.Count == 0)
-                    {
-                        await this._telegramBotClient.SendTextMessageAsync(
-                            chatId,
-                            $"Вибачте, але в базі даних немає розкладу для {audience.AudienceName} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
-
-                        return this.Ok();
-                    }
-
-                    var outputSb = new StringBuilder();
-
-                    var week0List = schedule.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
-                    var week1List = schedule.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
-
-                    outputSb.AppendLine($"{audience.AudienceName}\n");
-                    outputSb.AppendLine("Непарный тиждень:\n");
-                    foreach (var l in week0List)
-                    {
-                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
-                        outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
-                        outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
-                    }
-
-                    outputSb.AppendLine("\nПарный тиждень:\n");
-                    foreach (var l in week1List)
-                    {
-                        outputSb.AppendLine($"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
-                        outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
-                        outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
-                    }
-
-                    await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
-                    return this.Ok();
-                }*/
 
                 #endregion
             }

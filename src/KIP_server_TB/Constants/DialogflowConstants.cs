@@ -9,6 +9,11 @@ namespace KIP_server_TB.Constants
     [ExcludeFromCodeCoverage]
     public static class DialogflowConstants
     {
+        /// <summary>
+        /// ExitIntent.
+        /// </summary>
+        public const string ExitIntent = "Exit Intent";
+
         #region No auth mode
 
         /// <summary>
@@ -41,6 +46,11 @@ namespace KIP_server_TB.Constants
         public const string ScheduleIntent = "ScheduleIntent";
 
         /// <summary>
+        /// GroupScheduleIntent.
+        /// </summary>
+        public const string GroupScheduleIntent = "Group Schedule Intent";
+
+        /// <summary>
         /// NoAuthModeIntent.
         /// </summary>
         public const string GroupScheduleIntentFallback = "Group Schedule Intent - fallback";
@@ -67,7 +77,7 @@ namespace KIP_server_TB.Constants
         /// <summary>
         /// NoAuthModeIntent.
         /// </summary>
-        public const string ProfScheduleIntentDay = "Prof Schedule Intent - Day";
+        public const string ProfScheduleIntentProfFallback = "Prof Schedule Intent - Prof - fallback";
 
         #endregion
 
@@ -91,7 +101,7 @@ namespace KIP_server_TB.Constants
         /// <summary>
         /// NoAuthModeIntent.
         /// </summary>
-        public const string AudienceScheduleIntentDay = "Audience Schedule Intent - Day";
+        public const string AudienceScheduleIntentAudienceFallback = "Audience Schedule Intent - Audience - fallback";
 
         #endregion
     }

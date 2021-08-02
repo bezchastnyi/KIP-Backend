@@ -18,16 +18,17 @@ namespace KIP_server_TB.Services
         /// </summary>
         /// <param name="bot">The request.</param>
         /// <param name="chatId">The request.</param>
+        /// <param name="intentFlag">The intentFlag.</param>
         /// <returns>ChatId.</returns>
-        public static async Task OutputDaysButtons(ITelegramBotClient bot, string chatId)
+        public static async Task OutputDaysButtons(ITelegramBotClient bot, string chatId, string intentFlag)
         {
             var inlineButtons = new List<List<InlineKeyboardButton>>();
             foreach (var d in KIPTelegramConstants.DayUkrConstants)
             {
                 inlineButtons.Add(new List<InlineKeyboardButton>
-            {
-                InlineKeyboardButton.WithCallbackData(d.Value, d.Key.ToString()),
-            });
+                {
+                    InlineKeyboardButton.WithCallbackData(d.Value, $"{intentFlag}:{(int)d.Key}"),
+                });
             }
 
             var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);

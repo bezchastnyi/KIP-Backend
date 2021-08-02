@@ -29,7 +29,7 @@ namespace KIP_server_NoAuth
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-            var url = $"https://0.0.0.0:{port}";
+            var url = $"http://0.0.0.0:{port}";
 
             return Host.CreateDefaultBuilder(args)
                     .UseSerilog(

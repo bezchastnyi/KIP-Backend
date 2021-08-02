@@ -30,12 +30,15 @@ namespace KIP_server_TB.DB
                 entity.HasKey(e => e.UserId);
                 entity.Property(e => e.UserId).IsRequired();
 
-                entity.Property(e => e.UserName);
-                entity.Property(e => e.UserEmail);
-                entity.Property(e => e.UserPassword);
-                entity.Property(e => e.Faculty);
-                entity.Property(e => e.Course);
-                entity.Property(e => e.Group);
+                entity.Property(e => e.UserName).HasDefaultValue(null);
+                entity.Property(e => e.UserEmail).HasDefaultValue(null);
+                entity.Property(e => e.UserPassword).HasDefaultValue(null);
+                entity.Property(e => e.FacultyId).HasDefaultValue(null);
+                entity.Property(e => e.FacultyName).HasDefaultValue(null);
+                entity.Property(e => e.FacultyShortName).HasDefaultValue(null);
+                entity.Property(e => e.Course).HasDefaultValue(null);
+                entity.Property(e => e.GroupId).HasDefaultValue(null);
+                entity.Property(e => e.GroupName).HasDefaultValue(null);
                 entity.Property(e => e.TempProfValue).HasDefaultValue(null);
                 entity.Property(e => e.TempBuildingValue).HasDefaultValue(null);
                 entity.Property(e => e.TempAudienceValue).HasDefaultValue(null);

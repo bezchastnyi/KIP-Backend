@@ -42,7 +42,6 @@ namespace KIP_server_TB
                         webBuilder.ConfigureKestrel(serverOptions =>
                         {
                             serverOptions.AddServerHeader = false;
-                            serverOptions.AllowSynchronousIO = true;
                         })
                         .UseStartup<Startup>().UseUrls(url);
                     });
