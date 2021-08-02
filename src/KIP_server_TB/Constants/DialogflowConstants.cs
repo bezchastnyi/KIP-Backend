@@ -53,7 +53,7 @@ namespace KIP_server_TB.Constants
         /// <summary>
         /// NoAuthModeIntent.
         /// </summary>
-        public const string GroupScheduleIntentFallback = "Group Schedule Intent - fallback";
+        public const string GroupScheduleIntentDay = "Group Schedule Intent - Day";
 
         #endregion
 
@@ -77,7 +77,7 @@ namespace KIP_server_TB.Constants
         /// <summary>
         /// NoAuthModeIntent.
         /// </summary>
-        public const string ProfScheduleIntentProfFallback = "Prof Schedule Intent - Prof - fallback";
+        public const string ProfScheduleIntentDay = "Prof Schedule Intent - Day";
 
         #endregion
 
@@ -101,7 +101,7 @@ namespace KIP_server_TB.Constants
         /// <summary>
         /// NoAuthModeIntent.
         /// </summary>
-        public const string AudienceScheduleIntentAudienceFallback = "Audience Schedule Intent - Audience - fallback";
+        public const string AudienceScheduleIntentDay = "Audience Schedule Intent - Day";
 
         #endregion
     }

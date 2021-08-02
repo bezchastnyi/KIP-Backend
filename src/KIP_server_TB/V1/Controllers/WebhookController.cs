@@ -254,7 +254,7 @@ namespace KIP_server_TB.V1.Controllers
                         if (user == null)
                         {
                             // log
-                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\n Оновити профіль: /start");
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\nОновити профіль: /start");
                             return this.Ok();
                         }
 
@@ -263,7 +263,7 @@ namespace KIP_server_TB.V1.Controllers
                     }
 
                     // Group schedule
-                    case DialogflowConstants.GroupScheduleIntentFallback:
+                    case DialogflowConstants.GroupScheduleIntentDay:
                     {
                         message = message.Split(':')[1];
                         var day = Enum.Parse<Day>(message);
@@ -325,7 +325,7 @@ namespace KIP_server_TB.V1.Controllers
                         if (user == null)
                         {
                             // log
-                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\n Оновити профіль: /start");
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\nОновити профіль: /start");
                             return this.Ok();
                         }
 
@@ -394,7 +394,7 @@ namespace KIP_server_TB.V1.Controllers
                     }
 
                     // Prof schedule
-                    case DialogflowConstants.ProfScheduleIntentProfFallback:
+                    case DialogflowConstants.ProfScheduleIntentDay:
                     {
                         message = message.Split(':')[1];
                         var day = Enum.Parse<Day>(message);
@@ -462,7 +462,7 @@ namespace KIP_server_TB.V1.Controllers
                         if (user == null)
                         {
                             // log
-                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\n Оновити профіль: /start");
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\nОновити профіль: /start");
                             return this.Ok();
                         }
 
@@ -532,7 +532,7 @@ namespace KIP_server_TB.V1.Controllers
                     }
 
                     // Audience schedule
-                    case DialogflowConstants.AudienceScheduleIntentAudienceFallback:
+                    case DialogflowConstants.AudienceScheduleIntentDay:
                     {
                         message = message.Split(':')[1];
                         var day = Enum.Parse<Day>(message);
