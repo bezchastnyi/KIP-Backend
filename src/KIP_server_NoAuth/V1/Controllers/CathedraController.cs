@@ -36,28 +36,6 @@ namespace KIP_server_NoAuth.V1.Controllers
         }
 
         /// <summary>
-        /// All cathedras.
-        /// </summary>
-        /// <returns>All cathedras.</returns>
-        [HttpGet]
-        [Route("Cathedra")]
-        [ProducesResponseType(typeof(Cathedra), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        public IActionResult Cathedra()
-        {
-            if (this._context.Cathedra != null)
-            {
-                return new JsonResult(this._context.Cathedra.AsNoTracking());
-            }
-
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.NotFound();
-        }
-
-        /// <summary>
         /// Department.
         /// </summary>
         /// <returns>Department.</returns>
@@ -66,25 +44,16 @@ namespace KIP_server_NoAuth.V1.Controllers
         [Route("Cathedra/{id:int}")]
         [ProducesResponseType(typeof(Cathedra), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Cathedra(int id)
         {
             if (this._context.Cathedra != null)
             {
                 var list = this._context.Cathedra.Where(i => i.CathedraId == id).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 return new JsonResult(list);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Cathedra)} table is empty");
+            return this.NotFound();
         }
 
         /// <summary>
@@ -96,25 +65,16 @@ namespace KIP_server_NoAuth.V1.Controllers
         [Route("Cathedra/Faculty/{id:int}")]
         [ProducesResponseType(typeof(Cathedra), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Faculty(int id)
         {
             if (this._context.Cathedra != null)
             {
                 var list = this._context.Cathedra.Where(i => i.FacultyId == id).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 return new JsonResult(list);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Cathedra)} table is empty");
+            return this.NotFound();
         }
     }
 }

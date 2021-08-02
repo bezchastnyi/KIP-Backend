@@ -50,10 +50,7 @@ namespace KIP_server_NoAuth.V1.Controllers
                 return new JsonResult(this._context.Building.AsNoTracking());
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Building)} table is empty");
             return this.NotFound();
         }
 
@@ -66,25 +63,16 @@ namespace KIP_server_NoAuth.V1.Controllers
         [Route("Building/{id:int}")]
         [ProducesResponseType(typeof(Building), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Building(int id)
         {
             if (this._context.Building != null)
             {
                 var list = this._context.Building.Where(i => i.BuildingId == id).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 return new JsonResult(list);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Building)} table is empty");
+            return this.NotFound();
         }
     }
 }

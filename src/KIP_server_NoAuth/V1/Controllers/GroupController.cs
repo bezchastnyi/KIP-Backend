@@ -36,28 +36,6 @@ namespace KIP_server_NoAuth.V1.Controllers
         }
 
         /// <summary>
-        /// All groups.
-        /// </summary>
-        /// <returns>All groups.</returns>
-        [HttpGet]
-        [Route("Group")]
-        [ProducesResponseType(typeof(Group), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        public IActionResult Group()
-        {
-            if (this._context.Group != null)
-            {
-                return new JsonResult(this._context.Group.AsNoTracking());
-            }
-
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.NotFound();
-        }
-
-        /// <summary>
         /// Group.
         /// </summary>
         /// <returns>Group.</returns>
@@ -66,25 +44,16 @@ namespace KIP_server_NoAuth.V1.Controllers
         [Route("Group/{id:int}")]
         [ProducesResponseType(typeof(Group), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Group(int id)
         {
             if (this._context.Group != null)
             {
                 var list = this._context.Group.Where(i => i.GroupId == id).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 return new JsonResult(list);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Group)} table is empty");
+            return this.NotFound();
         }
 
         /// <summary>
@@ -96,25 +65,16 @@ namespace KIP_server_NoAuth.V1.Controllers
         [Route("Group/Faculty/{id:int}")]
         [ProducesResponseType(typeof(Group), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Faculty(int id)
         {
             if (this._context.Group != null)
             {
                 var list = this._context.Group.Where(i => i.FacultyId == id).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 return new JsonResult(list);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Group)} table is empty");
+            return this.NotFound();
         }
     }
 }

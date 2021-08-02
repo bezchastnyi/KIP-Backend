@@ -37,19 +37,6 @@ namespace KIP_server_NoAuth.V1.Controllers
         }
 
         /// <summary>
-        /// Audience Schedule start page.
-        /// </summary>
-        /// <returns>Page name.</returns>
-        [HttpGet]
-        [Route("AudienceSchedule")]
-        [ProducesResponseType(typeof(OkObjectResult), StatusCodes.Status200OK)]
-        public IActionResult AudienceSchedule()
-        {
-            var info = $"{nameof(KIP_Backend.Models.NoAuth.AudienceSchedule)}";
-            return this.Ok(info);
-        }
-
-        /// <summary>
         /// Schedule by specific audience.
         /// </summary>
         /// <returns>Schedule by specific audience.</returns>
@@ -58,25 +45,16 @@ namespace KIP_server_NoAuth.V1.Controllers
         [Route("AudienceSchedule/Audience/{id:int}")]
         [ProducesResponseType(typeof(AudienceSchedule), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Audience(int id)
         {
             if (this._context.AudienceSchedule != null)
             {
                 var list = this._context.AudienceSchedule.Where(i => i.AudienceId == id).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 return new JsonResult(list);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(AudienceSchedule)} table is empty");
+            return this.NotFound();
         }
 
         /// <summary>
@@ -92,14 +70,15 @@ namespace KIP_server_NoAuth.V1.Controllers
         [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Audience(int id, int day)
         {
-            if (this._context.AudienceSchedule != null && day >= 0 && day < 6)
+            if (day < 0 || day > 6)
+            {
+                this._logger.LogError($"{nameof(day)} must be in range limit");
+                return this.BadRequest();
+            }
+
+            if (this._context.AudienceSchedule != null)
             {
                 var list = this._context.AudienceSchedule.Where(i => i.AudienceId == id && i.Day == (Day)day).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 var outList = list.Select(l => new AudienceScheduleOutput
                     {
                         SubjectName = l.SubjectName,
@@ -114,11 +93,8 @@ namespace KIP_server_NoAuth.V1.Controllers
                 return new JsonResult(outList);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(AudienceSchedule)} table is empty");
+            return this.NotFound();
         }
     }
 }

@@ -50,10 +50,7 @@ namespace KIP_server_NoAuth.V1.Controllers
                 return new JsonResult(this._context.Faculty.AsNoTracking());
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Faculty)} table is empty");
             return this.NotFound();
         }
 
@@ -72,19 +69,11 @@ namespace KIP_server_NoAuth.V1.Controllers
             if (this._context.Faculty != null)
             {
                 var list = this._context.Faculty.Where(i => i.FacultyId == id).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 return new JsonResult(list);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Faculty)} table is empty");
+            return this.NotFound();
         }
     }
 }

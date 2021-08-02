@@ -44,25 +44,16 @@ namespace KIP_server_NoAuth.V1.Controllers
         [Route("Prof/{id:int}")]
         [ProducesResponseType(typeof(Prof), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Prof(int id)
         {
             if (this._context.Prof != null)
             {
                 var list = this._context.Prof.Where(i => i.ProfId == id).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 return new JsonResult(list);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Prof)} table is empty");
+            return this.NotFound();
         }
 
         /// <summary>
@@ -74,25 +65,16 @@ namespace KIP_server_NoAuth.V1.Controllers
         [Route("Prof/Cathedra/{id:int}")]
         [ProducesResponseType(typeof(Prof), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
         public IActionResult Cathedra(int id)
         {
             if (this._context.Prof != null)
             {
                 var list = this._context.Prof.Where(i => i.CathedraId == id).AsNoTracking().ToHashSet();
-                if (list.Count == 0)
-                {
-                    return this.NotFound();
-                }
-
                 return new JsonResult(list);
             }
 
-            var reExecute = this.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            var message = $"Unexpected Status Code: {this.HttpContext.Response?.StatusCode}, OriginalPath: {reExecute?.OriginalPath}";
-            this._logger.Log(LogLevel.Error, message);
-
-            return this.BadRequest();
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Prof)} table is empty");
+            return this.NotFound();
         }
     }
 }
