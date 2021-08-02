@@ -551,7 +551,7 @@ namespace KIP_server_TB.V1.Controllers
                         var audience = audiences?.First();
 
                         var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<AudienceSchedule>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfScheduleByProfIdAndDay, user.TempAudienceValue, (int)day)}",
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceScheduleByAudienceIdAndDay, user.TempAudienceValue, (int)day)}",
                             this._logger);
 
                         var schedule = schedules?.ToList();

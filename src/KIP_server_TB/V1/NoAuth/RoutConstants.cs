@@ -21,6 +21,11 @@
         public const string AudiencesByBuildingId = "v1/Audience/Building/{0}";
 
         /// <summary>
+        /// AudienceScheduleByAudienceIdAndDay.
+        /// </summary>
+        public const string AudienceScheduleByAudienceIdAndDay = "v1/AudienceSchedule/Audience/{0}/Day/{1}";
+
+        /// <summary>
         /// AllFaculties.
         /// </summary>
         public const string AllFaculties = "v1/Faculty";
