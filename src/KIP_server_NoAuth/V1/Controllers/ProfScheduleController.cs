@@ -51,7 +51,7 @@ namespace KIP_server_NoAuth.V1.Controllers
                 return new JsonResult(this._context.ProfSchedule.AsNoTracking());
             }
 
-            this._logger.LogError($"{nameof(ProfSchedule)} table is empty");
+            this._logger.LogError($"{nameof(this.ProfSchedule)} table is empty");
             return this.NotFound();
         }
 
@@ -72,7 +72,7 @@ namespace KIP_server_NoAuth.V1.Controllers
                 return new JsonResult(list);
             }
 
-            this._logger.LogError($"{nameof(ProfSchedule)} table is empty");
+            this._logger.LogError($"{nameof(this.ProfSchedule)} table is empty");
             return this.NotFound();
         }
 
@@ -112,7 +112,7 @@ namespace KIP_server_NoAuth.V1.Controllers
                 return new JsonResult(outList);
             }
 
-            this._logger.LogError($"{nameof(ProfSchedule)} table is empty");
+            this._logger.LogError($"{nameof(this.ProfSchedule)} table is empty");
             return this.NotFound();
         }
     }
