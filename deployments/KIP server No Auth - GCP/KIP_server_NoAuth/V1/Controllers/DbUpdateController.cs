@@ -53,82 +53,31 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// </summary>
         /// <returns>IActionResult.</returns>
         [HttpPost]
-        [Route("UpdateAllDb")]
+        [Route("UpdateDb")]
         [ProducesResponseType(typeof(OkResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateAllDb()
+        public async Task<IActionResult> UpdateDb()
         {
             try
             {
-                // log
-                await GetService.CleanDbAsync(this._logger, this._config);
+                this._logger.LogInformation($"Action: '{nameof(this.UpdateDb)}': Start Cleaning Db");
+                var result = await PrepareService.CleanDbAsync(this._logger, nameof(this.UpdateDb), this._config);
+                if (!result)
+                {
+                    return this.BadRequest();
+                }
 
-                /*
-                var kipFacultyList = await MapService.GetFacultiesAsync(this._logger, this._mapper);
-                var kipGroupListByFaculty = await MapService.GetGroupsAsync(kipFacultyList, this._logger, this._mapper);
-                var kipCathedraListByFaculty = await MapService.GetCathedrasAsync(kipFacultyList, this._logger, this._mapper);
-                var kipBuildingList = await MapService.GetBuildingsAsync(this._logger, this._mapper);
-                var kipAudienceListByBuilding = await MapService.GetAudiencesAsync(kipBuildingList, this._logger, this._mapper);
-                var kipProfListByCathedra = await MapService.GetProfsAsync(kipCathedraListByFaculty, this._logger, this._mapper);
+                this._logger.LogInformation($"Action: '{nameof(this.UpdateDb)}': Start preparing data");
+                var dataList = await PrepareService.PrepareAsync(this._logger, this._mapper);
+                this._logger.LogInformation($"Action: '{nameof(this.UpdateDb)}': Data prepared successfully");
 
-                await SendService.SendFacultyDataToDbAsync(this._context, kipFacultyList);
-                await SendService.SendGroupDataToDbAsync(this._context, kipGroupListByFaculty);
-                await SendService.SendCathedraDataToDbAsync(this._context, kipCathedraListByFaculty);
-                await SendService.SendBuildingDataToDbAsync(this._context, kipBuildingList);
-                await SendService.SendAudienceDataToDbAsync(this._context, kipAudienceListByBuilding);
-                await SendService.SendProfDataToDbAsync(this._context, kipProfListByCathedra);
-                */
-
-                // log
-                var dataList = await GetService.GetAllDataAsync(this._logger, this._mapper);
-
-                // log
+                this._logger.LogInformation($"Action: '{nameof(this.UpdateDb)}': Start sending data");
                 await SendService.SendDataToDbAsync(this._context, dataList);
+                this._logger.LogInformation($"Action: '{nameof(this.UpdateDb)}': Data sent successfully");
             }
             catch
             {
-                // log
-                return this.BadRequest();
-            }
-
-            return this.Ok();
-        }
-
-        /// <summary>
-        /// Update KIP Db.
-        /// </summary>
-        /// <returns>IActionResult.</returns>
-        [HttpPost]
-        [Route("UpdateSchedule")]
-        [ProducesResponseType(typeof(OkResult), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequestResult), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateSchedule()
-        {
-            try
-            {
-                // log
-                await GetService.CleanTableAsync(this._logger, this._config, nameof(StudentSchedule));
-                await GetService.CleanTableAsync(this._logger, this._config, nameof(ProfSchedule));
-                await GetService.CleanTableAsync(this._logger, this._config, nameof(AudienceSchedule));
-
-                // log
-                var (_, _, _, _, _, _, studentScheduleList, studentSchedule2List,
-                    profScheduleList, profSchedule2List,
-                    audienceScheduleList, audienceSchedule2List) = await GetService.GetAllDataAsync(this._logger, this._mapper);
-
-                // log
-                await SendService.SendStudentScheduleDataToDbAsync(this._context, studentScheduleList);
-                await SendService.SendStudentScheduleDataToDbAsync(this._context, studentSchedule2List);
-
-                await SendService.SendProfScheduleDataToDbAsync(this._context, profScheduleList);
-                await SendService.SendProfScheduleDataToDbAsync(this._context, profSchedule2List);
-
-                await SendService.SendAudienceScheduleDataToDbAsync(this._context, audienceScheduleList);
-                await SendService.SendAudienceScheduleDataToDbAsync(this._context, audienceSchedule2List);
-            }
-            catch
-            {
-                // log
+                this._logger.LogInformation($"Action: '{nameof(this.UpdateDb)}': Unexpected error");
                 return this.BadRequest();
             }
 

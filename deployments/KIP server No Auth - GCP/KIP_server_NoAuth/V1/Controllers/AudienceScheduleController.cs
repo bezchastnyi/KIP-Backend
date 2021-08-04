@@ -40,6 +40,25 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// Schedule by specific audience.
         /// </summary>
         /// <returns>Schedule by specific audience.</returns>
+        [HttpGet]
+        [Route("AudienceSchedule")]
+        [ProducesResponseType(typeof(AudienceSchedule), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        public IActionResult AudienceSchedule()
+        {
+            if (this._context.AudienceSchedule != null)
+            {
+                return new JsonResult(this._context.AudienceSchedule.AsNoTracking());
+            }
+
+            this._logger.LogError($"{nameof(AudienceSchedule)} table is empty");
+            return this.NotFound();
+        }
+
+        /// <summary>
+        /// Schedule by specific audience.
+        /// </summary>
+        /// <returns>Schedule by specific audience.</returns>
         /// <param name="id">Audience ID.</param>
         [HttpGet]
         [Route("AudienceSchedule/Audience/{id:int}")]

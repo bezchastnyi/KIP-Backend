@@ -39,6 +39,25 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// Group.
         /// </summary>
         /// <returns>Group.</returns>
+        [HttpGet]
+        [Route("Group")]
+        [ProducesResponseType(typeof(Group), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        public IActionResult Group()
+        {
+            if (this._context.Group != null)
+            {
+                return new JsonResult(this._context.Group.AsNoTracking());
+            }
+
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Group)} table is empty");
+            return this.NotFound();
+        }
+
+        /// <summary>
+        /// Group.
+        /// </summary>
+        /// <returns>Group.</returns>
         /// <param name="id">Group ID.</param>
         [HttpGet]
         [Route("Group/{id:int}")]

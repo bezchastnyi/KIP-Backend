@@ -84,21 +84,21 @@ namespace KIP_server_TB.V1.Controllers
                 var intent = request.QueryResult.Intent.DisplayName;
                 if (string.IsNullOrEmpty(intent))
                 {
-                    // log
+                    // TODO log
                     return this.Ok();
                 }
 
                 var userId = TelegramRequestProcessing.GetUserId(request);
                 if (userId == null)
                 {
-                    // log
+                    // TODO log
                     return this.Ok();
                 }
 
                 var chatId = TelegramRequestProcessing.GetChatId(request);
                 if (chatId == null)
                 {
-                    // log
+                    // TODO log
                     return this.Ok();
                 }
 
@@ -113,6 +113,14 @@ namespace KIP_server_TB.V1.Controllers
                     {
                         var faculties = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Faculty>(
                             $"{this._noAuthServerUrl}/{RoutConstants.AllFaculties}", this._logger);
+
+                        if (faculties == null || !faculties.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
 
                         faculties = faculties.OrderBy(f => f.FacultyShortName);
                         var inlineButtons = faculties.Select(f => new List<InlineKeyboardButton>
@@ -133,6 +141,14 @@ namespace KIP_server_TB.V1.Controllers
                         var faculties = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Faculty>(
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.FacultyById, facultyId)}",
                             this._logger);
+
+                        if (faculties == null || !faculties.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
 
                         var faculty = faculties.FirstOrDefault();
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
@@ -182,7 +198,7 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
@@ -192,6 +208,14 @@ namespace KIP_server_TB.V1.Controllers
                         var groups = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Group>(
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.GroupsByFacultyId, user.FacultyId)}",
                             this._logger);
+
+                        if (groups == null || !groups.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
 
                         groups = groups.Where(g => g.Course == user.Course).OrderBy(g => g.GroupName);
                         var inlineButtons = groups.Select(g => new List<InlineKeyboardButton>
@@ -216,7 +240,7 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
@@ -253,8 +277,30 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\nОновити профіль: /start");
+                            return this.Ok();
+                        }
+
+                        var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<StudentSchedule>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.StudentScheduleByGroupId, user.GroupId)}",
+                            this._logger);
+
+                        if (schedules == null)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
+                        var schedule = schedules?.ToList();
+                        if (schedule?.Count == 0)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(
+                                chatId,
+                                $"Вибачте, але в базі даних немає розкладу для вашої групи {user.GroupName}");
+
                             return this.Ok();
                         }
 
@@ -271,7 +317,7 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
@@ -279,12 +325,20 @@ namespace KIP_server_TB.V1.Controllers
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.StudentScheduleByGroupIdAndDay, user.GroupId, (int)day)}",
                             this._logger);
 
+                        if (schedules == null)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
                         var schedule = schedules?.ToList();
                         if (schedule?.Count == 0)
                         {
                             await this._telegramBotClient.SendTextMessageAsync(
                                 chatId,
-                                $"Вибачте, але в базі даних немає розкладу для вашої групи {user.GroupName} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
+                                $"Немає розкладу для вашої групи {user.GroupName} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
 
                             return this.Ok();
                         }
@@ -324,7 +378,7 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\nОновити профіль: /start");
                             return this.Ok();
                         }
@@ -332,6 +386,14 @@ namespace KIP_server_TB.V1.Controllers
                         var cathedras = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Cathedra>(
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.CathedrasByFacultyId, user.FacultyId)}",
                             this._logger);
+
+                        if (cathedras == null || !cathedras.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
 
                         cathedras = cathedras.OrderBy(c => c.CathedraName);
                         var inlineButtons = cathedras.Select(c => new List<InlineKeyboardButton>
@@ -353,13 +415,21 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
                         var profs = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Prof>(
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfsByCathedraId, cathedraId)}",
                             this._logger);
+
+                        if (profs == null || !profs.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
 
                         profs = profs.OrderBy(p => p.ProfSurname);
                         var inlineButtons = profs.Select(p => new List<InlineKeyboardButton>
@@ -382,12 +452,48 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
                         user.TempProfValue = profId;
                         await this._dbContext.SaveChangesAsync();
+
+                        var profs = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Prof>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfById, user.TempProfValue)}",
+                            this._logger);
+
+                        if (profs == null || !profs.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
+                        var prof = profs?.First();
+
+                        var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<ProfSchedule>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfScheduleByProfId, user.TempProfValue)}",
+                            this._logger);
+
+                        if (schedules == null)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
+                        var schedule = schedules?.ToList();
+                        if (schedule?.Count == 0)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(
+                                chatId,
+                                $"Вибачте, але в базі даних немає розкладу для {prof?.ProfSurname}");
+
+                            return this.Ok();
+                        }
 
                         await TelegramRequestProcessing.OutputDaysButtons(this._telegramBotClient, chatId, "ProfSchedule");
                         return this.Ok();
@@ -402,7 +508,7 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
@@ -410,18 +516,34 @@ namespace KIP_server_TB.V1.Controllers
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfById, user.TempProfValue)}",
                             this._logger);
 
+                        if (profs == null || !profs.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
                         var prof = profs?.First();
 
                         var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<ProfSchedule>(
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfScheduleByProfIdAndDay, user.TempProfValue, (int)day)}",
                             this._logger);
 
+                        if (schedules == null)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
                         var schedule = schedules?.ToList();
                         if (schedule?.Count == 0)
                         {
                             await this._telegramBotClient.SendTextMessageAsync(
                                 chatId,
-                                $"Вибачте, але в базі даних немає розкладу для {prof?.ProfSurname} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
+                                $"Немає розкладу для {prof?.ProfSurname} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
 
                             return this.Ok();
                         }
@@ -461,13 +583,21 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             await this._telegramBotClient.SendTextMessageAsync(chatId, "Вашого профілю немає в базі даних\nОновити профіль: /start");
                             return this.Ok();
                         }
 
                         var buildings = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Building>(
                             $"{this._noAuthServerUrl}/{RoutConstants.AllBuildings}", this._logger);
+
+                        if (buildings == null || !buildings.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
 
                         buildings = buildings.OrderBy(b => b.BuildingShortName);
                         var inlineButtons = buildings.Select(b => new List<InlineKeyboardButton>
@@ -489,7 +619,7 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
@@ -499,6 +629,14 @@ namespace KIP_server_TB.V1.Controllers
                         var audiences = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Audience>(
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudiencesByBuildingId, buildingId)}",
                             this._logger);
+
+                        if (audiences == null || !audiences.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
 
                         audiences = audiences.OrderBy(a => a.AudienceName);
                         var inlineButtons = audiences.Select(a => new List<InlineKeyboardButton>
@@ -520,12 +658,48 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
                         user.TempAudienceValue = audienceId;
                         await this._dbContext.SaveChangesAsync();
+
+                        var audiences = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Audience>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceById, user.TempAudienceValue)}",
+                            this._logger);
+
+                        if (audiences == null || !audiences.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
+                        var audience = audiences?.First();
+
+                        var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<AudienceSchedule>(
+                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceScheduleByAudienceId, user.TempAudienceValue)}",
+                            this._logger);
+
+                        if (schedules == null)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
+                        var schedule = schedules?.ToList();
+                        if (schedule?.Count == 0)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(
+                                chatId,
+                                $"Вибачте, але в базі даних немає розкладу для {audience?.AudienceName}");
+
+                            return this.Ok();
+                        }
 
                         await TelegramRequestProcessing.OutputDaysButtons(this._telegramBotClient, chatId, "AudienceSchedule");
                         return this.Ok();
@@ -540,7 +714,7 @@ namespace KIP_server_TB.V1.Controllers
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
@@ -548,18 +722,34 @@ namespace KIP_server_TB.V1.Controllers
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceById, user.TempAudienceValue)}",
                             this._logger);
 
+                        if (audiences == null || !audiences.Any())
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
                         var audience = audiences?.First();
 
                         var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<AudienceSchedule>(
                             $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceScheduleByAudienceIdAndDay, user.TempAudienceValue, (int)day)}",
                             this._logger);
 
+                        if (schedules == null)
+                        {
+                            await this._telegramBotClient.SendTextMessageAsync(chatId, "Вибачте за незручності 🥺 але сервер тимчасово не працює\nkip.ntu.khpi@gmail.com - пошта для зв'язку");
+
+                            // TODO log
+                            return this.Ok();
+                        }
+
                         var schedule = schedules?.ToList();
                         if (schedule?.Count == 0)
                         {
                             await this._telegramBotClient.SendTextMessageAsync(
                                 chatId,
-                                $"Вибачте, але в базі даних немає розкладу для {audience?.AudienceName} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
+                                $"Немає розкладу для {audience?.AudienceName} на {KIPTelegramConstants.DayUkrConstants.GetValueOrDefault(day)}");
 
                             return this.Ok();
                         }
@@ -592,13 +782,13 @@ namespace KIP_server_TB.V1.Controllers
                         return this.Ok();
                     }
 
-                    // Buildings output
+                    // Exit command
                     case DialogflowConstants.ExitIntent:
                     {
                         var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
                         if (user == null)
                         {
-                            // log
+                            // TODO log
                             return this.Ok();
                         }
 
@@ -609,7 +799,7 @@ namespace KIP_server_TB.V1.Controllers
 
                     default:
                     {
-                        // log
+                        // TODO log
                         return this.Ok();
                     }
                 }
@@ -618,7 +808,7 @@ namespace KIP_server_TB.V1.Controllers
             }
             catch (Exception ex)
             {
-                // log
+                // TODO log
                 Console.WriteLine(ex.Message);
                 return this.Ok();
             }

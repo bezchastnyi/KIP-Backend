@@ -48,7 +48,7 @@ namespace KIP_server_Auth
             {
                 Title = $" {name}: v{version}",
                 Version = version,
-                Description = " Server \"Auth\": providing information for individual student's cabinet from KhPI database",
+                Description = " Server 'Auth': providing information for individual student's cabinet from KhPI database",
                 Contact = new OpenApiContact
                 {
                     Name = " KIP ",

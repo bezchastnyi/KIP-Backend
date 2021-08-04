@@ -1,123 +1,158 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
-using KIP_Backend.Models.Helpers;
-using KIP_Backend.Models.NoAuth;
+using KIP_Backend.Extensions;
+using KIP_server_NoAuth.Models.KhPI;
 using KIP_server_NoAuth.V1.Controllers;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Npgsql;
 
 namespace KIP_server_NoAuth.Services
 {
     /// <summary>
-    /// Db service.
+    /// Pulling data from the KhPI database.
     /// </summary>
     public static class GetService
     {
+        private const string FacultyListUrl = @"http://schedule.kpi.kharkov.ua/json/FacultyList";
+        private const string GroupListByFacultyUrl = @"http://schedule.kpi.kharkov.ua/json/GroupByFacultyList/";
+        private const string ScheduleByGroupUrl = @"http://schedule.kpi.kharkov.ua/json/Schedule/";
+        private const string Schedule2ByGroupUrl = @"http://schedule.kpi.kharkov.ua/json/Schedule2/";
+        private const string CathedrasListByFacultyUrl = @"http://schedule.kpi.kharkov.ua/JSON/DeptsByFacultyP/";
+        private const string ProfListByCathedraUrl = @"http://schedule.kpi.kharkov.ua/JSON/PrepodListByDeptP/";
+        private const string ScheduleByProfUrl = @"http://schedule.kpi.kharkov.ua/JSON/ScheduleP/";
+        private const string Schedule2ByProfUrl = @"http://schedule.kpi.kharkov.ua/JSON/Schedule2P/";
+        private const string BuildingListUrl = @"http://schedule.kpi.kharkov.ua/JSON/BuildingList";
+        private const string AudienceListByBuildingUrl = @"http://schedule.kpi.kharkov.ua/JSON/AudListByBuilding/";
+        private const string ScheduleByAudienceUrl = @"http://schedule.kpi.kharkov.ua/JSON/ScheduleA/";
+        private const string Schedule2ByAudienceUrl = @"http://schedule.kpi.kharkov.ua/JSON/Schedule2A/";
+
         /// <summary>
-        /// Db service.
+        /// Getting a list of faculties using asynchronous.
         /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="mapper">The logger.</param>
-        /// <returns>Task.</returns>
-        public static async Task<(
-            HashSet<Faculty> facultyList,
-            HashSet<Group> groupList,
-            HashSet<Cathedra> cathedraList,
-            HashSet<Building> buildingList,
-            HashSet<Audience> audienceList,
-            HashSet<Prof> profList,
-            HashSet<StudentSchedule> studentScheduleList,
-            HashSet<StudentSchedule> studentSchedule2List,
-            HashSet<ProfSchedule> profScheduleList,
-            HashSet<ProfSchedule> profSchedule2List,
-            HashSet<AudienceSchedule> audienceScheduleList,
-            HashSet<AudienceSchedule> audienceSchedule2List)>
-            GetAllDataAsync(ILogger<DbUpdateController> logger, IMapper mapper)
+        /// <returns>List of faculties.</returns>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<IEnumerable<FacultyKhPI>> GetFacultiesAsync(ILogger logger)
         {
-            var kipFacultyList = await MapService.GetFacultiesAsync(logger, mapper);
-            var kipGroupListByFaculty = await MapService.GetGroupsAsync(kipFacultyList, logger, mapper);
-            var kipCathedraListByFaculty = await MapService.GetCathedrasAsync(kipFacultyList, logger, mapper);
-            var kipBuildingList = await MapService.GetBuildingsAsync(logger, mapper);
-            var kipAudienceListByBuilding = await MapService.GetAudiencesAsync(kipBuildingList, logger, mapper);
-            var kipProfListByCathedra = await MapService.GetProfsAsync(kipCathedraListByFaculty, logger, mapper);
-
-            DbUpdateController.Week = Week.UnPaired;
-            var kipScheduleByProf = await MapService.GetScheduleByProfAsync(kipProfListByCathedra, logger, mapper);
-            var kipScheduleByAudience = await MapService.GetScheduleByAudienceAsync(kipAudienceListByBuilding, logger, mapper);
-            var kipScheduleByGroup = await MapService.GetScheduleByGroupAsync(kipGroupListByFaculty, logger, mapper);
-
-            DbUpdateController.Week = Week.Paired;
-            var kipSchedule2ByProf = await MapService.GetSchedule2ByProfAsync(kipProfListByCathedra, logger, mapper);
-            var kipSchedule2ByAudience = await MapService.GetSchedule2ByAudienceAsync(kipAudienceListByBuilding, logger, mapper);
-            var kipSchedule2ByGroup = await MapService.GetSchedule2ByGroupAsync(kipGroupListByFaculty, logger, mapper);
-
-            return (kipFacultyList, kipGroupListByFaculty, kipCathedraListByFaculty, kipBuildingList, kipAudienceListByBuilding, kipProfListByCathedra,
-                    kipScheduleByGroup, kipSchedule2ByGroup, kipScheduleByProf, kipSchedule2ByProf, kipScheduleByAudience, kipSchedule2ByAudience);
+            return await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<FacultyKhPI>(FacultyListUrl, logger);
         }
 
         /// <summary>
-        /// Db service.
+        /// Getting a list of groups by faculty ID using asynchronous.
         /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="config">The logger.</param>
-        /// <returns>Task.</returns>
-        public static async Task CleanDbAsync(ILogger<DbUpdateController> logger, IConfiguration config)
+        /// <returns>List of list of groups by faculty.</returns>
+        /// <param name="facultyId">Faculty ID.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<IEnumerable<GroupKhPI>> GetGroupsAsync(int facultyId, ILogger logger)
         {
-            var connectionString = config.GetConnectionString("PostgresConnection");
-            await using var connection = new NpgsqlConnection(connectionString);
-            connection.Open();
-
-            if (connection.State.ToString() == "Open")
-            {
-                logger.Log(LogLevel.Information, "Connection opened");
-                await using var command = new NpgsqlCommand(
-                    $"TRUNCATE TABLE " +
-                    $"\"{nameof(Audience)}\", " +
-                    $"\"{nameof(Building)}\", " +
-                    $"\"{nameof(Cathedra)}\", " +
-                    $"\"{nameof(Faculty)}\", " +
-                    $"\"{nameof(Group)}\", " +
-                    $"\"{nameof(Prof)}\", " +
-                    $"\"{nameof(AudienceSchedule)}\", " +
-                    $"\"{nameof(ProfSchedule)}\", " +
-                    $"\"{nameof(StudentSchedule)}\";", connection);
-
-                logger.Log(LogLevel.Information, $"Executing query: {command.CommandText}");
-                await command.ExecuteNonQueryAsync();
-
-                logger.Log(LogLevel.Information, "DataBase is cleaned");
-                return;
-            }
-
-            logger.Log(LogLevel.Error, "Unable to open connection to DB");
+            return await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<GroupKhPI>(GroupListByFacultyUrl + facultyId, logger);
         }
 
         /// <summary>
-        /// Db service.
+        /// Getting a list of departments by faculty ID using asynchronous.
         /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="config">The logger.</param>
-        /// <param name="tableName">The logger.</param>
-        /// <returns>Task.</returns>
-        public static async Task CleanTableAsync(ILogger<DbUpdateController> logger, IConfiguration config, string tableName)
+        /// <returns>List of list of departments by faculty.</returns>
+        /// <param name="facultyId">Faculty ID.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<IEnumerable<CathedraKhPI>> GetCathedrasAsync(int facultyId, ILogger logger)
         {
-            var connectionString = config.GetConnectionString("PostgresConnection");
-            await using var connection = new NpgsqlConnection(connectionString);
-            connection.Open();
-            if (connection.State.ToString() == "Open")
-            {
-                logger.Log(LogLevel.Information, "Connection opened");
+            return await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<CathedraKhPI>(CathedrasListByFacultyUrl + facultyId, logger);
+        }
 
-                await using var command = new NpgsqlCommand($"TRUNCATE TABLE \"{tableName}\";", connection);
-                logger.Log(LogLevel.Information, $"Executing query: {command.CommandText}");
+        /// <summary>
+        /// Getting a group schedule for an unpaired week using asynchronous.
+        /// </summary>
+        /// <returns>Schedule of groups for an unpaired week.</returns>
+        /// <param name="groupId">Group ID.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<ScheduleKhPI> GetScheduleByGroupAsync(int groupId, ILogger logger)
+        {
+            return await ConvertExtensions.ConvertJsonDataToModelAsync<ScheduleKhPI>(ScheduleByGroupUrl + groupId, logger);
+        }
 
-                await command.ExecuteNonQueryAsync();
-                logger.Log(LogLevel.Information, "DataBase is cleaned");
-            }
+        /// <summary>
+        /// Getting a group schedule for a paired week using asynchronous.
+        /// </summary>
+        /// <returns>Schedule of groups for a paired week.</returns>
+        /// <param name="groupId">Group ID.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<ScheduleKhPI> GetSchedule2ByGroupAsync(int groupId, ILogger logger)
+        {
+            return await ConvertExtensions.ConvertJsonDataToModelAsync<ScheduleKhPI>(Schedule2ByGroupUrl + groupId, logger);
+        }
 
-            logger.Log(LogLevel.Error, "Unable to open connection to DB");
+        /// <summary>
+        /// Getting a teachers schedule for an unpaired week using asynchronous.
+        /// </summary>
+        /// <returns>Schedule of teachers for an unpaired week.</returns>
+        /// <param name="profId">Teacher ID.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<ScheduleKhPI> GetScheduleByProfAsync(int profId, ILogger logger)
+        {
+            return await ConvertExtensions.ConvertJsonDataToModelAsync<ScheduleKhPI>(ScheduleByProfUrl + profId, logger);
+        }
+
+        /// <summary>
+        /// Getting a teachers schedule for a paired week using asynchronous.
+        /// </summary>
+        /// <returns>Schedule of teachers for a paired week.</returns>
+        /// <param name="profId">Teacher ID.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<ScheduleKhPI> GetSchedule2ByProfAsync(int profId, ILogger logger)
+        {
+            return await ConvertExtensions.ConvertJsonDataToModelAsync<ScheduleKhPI>(Schedule2ByProfUrl + profId, logger);
+        }
+
+        /// <summary>
+        /// Getting an audience schedule for an unpaired week using asynchronous.
+        /// </summary>
+        /// <returns>Schedule of teachers for an unpaired week.</returns>
+        /// <param name="audienceId">Audience ID.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<ScheduleKhPI> GetScheduleByAudienceAsync(int audienceId, ILogger logger)
+        {
+            return await ConvertExtensions.ConvertJsonDataToModelAsync<ScheduleKhPI>(ScheduleByAudienceUrl + audienceId, logger);
+        }
+
+        /// <summary>
+        /// Getting an audience schedule for an paired week using asynchronous.
+        /// </summary>
+        /// <returns>Schedule of teachers for an unpaired week.</returns>
+        /// <param name="audienceId">Audience ID.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<ScheduleKhPI> GetSchedule2ByAudienceAsync(int audienceId, ILogger logger)
+        {
+            return await ConvertExtensions.ConvertJsonDataToModelAsync<ScheduleKhPI>(Schedule2ByAudienceUrl + audienceId, logger);
+        }
+
+        /// <summary>
+        /// Getting the list of buildings using asynchronous.
+        /// </summary>
+        /// <returns>List of buildings.</returns>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<IEnumerable<BuildingKhPI>> GetBuildingsAsync(ILogger logger)
+        {
+            return await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<BuildingKhPI>(BuildingListUrl, logger);
+        }
+
+        /// <summary>
+        /// Getting a list of audiences in the building using asynchronous.
+        /// </summary>
+        /// <returns>List of audiences in the building.</returns>
+        /// <param name="buildingId">Building Id.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<IEnumerable<AudienceKhPI>> GetAudiencesAsync(int buildingId, ILogger logger)
+        {
+            return await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<AudienceKhPI>(AudienceListByBuildingUrl + buildingId, logger);
+        }
+
+        /// <summary>
+        /// Getting a list of teachers of the department using asynchronous.
+        /// </summary>
+        /// <returns>List of teachers of the department.</returns>
+        /// <param name="cathedraId">Cathedra Id.</param>
+        /// <param name="logger">Group ID.</param>
+        public static async Task<IEnumerable<ProfKhPI>> GetProfsAsync(int cathedraId, ILogger logger)
+        {
+            return await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<ProfKhPI>(ProfListByCathedraUrl + cathedraId, logger);
         }
     }
 }

@@ -39,6 +39,25 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// All teachers.
         /// </summary>
         /// <returns>Teacher.</returns>
+        [HttpGet]
+        [Route("Prof")]
+        [ProducesResponseType(typeof(Prof), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        public IActionResult Prof()
+        {
+            if (this._context.Prof != null)
+            {
+                return new JsonResult(this._context.Prof.AsNoTracking());
+            }
+
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Prof)} table is empty");
+            return this.NotFound();
+        }
+
+        /// <summary>
+        /// All teachers.
+        /// </summary>
+        /// <returns>Teacher.</returns>
         /// <param name="id">Teacher ID.</param>
         [HttpGet]
         [Route("Prof/{id:int}")]

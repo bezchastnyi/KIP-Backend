@@ -39,6 +39,25 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// Department.
         /// </summary>
         /// <returns>Department.</returns>
+        [HttpGet]
+        [Route("Cathedra")]
+        [ProducesResponseType(typeof(Cathedra), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        public IActionResult Cathedra()
+        {
+            if (this._context.Cathedra != null)
+            {
+                return new JsonResult(this._context.Cathedra.AsNoTracking());
+            }
+
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Cathedra)} table is empty");
+            return this.NotFound();
+        }
+
+        /// <summary>
+        /// Department.
+        /// </summary>
+        /// <returns>Department.</returns>
         /// <param name="id">Department ID.</param>
         [HttpGet]
         [Route("Cathedra/{id:int}")]

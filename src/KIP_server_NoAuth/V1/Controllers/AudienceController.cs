@@ -39,6 +39,25 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// Audience by id.
         /// </summary>
         /// <returns>The audience.</returns>
+        [HttpGet]
+        [Route("Audience")]
+        [ProducesResponseType(typeof(Audience), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        public IActionResult Audience()
+        {
+            if (this._context.Audience != null)
+            {
+                return new JsonResult(this._context.Audience.AsNoTracking());
+            }
+
+            this._logger.LogError($"{nameof(KIP_Backend.Models.NoAuth.Audience)} table is empty");
+            return this.NotFound();
+        }
+
+        /// <summary>
+        /// Audience by id.
+        /// </summary>
+        /// <returns>The audience.</returns>
         /// <param name="id">Audience ID.</param>
         [HttpGet]
         [Route("Audience/{id:int}")]

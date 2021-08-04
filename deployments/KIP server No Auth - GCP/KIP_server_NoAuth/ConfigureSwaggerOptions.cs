@@ -42,12 +42,14 @@ namespace KIP_server_NoAuth
         private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
             var assembly = Assembly.GetEntryAssembly();
+            var version = assembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+
             var info = new OpenApiInfo
             {
                 Title = $" {assembly?.GetName().Name}: " +
-                        $"v{assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion}",
-                Version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
-                Description = " Server \"GET\": providing common information for not auth mode",
+                        $"v{version}",
+                Version = version,
+                Description = " Server 'No Auth': providing common information for not auth mode",
                 Contact = new OpenApiContact
                 {
                     Name = " KIP ",

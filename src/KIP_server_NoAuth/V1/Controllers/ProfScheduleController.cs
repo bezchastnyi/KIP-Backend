@@ -40,6 +40,25 @@ namespace KIP_server_NoAuth.V1.Controllers
         /// Schedule by specific prof.
         /// </summary>
         /// <returns>Schedule by specific teacher.</returns>
+        [HttpGet]
+        [Route("ProfSchedule")]
+        [ProducesResponseType(typeof(ProfSchedule), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotFoundResult), StatusCodes.Status404NotFound)]
+        public IActionResult ProfSchedule()
+        {
+            if (this._context.ProfSchedule != null)
+            {
+                return new JsonResult(this._context.ProfSchedule.AsNoTracking());
+            }
+
+            this._logger.LogError($"{nameof(ProfSchedule)} table is empty");
+            return this.NotFound();
+        }
+
+        /// <summary>
+        /// Schedule by specific prof.
+        /// </summary>
+        /// <returns>Schedule by specific teacher.</returns>
         /// <param name="id">Teacher ID.</param>
         [HttpGet]
         [Route("ProfSchedule/Prof/{id:int}")]
