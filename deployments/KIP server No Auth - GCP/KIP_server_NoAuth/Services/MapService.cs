@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using KIP_Backend.Models.Helpers;
 using KIP_Backend.Models.NoAuth;
+using KIP_server_NoAuth.Models.Helpers;
+using KIP_server_NoAuth.Models.KhPI;
 using KIP_server_NoAuth.V1.Controllers;
 using Microsoft.Extensions.Logging;
 
@@ -86,7 +88,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="mapper">The mapper. </param>
         public static async Task<HashSet<Faculty>> GetFacultiesAsync(ILogger logger, IMapper mapper)
         {
-            var facultyList = await GetService.GetFacultiesAsync(logger);
+            var facultyList = await GetService.GetCollectionOfDataAsync<FacultyKhPI>(logger);
             if (facultyList == null)
             {
                 logger.LogWarning(string.Format(NullListOfObjectsWarningLog, nameof(GetFacultiesAsync), "get", nameof(Faculty)));
@@ -123,7 +125,7 @@ namespace KIP_server_NoAuth.Services
 
             foreach (var f in facultyList)
             {
-                var groupList = await GetService.GetGroupsAsync(f.FacultyId, logger);
+                var groupList = await GetService.GetCollectionOfDataAsync<GroupKhPI>(logger, f.FacultyId);
                 if (groupList == null)
                 {
                     stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetGroupsAsync), "get", nameof(Group), nameof(Faculty), f.FacultyId, f.FacultyName));
@@ -172,7 +174,7 @@ namespace KIP_server_NoAuth.Services
 
             foreach (var f in facultyList)
             {
-                var cathedraList = await GetService.GetCathedrasAsync(f.FacultyId, logger);
+                var cathedraList = await GetService.GetCollectionOfDataAsync<CathedraKhPI>(logger, f.FacultyId);
                 if (cathedraList == null)
                 {
                     stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetCathedrasAsync), "get", nameof(Group), nameof(Faculty), f.FacultyId, f.FacultyName));
@@ -210,7 +212,7 @@ namespace KIP_server_NoAuth.Services
         /// <param name="mapper">The mapper. </param>
         public static async Task<HashSet<Building>> GetBuildingsAsync(ILogger logger, IMapper mapper)
         {
-            var buildingList = await GetService.GetBuildingsAsync(logger);
+            var buildingList = await GetService.GetCollectionOfDataAsync<BuildingKhPI>(logger);
             if (buildingList == null)
             {
                 logger.LogWarning(string.Format(NullListOfObjectsWarningLog, nameof(GetBuildingsAsync), "get", nameof(Building)));
@@ -247,7 +249,7 @@ namespace KIP_server_NoAuth.Services
 
             foreach (var b in buildingList)
             {
-                var audienceList = await GetService.GetAudiencesAsync(b.BuildingId, logger);
+                var audienceList = await GetService.GetCollectionOfDataAsync<AudienceKhPI>(logger, b.BuildingId);
                 if (audienceList == null)
                 {
                     stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetAudiencesAsync), "get", nameof(Audience), nameof(Building), b.BuildingId, b.BuildingName));
@@ -297,7 +299,7 @@ namespace KIP_server_NoAuth.Services
 
             foreach (var c in cathedraList)
             {
-                var profList = await GetService.GetProfsAsync(c.CathedraId, logger);
+                var profList = await GetService.GetCollectionOfDataAsync<ProfKhPI>(logger, c.CathedraId);
                 if (profList == null)
                 {
                     stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetProfsAsync), "get", nameof(Prof), nameof(Cathedra), c.CathedraId, c.CathedraName));
@@ -334,19 +336,22 @@ namespace KIP_server_NoAuth.Services
         /// <param name="groupList">The KIP group by faculty list.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper. </param>
-        public static async Task<HashSet<StudentSchedule>> GetScheduleByGroupAsync(HashSet<Group> groupList, ILogger logger, IMapper mapper)
+        public static async Task<(HashSet<StudentSchedule> schedule0, HashSet<StudentSchedule> schedule1)>
+            GetScheduleByGroupAsync(HashSet<Group> groupList, ILogger logger, IMapper mapper)
         {
             if (groupList == null)
             {
-                return null;
+                return (null, null);
             }
 
             GroupScheduleList = new HashSet<StudentSchedule>();
+            GroupSchedule2List = new HashSet<StudentSchedule>();
             var stringBuilder = new StringBuilder();
 
             foreach (var g in groupList)
             {
-                var schedule = await GetService.GetScheduleByGroupAsync(g.GroupId, logger);
+                DbUpdateController.Week = Week.UnPaired;
+                var schedule = await GetService.GetScheduleAsync(g.GroupId, ScheduleType.GroupSchedule, DbUpdateController.Week, logger);
                 if (schedule == null)
                 {
                     stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByGroupAsync), "get", nameof(StudentSchedule) + " [paired]", nameof(Group), g.GroupId, g.GroupName));
@@ -366,46 +371,19 @@ namespace KIP_server_NoAuth.Services
                 }
 
                 stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByGroupAsync), "map", nameof(StudentSchedule) + " [paired]", nameof(Group), g.GroupId, g.GroupName));
-            }
 
-            if (stringBuilder.Length != 0)
-            {
-                // logger.LogWarning(stringBuilder.ToString());
-            }
-
-            return GroupScheduleList;
-        }
-
-        /// <summary>
-        /// Getting schedule of group by faculty for a paired week to KIP.
-        /// </summary>
-        /// <returns>Schedule of group by faculty for a paired week.</returns>
-        /// <param name="groupList">The KIP group by faculty list.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="mapper">The mapper. </param>
-        public static async Task<HashSet<StudentSchedule>> GetSchedule2ByGroupAsync(HashSet<Group> groupList, ILogger logger, IMapper mapper)
-        {
-            if (groupList == null)
-            {
-                return null;
-            }
-
-            GroupSchedule2List = new HashSet<StudentSchedule>();
-            var stringBuilder = new StringBuilder();
-
-            foreach (var g in groupList)
-            {
-                var schedule = await GetService.GetSchedule2ByGroupAsync(g.GroupId, logger);
+                DbUpdateController.Week = Week.Paired;
+                schedule = await GetService.GetScheduleAsync(g.GroupId, ScheduleType.GroupSchedule, DbUpdateController.Week, logger);
                 if (schedule == null)
                 {
-                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByGroupAsync), "get", nameof(StudentSchedule) + " [unpaired]", nameof(Group), g.GroupId, g.GroupName));
+                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByGroupAsync), "get", nameof(StudentSchedule) + " [unpaired]", nameof(Group), g.GroupId, g.GroupName));
                     continue;
                 }
 
-                var schedule1 = mapper.Map<List<StudentSchedule>>(schedule);
-                if (schedule1 != null)
+                kipSchedule = mapper.Map<List<StudentSchedule>>(schedule);
+                if (kipSchedule != null)
                 {
-                    foreach (var l in schedule1.Where(l => l != null))
+                    foreach (var l in kipSchedule.Where(l => l != null))
                     {
                         l.GroupId = g.GroupId;
                         g.ScheduleIsPresent[(int)l.Day] = true;
@@ -416,7 +394,7 @@ namespace KIP_server_NoAuth.Services
                     continue;
                 }
 
-                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByGroupAsync), "map", nameof(StudentSchedule) + " [unpaired]", nameof(Group), g.GroupId, g.GroupName));
+                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByGroupAsync), "map", nameof(StudentSchedule) + " [unpaired]", nameof(Group), g.GroupId, g.GroupName));
             }
 
             if (stringBuilder.Length != 0)
@@ -424,7 +402,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return GroupSchedule2List;
+            return (GroupScheduleList, GroupSchedule2List);
         }
 
         /// <summary>
@@ -434,22 +412,25 @@ namespace KIP_server_NoAuth.Services
         /// <param name="profList">The KIP teacher by department list.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper. </param>
-        public static async Task<HashSet<ProfSchedule>> GetScheduleByProfAsync(HashSet<Prof> profList, ILogger logger, IMapper mapper)
+        public static async Task<(HashSet<ProfSchedule> ProfScheduleList, HashSet<ProfSchedule> ProfSchedule2List)>
+            GetScheduleByProfAsync(HashSet<Prof> profList, ILogger logger, IMapper mapper)
         {
             if (profList == null)
             {
-                return null;
+                return (null, null);
             }
 
             ProfScheduleList = new HashSet<ProfSchedule>();
+            ProfSchedule2List = new HashSet<ProfSchedule>();
             var stringBuilder = new StringBuilder();
 
             foreach (var p in profList)
             {
-                var schedule = await GetService.GetScheduleByProfAsync(p.ProfId, logger);
+                DbUpdateController.Week = Week.UnPaired;
+                var schedule = await GetService.GetScheduleAsync(p.ProfId, ScheduleType.ProfSchedule, DbUpdateController.Week, logger);
                 if (schedule == null)
                 {
-                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByProfAsync), "get", nameof(ProfSchedule) + " [paired]", nameof(Prof), p.ProfId, p.ProfSurname));
+                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByProfAsync), "get", nameof(ProfSchedule) + " [paired]", nameof(Prof), p.ProfId, p.ProfSurname));
                     continue;
                 }
 
@@ -468,44 +449,17 @@ namespace KIP_server_NoAuth.Services
                 }
 
                 stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByProfAsync), "map", nameof(ProfSchedule) + " [paired]", nameof(Prof), p.ProfId, p.ProfSurname));
-            }
 
-            if (stringBuilder.Length != 0)
-            {
-                // logger.LogWarning(stringBuilder.ToString());
-            }
-
-            return ProfScheduleList;
-        }
-
-        /// <summary>
-        /// Getting schedule of teachers for a paired week to KIP.
-        /// </summary>
-        /// <returns>Schedule of teachers for a paired week.</returns>
-        /// <param name="profList">The KIP teacher by department list.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="mapper">The mapper. </param>
-        public static async Task<HashSet<ProfSchedule>> GetSchedule2ByProfAsync(HashSet<Prof> profList, ILogger logger, IMapper mapper)
-        {
-            if (profList == null)
-            {
-                return null;
-            }
-
-            ProfSchedule2List = new HashSet<ProfSchedule>();
-            var stringBuilder = new StringBuilder();
-
-            foreach (var p in profList)
-            {
-                var schedule = await GetService.GetSchedule2ByProfAsync(p.ProfId, logger);
+                DbUpdateController.Week = Week.Paired;
+                schedule = await GetService.GetScheduleAsync(p.ProfId, ScheduleType.ProfSchedule, DbUpdateController.Week, logger);
 
                 if (schedule == null)
                 {
-                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByProfAsync), "get", nameof(ProfSchedule) + " [unpaired]", nameof(Prof), p.ProfId, p.ProfSurname));
+                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByProfAsync), "get", nameof(ProfSchedule) + " [unpaired]", nameof(Prof), p.ProfId, p.ProfSurname));
                     continue;
                 }
 
-                var kipSchedule = mapper.Map<List<ProfSchedule>>(schedule);
+                kipSchedule = mapper.Map<List<ProfSchedule>>(schedule);
                 if (kipSchedule != null)
                 {
                     foreach (var l in kipSchedule.Where(l => l != null))
@@ -519,7 +473,7 @@ namespace KIP_server_NoAuth.Services
                     continue;
                 }
 
-                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByProfAsync), "map", nameof(ProfSchedule) + " [unpaired]", nameof(Prof), p.ProfId, p.ProfSurname));
+                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByProfAsync), "map", nameof(ProfSchedule) + " [unpaired]", nameof(Prof), p.ProfId, p.ProfSurname));
             }
 
             if (stringBuilder.Length != 0)
@@ -527,7 +481,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return ProfSchedule2List;
+            return (ProfScheduleList, ProfSchedule2List);
         }
 
         /// <summary>
@@ -537,19 +491,22 @@ namespace KIP_server_NoAuth.Services
         /// <param name="audienceList">The KIP teacher by department list.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="mapper">The mapper. </param>
-        public static async Task<HashSet<AudienceSchedule>> GetScheduleByAudienceAsync(HashSet<Audience> audienceList, ILogger logger, IMapper mapper)
+        public static async Task<(HashSet<AudienceSchedule> AudienceScheduleList, HashSet<AudienceSchedule> AudienceSchedule2List)>
+            GetScheduleByAudienceAsync(HashSet<Audience> audienceList, ILogger logger, IMapper mapper)
         {
             if (audienceList == null)
             {
-                return null;
+                return (null, null);
             }
 
             AudienceScheduleList = new HashSet<AudienceSchedule>();
+            AudienceSchedule2List = new HashSet<AudienceSchedule>();
             var stringBuilder = new StringBuilder();
 
             foreach (var a in audienceList)
             {
-                var schedule = await GetService.GetScheduleByAudienceAsync(a.AudienceId, logger);
+                DbUpdateController.Week = Week.UnPaired;
+                var schedule = await GetService.GetScheduleAsync(a.AudienceId, ScheduleType.AudienceSchedule, DbUpdateController.Week, logger);
                 if (schedule == null)
                 {
                     stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByAudienceAsync), "get", nameof(AudienceSchedule) + " [paired]", nameof(Audience), a.AudienceId, a.AudienceName));
@@ -572,43 +529,16 @@ namespace KIP_server_NoAuth.Services
                 }
 
                 stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByAudienceAsync), "map", nameof(AudienceSchedule) + " [paired]", nameof(Audience), a.AudienceId, a.AudienceName));
-            }
 
-            if (stringBuilder.Length != 0)
-            {
-                // logger.LogWarning(stringBuilder.ToString());
-            }
-
-            return AudienceScheduleList;
-        }
-
-        /// <summary>
-        /// Getting schedule of audience for a paired week to KIP.
-        /// </summary>
-        /// <returns>Schedule of audience for a paired week.</returns>
-        /// <param name="audienceList">The KIP teacher by department list.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="mapper">The mapper. </param>
-        public static async Task<HashSet<AudienceSchedule>> GetSchedule2ByAudienceAsync(HashSet<Audience> audienceList, ILogger logger, IMapper mapper)
-        {
-            if (audienceList == null)
-            {
-                return null;
-            }
-
-            AudienceSchedule2List = new HashSet<AudienceSchedule>();
-            var stringBuilder = new StringBuilder();
-
-            foreach (var a in audienceList)
-            {
-                var schedule = await GetService.GetSchedule2ByAudienceAsync(a.AudienceId, logger);
+                DbUpdateController.Week = Week.Paired;
+                schedule = await GetService.GetScheduleAsync(a.AudienceId, ScheduleType.AudienceSchedule, DbUpdateController.Week, logger);
                 if (schedule == null)
                 {
-                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByAudienceAsync), "get", nameof(AudienceSchedule) + " [unpaired]", nameof(Audience), a.AudienceId, a.AudienceName));
+                    stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByAudienceAsync), "get", nameof(AudienceSchedule) + " [unpaired]", nameof(Audience), a.AudienceId, a.AudienceName));
                     continue;
                 }
 
-                var kipSchedule = mapper.Map<List<AudienceSchedule>>(schedule);
+                kipSchedule = mapper.Map<List<AudienceSchedule>>(schedule);
                 if (kipSchedule != null)
                 {
                     foreach (var l in kipSchedule.Where(l => l != null))
@@ -623,7 +553,7 @@ namespace KIP_server_NoAuth.Services
                     continue;
                 }
 
-                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetSchedule2ByAudienceAsync), "map", nameof(AudienceSchedule) + " [unpaired]", nameof(Audience), a.AudienceId, a.AudienceName));
+                stringBuilder.AppendLine(string.Format(NullObjectWarningLog, nameof(GetScheduleByAudienceAsync), "map", nameof(AudienceSchedule) + " [unpaired]", nameof(Audience), a.AudienceId, a.AudienceName));
             }
 
             if (stringBuilder.Length != 0)
@@ -631,7 +561,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return AudienceSchedule2List;
+            return (AudienceScheduleList, AudienceSchedule2List);
         }
     }
 }

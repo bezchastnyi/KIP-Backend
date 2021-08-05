@@ -3,14 +3,14 @@
 namespace KIP_server_NoAuth.Constants
 {
     /// <summary>
-    /// KIP short names for faculties constants.
+    /// Short names for faculties constants.
     /// </summary>
-    public static class KIPFacultiesShortNames
+    public static class FacultiesShortNames
     {
         /// <summary>
         /// Gets short names of faculties.
         /// </summary>
-        public static Dictionary<string, string> FacultiesShortNames { get; } = new Dictionary<string, string>
+        public static Dictionary<string, string> ShortNames { get; } = new Dictionary<string, string>
         {
             { "Соціально-гуманітарних технологій", "СГТ" },
             { "Комп`ютерних наук і програмної інженерії", "КН" },

@@ -3,14 +3,14 @@
 namespace KIP_server_NoAuth.Constants
 {
     /// <summary>
-    /// KIP short names for building constants.
+    /// Short names for building constants.
     /// </summary>
-    public static class KIPBuildingShortNames
+    public static class BuildingShortNames
     {
         /// <summary>
         /// Gets short names of building.
         /// </summary>
-        public static Dictionary<string, string> BuildingShortNames { get; } = new Dictionary<string, string>
+        public static Dictionary<string, string> ShortNames { get; } = new Dictionary<string, string>
         {
             { "Учбовий корпус 1", "У1" },
             { "Учбовий корпус 2", "У2" },

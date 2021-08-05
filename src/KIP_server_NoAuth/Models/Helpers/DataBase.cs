@@ -1,4 +1,4 @@
-﻿namespace KIP_server_NoAuth.Models
+﻿namespace KIP_server_NoAuth.Models.Helpers
 {
     /// <summary>
     /// Database.

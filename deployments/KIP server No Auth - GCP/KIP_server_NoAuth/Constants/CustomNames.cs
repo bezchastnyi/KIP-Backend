@@ -11,7 +11,7 @@
         public const string KIPDatabase = "KIPDatabase";
 
         /// <summary>
-        /// DB system.
+        /// Db system.
         /// </summary>
         public const string PostgreSql = "PostgreSql";
 
