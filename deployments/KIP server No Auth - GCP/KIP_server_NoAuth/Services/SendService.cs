@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using KIP_Backend.Models.NoAuth;
 using KIP_server_NoAuth.DB;
@@ -31,125 +32,83 @@ namespace KIP_server_NoAuth.Services
             HashSet<AudienceSchedule> AudienceScheduleList,
             HashSet<AudienceSchedule> AudienceSchedule2List) dataList)
         {
-            await SendFacultyDataToDbAsync(context, dataList.facultyList);
-            await SendCathedraDataToDbAsync(context, dataList.cathedraList);
-            await SendGroupDataToDbAsync(context, dataList.groupList);
-            await SendBuildingDataToDbAsync(context, dataList.buildingList);
-            await SendAudienceDataToDbAsync(context, dataList.audienceList);
-            await SendProfDataToDbAsync(context, dataList.profList);
-            await SendStudentScheduleDataToDbAsync(context, dataList.studentScheduleList);
-            await SendStudentScheduleDataToDbAsync(context, dataList.studentSchedule2List);
-            await SendProfScheduleDataToDbAsync(context, dataList.profScheduleList);
-            await SendProfScheduleDataToDbAsync(context, dataList.profSchedule2List);
-            await SendAudienceScheduleDataToDbAsync(context, dataList.AudienceScheduleList);
-            await SendAudienceScheduleDataToDbAsync(context, dataList.AudienceSchedule2List);
+            await SendCollectionOfDataToDbAsync(context, dataList.facultyList);
+            await SendCollectionOfDataToDbAsync(context, dataList.cathedraList);
+            await SendCollectionOfDataToDbAsync(context, dataList.groupList);
+            await SendCollectionOfDataToDbAsync(context, dataList.buildingList);
+            await SendCollectionOfDataToDbAsync(context, dataList.audienceList);
+            await SendCollectionOfDataToDbAsync(context, dataList.profList);
+            await SendCollectionOfDataToDbAsync(context, dataList.studentScheduleList);
+            await SendCollectionOfDataToDbAsync(context, dataList.studentSchedule2List);
+            await SendCollectionOfDataToDbAsync(context, dataList.profScheduleList);
+            await SendCollectionOfDataToDbAsync(context, dataList.profSchedule2List);
+            await SendCollectionOfDataToDbAsync(context, dataList.AudienceScheduleList);
+            await SendCollectionOfDataToDbAsync(context, dataList.AudienceSchedule2List);
         }
 
         /// <summary>
-        /// Sending data about faculties to the database.
+        /// Sending collection of data to the database.
         /// </summary>
+        /// <typeparam name="T">Data type.</typeparam>
         /// <param name="context">The context.</param>
         /// <param name="objects">The objects.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendFacultyDataToDbAsync(NoAuthDbContext context, IEnumerable<Faculty> objects)
+        /// <returns>A task.<see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task SendCollectionOfDataToDbAsync<T>(NoAuthDbContext context, IEnumerable<T> objects)
         {
-            await context.Faculty.AddRangeAsync(objects);
-            await context.SaveChangesAsync();
-        }
+            if (typeof(T) == typeof(Faculty))
+            {
+                await context.Faculty.AddRangeAsync(objects as IEnumerable<Faculty> ?? throw new InvalidOperationException(
+                    $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
+            }
 
-        /// <summary>
-        /// Sending data about groups to the database.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="objects">The objects.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendGroupDataToDbAsync(NoAuthDbContext context, IEnumerable<Group> objects)
-        {
-            await context.Group.AddRangeAsync(objects);
-            await context.SaveChangesAsync();
-        }
+            if (typeof(T) == typeof(Group))
+            {
+                await context.Group.AddRangeAsync(objects as IEnumerable<Group> ?? throw new InvalidOperationException(
+                    $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
+            }
 
-        /// <summary>
-        /// Sending data about department to the database.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="objects">The objects.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendCathedraDataToDbAsync(NoAuthDbContext context, IEnumerable<Cathedra> objects)
-        {
-            await context.Cathedra.AddRangeAsync(objects);
-            await context.SaveChangesAsync();
-        }
+            if (typeof(T) == typeof(Cathedra))
+            {
+                await context.Cathedra.AddRangeAsync(objects as IEnumerable<Cathedra> ?? throw new InvalidOperationException(
+                    $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
+            }
 
-        /// <summary>
-        /// Sending data about buildings to the database.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="objects">The objects.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendBuildingDataToDbAsync(NoAuthDbContext context, IEnumerable<Building> objects)
-        {
-            await context.Building.AddRangeAsync(objects);
-            await context.SaveChangesAsync();
-        }
+            if (typeof(T) == typeof(Building))
+            {
+                await context.Building.AddRangeAsync(objects as IEnumerable<Building> ?? throw new InvalidOperationException(
+                    $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
+            }
 
-        /// <summary>
-        /// Sending data about audiences to the database.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="objects">The objects.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendAudienceDataToDbAsync(NoAuthDbContext context, IEnumerable<Audience> objects)
-        {
-            await context.Audience.AddRangeAsync(objects);
-            await context.SaveChangesAsync();
-        }
+            if (typeof(T) == typeof(Audience))
+            {
+                await context.Audience.AddRangeAsync(objects as IEnumerable<Audience> ?? throw new InvalidOperationException(
+                    $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
+            }
 
-        /// <summary>
-        /// Sending data about teachers to the database.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="objects">The objects.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendProfDataToDbAsync(NoAuthDbContext context, IEnumerable<Prof> objects)
-        {
-            await context.Prof.AddRangeAsync(objects);
-            await context.SaveChangesAsync();
-        }
+            if (typeof(T) == typeof(Prof))
+            {
+                await context.Prof.AddRangeAsync(objects as IEnumerable<Prof> ?? throw new InvalidOperationException(
+                    $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
+            }
 
-        /// <summary>
-        /// Sending data about schedule of groups to the database.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="objects">The objects.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendStudentScheduleDataToDbAsync(NoAuthDbContext context, IEnumerable<StudentSchedule> objects)
-        {
-            await context.StudentSchedule.AddRangeAsync(objects);
-            await context.SaveChangesAsync();
-        }
+            if (typeof(T) == typeof(StudentSchedule))
+            {
+                await context.StudentSchedule.AddRangeAsync(objects as IEnumerable<StudentSchedule> ?? throw new InvalidOperationException(
+                    $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
+            }
 
-        /// <summary>
-        /// Sending data about schedule of teachers to the database.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="objects">The objects.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendProfScheduleDataToDbAsync(NoAuthDbContext context, IEnumerable<ProfSchedule> objects)
-        {
-            await context.ProfSchedule.AddRangeAsync(objects);
-            await context.SaveChangesAsync();
-        }
+            if (typeof(T) == typeof(ProfSchedule))
+            {
+                await context.ProfSchedule.AddRangeAsync(objects as IEnumerable<ProfSchedule> ?? throw new InvalidOperationException(
+                    $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
+            }
 
-        /// <summary>
-        /// Sending data about schedule of audience to the database.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="objects">The objects.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task SendAudienceScheduleDataToDbAsync(NoAuthDbContext context, IEnumerable<AudienceSchedule> objects)
-        {
-            await context.AudienceSchedule.AddRangeAsync(objects);
+            if (typeof(T) == typeof(AudienceSchedule))
+            {
+                await context.AudienceSchedule.AddRangeAsync(objects as IEnumerable<AudienceSchedule> ?? throw new InvalidOperationException(
+                    $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
+            }
+
             await context.SaveChangesAsync();
         }
     }

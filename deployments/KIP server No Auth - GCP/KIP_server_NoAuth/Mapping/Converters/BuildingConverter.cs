@@ -34,7 +34,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 return null;
             }
 
-            var (_, shortName) = KIPBuildingShortNames.BuildingShortNames.FirstOrDefault(b => source.title.Contains(b.Key));
+            var (_, shortName) = BuildingShortNames.ShortNames.FirstOrDefault(b => source.title.Contains(b.Key));
 
             return new Building
             {

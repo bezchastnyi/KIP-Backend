@@ -2,6 +2,7 @@
 using System.Reflection;
 using KIP_server_NoAuth.Constants;
 using KIP_server_NoAuth.Models;
+using KIP_server_NoAuth.Models.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -68,7 +69,7 @@ namespace KIP_server_NoAuth.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    this._logger.LogError($"Unable to open connection to Db: {ex.Message}");
                 }
                 finally
                 {
@@ -79,7 +80,7 @@ namespace KIP_server_NoAuth.Controllers
             var healthCheck = new HealthCheck();
             healthCheck.Databases.Add(new DataBase(CustomNames.KIPDatabase, CustomNames.PostgreSql, this._configuration.GetConnectionString("PostgresVersion"), status));
 
-            this._logger.Log(LogLevel.Information, $"{CustomNames.KIPDatabase} status: {status}");
+            this._logger.LogInformation($"{CustomNames.KIPDatabase} status: {status}");
             return this.Json(healthCheck);
         }
     }
