@@ -54,9 +54,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var audienceListDestination = ScheduleStuff.IdAndNameListDestination();
                 var buildingListDestination = new List<int?> { null, null, null, null, null, null };
 
-                ProfIdentificationAndScheduleImprovement(Day.Tuesday, week, profListTuesday, ref subjectListMonday, ref profListDestination);
+                ProfIdentificationAndScheduleImprovement(Day.Tuesday, week, profListTuesday, ref subjectListTuesday, ref profListDestination);
                 ScheduleStuff.AudienceIdentification(audienceListTuesday, ref buildingListDestination, ref audienceListDestination);
-                RegisterGroupScheduleLessons(ref obj, Day.Tuesday, week, subjectListMonday, typeListTuesday, profListDestination, buildingListDestination, audienceListDestination);
+                RegisterGroupScheduleLessons(ref obj, Day.Tuesday, week, subjectListTuesday, typeListTuesday, profListDestination, buildingListDestination, audienceListDestination);
             }
 
             if (subjectListWednesday != null)
@@ -65,9 +65,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var audienceListDestination = ScheduleStuff.IdAndNameListDestination();
                 var buildingListDestination = new List<int?> { null, null, null, null, null, null };
 
-                ProfIdentificationAndScheduleImprovement(Day.Wednesday, week, profListWednesday, ref subjectListMonday, ref profListDestination);
+                ProfIdentificationAndScheduleImprovement(Day.Wednesday, week, profListWednesday, ref subjectListWednesday, ref profListDestination);
                 ScheduleStuff.AudienceIdentification(audienceListWednesday, ref buildingListDestination, ref audienceListDestination);
-                RegisterGroupScheduleLessons(ref obj, Day.Wednesday, week, subjectListMonday, typeListWednesday, profListDestination, buildingListDestination, audienceListDestination);
+                RegisterGroupScheduleLessons(ref obj, Day.Wednesday, week, subjectListWednesday, typeListWednesday, profListDestination, buildingListDestination, audienceListDestination);
             }
 
             if (subjectListThursday != null)
@@ -76,9 +76,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var audienceListDestination = ScheduleStuff.IdAndNameListDestination();
                 var buildingListDestination = new List<int?> { null, null, null, null, null, null };
 
-                ProfIdentificationAndScheduleImprovement(Day.Thursday, week, profListThursday, ref subjectListMonday, ref profListDestination);
+                ProfIdentificationAndScheduleImprovement(Day.Thursday, week, profListThursday, ref subjectListThursday, ref profListDestination);
                 ScheduleStuff.AudienceIdentification(audienceListThursday, ref buildingListDestination, ref audienceListDestination);
-                RegisterGroupScheduleLessons(ref obj, Day.Thursday, week, subjectListMonday, typeListThursday, profListDestination, buildingListDestination, audienceListDestination);
+                RegisterGroupScheduleLessons(ref obj, Day.Thursday, week, subjectListThursday, typeListThursday, profListDestination, buildingListDestination, audienceListDestination);
             }
 
             if (subjectListFriday != null)
@@ -87,9 +87,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var audienceListDestination = ScheduleStuff.IdAndNameListDestination();
                 var buildingListDestination = new List<int?> { null, null, null, null, null, null };
 
-                ProfIdentificationAndScheduleImprovement(Day.Friday, week, profListFriday, ref subjectListMonday, ref profListDestination);
+                ProfIdentificationAndScheduleImprovement(Day.Friday, week, profListFriday, ref subjectListFriday, ref profListDestination);
                 ScheduleStuff.AudienceIdentification(audienceListFriday, ref buildingListDestination, ref audienceListDestination);
-                RegisterGroupScheduleLessons(ref obj, Day.Friday, week, subjectListMonday, typeListFriday, profListDestination, buildingListDestination, audienceListDestination);
+                RegisterGroupScheduleLessons(ref obj, Day.Friday, week, subjectListFriday, typeListFriday, profListDestination, buildingListDestination, audienceListDestination);
             }
 
             return obj.Count == 0 ? null : obj;

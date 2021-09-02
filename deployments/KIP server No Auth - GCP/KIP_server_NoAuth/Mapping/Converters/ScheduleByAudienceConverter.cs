@@ -56,7 +56,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
                 ScheduleStuff.GroupsIdentification(groupListTuesday, ref groupListDestination, ref groupListNamesDestination);
                 ProfIdentification(profListTuesday, ref profListDestination);
-                RegisterAudienceScheduleLessons(ref obj, Day.Tuesday, week, subjectListMonday, typeListTuesday, groupListDestination, groupListNamesDestination, profListDestination);
+                RegisterAudienceScheduleLessons(ref obj, Day.Tuesday, week, subjectListTuesday, typeListTuesday, groupListDestination, groupListNamesDestination, profListDestination);
             }
 
             if (subjectListWednesday != null)
@@ -67,7 +67,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
                 ScheduleStuff.GroupsIdentification(groupListWednesday, ref groupListDestination, ref groupListNamesDestination);
                 ProfIdentification(profListWednesday, ref profListDestination);
-                RegisterAudienceScheduleLessons(ref obj, Day.Wednesday, week, subjectListMonday, typeListWednesday, groupListDestination, groupListNamesDestination, profListDestination);
+                RegisterAudienceScheduleLessons(ref obj, Day.Wednesday, week, subjectListWednesday, typeListWednesday, groupListDestination, groupListNamesDestination, profListDestination);
             }
 
             if (subjectListThursday != null)
@@ -78,7 +78,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
                 ScheduleStuff.GroupsIdentification(groupListThursday, ref groupListDestination, ref groupListNamesDestination);
                 ProfIdentification(profListThursday, ref profListDestination);
-                RegisterAudienceScheduleLessons(ref obj, Day.Thursday, week, subjectListMonday, typeListThursday, groupListDestination, groupListNamesDestination, profListDestination);
+                RegisterAudienceScheduleLessons(ref obj, Day.Thursday, week, subjectListThursday, typeListThursday, groupListDestination, groupListNamesDestination, profListDestination);
             }
 
             if (subjectListFriday != null)
@@ -89,7 +89,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
                 ScheduleStuff.GroupsIdentification(groupListFriday, ref groupListDestination, ref groupListNamesDestination);
                 ProfIdentification(profListFriday, ref profListDestination);
-                RegisterAudienceScheduleLessons(ref obj, Day.Friday, week, subjectListMonday, typeListFriday, groupListDestination, groupListNamesDestination, profListDestination);
+                RegisterAudienceScheduleLessons(ref obj, Day.Friday, week, subjectListFriday, typeListFriday, groupListDestination, groupListNamesDestination, profListDestination);
             }
 
             return obj.Count == 0 ? null : obj;
