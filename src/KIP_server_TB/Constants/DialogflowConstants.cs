@@ -104,6 +104,15 @@ namespace KIP_server_TB.Constants
         public const string AudienceScheduleIntentDay = "Audience Schedule Intent - Day";
 
         #endregion
+
+        #region Auth mode
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string EmailModeIntent = "Email Mode Intent";
+
+        #endregion
     }
 #pragma warning restore SA1124 // Do not use regions
 }
