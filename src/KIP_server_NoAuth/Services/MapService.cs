@@ -148,7 +148,7 @@ namespace KIP_server_NoAuth.Services
         /// </summary>
         /// <returns>List of building.</returns>
         /// <param name="logger">The logger.</param>
-        /// <param name="mapper">The mapper. </param>
+        /// <param name="mapper">The mapper.</param>
         public static async Task<HashSet<Building>> GetBuildingsAsync(ILogger logger, IMapper mapper)
         {
             var buildingList = await GetService.GetCollectionOfDataAsync<BuildingKhPI>(logger);
@@ -428,7 +428,7 @@ namespace KIP_server_NoAuth.Services
         /// <returns>Schedule of audience for an unpaired week.</returns>
         /// <param name="audienceList">The KIP teacher by department list.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="mapper">The mapper. </param>
+        /// <param name="mapper">The mapper.</param>
         public static async Task<(HashSet<AudienceSchedule> AudienceScheduleList, HashSet<AudienceSchedule> AudienceSchedule2List)>
             GetScheduleByAudienceAsync(HashSet<Audience> audienceList, ILogger logger, IMapper mapper)
         {

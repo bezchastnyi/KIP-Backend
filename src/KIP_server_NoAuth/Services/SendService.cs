@@ -126,50 +126,42 @@ namespace KIP_server_NoAuth.Services
                 await context.Faculty.AddRangeAsync(objects as IEnumerable<Faculty> ?? throw new InvalidOperationException(
                     $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
             }
-
-            if (typeof(T) == typeof(Group))
+            else if (typeof(T) == typeof(Group))
             {
                 await context.Group.AddRangeAsync(objects as IEnumerable<Group> ?? throw new InvalidOperationException(
                     $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
             }
-
-            if (typeof(T) == typeof(Cathedra))
+            else if (typeof(T) == typeof(Cathedra))
             {
                 await context.Cathedra.AddRangeAsync(objects as IEnumerable<Cathedra> ?? throw new InvalidOperationException(
                     $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
             }
-
-            if (typeof(T) == typeof(Building))
+            else if (typeof(T) == typeof(Building))
             {
                 await context.Building.AddRangeAsync(objects as IEnumerable<Building> ?? throw new InvalidOperationException(
                     $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
             }
-
-            if (typeof(T) == typeof(Audience))
+            else if (typeof(T) == typeof(Audience))
             {
                 await context.Audience.AddRangeAsync(objects as IEnumerable<Audience> ?? throw new InvalidOperationException(
                     $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
             }
-
-            if (typeof(T) == typeof(Prof))
+            else if (typeof(T) == typeof(Prof))
             {
                 await context.Prof.AddRangeAsync(objects as IEnumerable<Prof> ?? throw new InvalidOperationException(
                     $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
             }
-
-            if (typeof(T) == typeof(StudentSchedule))
+            else if (typeof(T) == typeof(StudentSchedule))
             {
                 await context.StudentSchedule.AddRangeAsync(objects as IEnumerable<StudentSchedule> ?? throw new InvalidOperationException(
                     $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
             }
-
-            if (typeof(T) == typeof(ProfSchedule))
+            else if (typeof(T) == typeof(ProfSchedule))
             {
                 await context.ProfSchedule.AddRangeAsync(objects as IEnumerable<ProfSchedule> ?? throw new InvalidOperationException(
                     $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));
             }
-
-            if (typeof(T) == typeof(AudienceSchedule))
+            else if (typeof(T) == typeof(AudienceSchedule))
             {
                 await context.AudienceSchedule.AddRangeAsync(objects as IEnumerable<AudienceSchedule> ?? throw new InvalidOperationException(
                     $"Action: 'Send collection of data to Db' typeparam is not valid ({typeof(T)})"));

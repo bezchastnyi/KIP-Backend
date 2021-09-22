@@ -6,7 +6,6 @@ using KIP_Backend.Models.Helpers;
 using KIP_Backend.Models.NoAuth;
 using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Models.KhPI;
-using KIP_server_NoAuth.Services;
 using KIP_server_NoAuth.V1.Controllers;
 
 namespace KIP_server_NoAuth.Mapping.Converters
@@ -45,6 +44,15 @@ namespace KIP_server_NoAuth.Mapping.Converters
             var week = DbUpdateController.Week;
 
             var (subjectListMonday, subjectListTuesday, subjectListWednesday, subjectListThursday, subjectListFriday) = ScheduleStuff.GetSubjectLists(source);
+            if (subjectListMonday == null &&
+                subjectListTuesday == null &&
+                subjectListWednesday == null &&
+                subjectListThursday == null &&
+                subjectListFriday == null)
+            {
+                return null;
+            }
+
             var (audienceListMonday, audienceListTuesday, audienceListWednesday, audienceListThursday, audienceListFriday) = ScheduleStuff.GetAudienceLists(source);
             var (typeListMonday, typeListTuesday, typeListWednesday, typeListThursday, typeListFriday) = ScheduleStuff.GetTypeLists(source);
             var (profListMonday, profListTuesday, profListWednesday, profListThursday, profListFriday) = ScheduleStuff.GetProfLists(source);

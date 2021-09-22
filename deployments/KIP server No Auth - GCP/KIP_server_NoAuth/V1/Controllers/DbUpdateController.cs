@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
 using KIP_Backend.Models.Helpers;
-using KIP_Backend.Models.NoAuth;
 using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Services;
 using Microsoft.AspNetCore.Http;
@@ -64,6 +63,7 @@ namespace KIP_server_NoAuth.V1.Controllers
                 var result = await PrepareService.CleanDbAsync(this._logger, nameof(this.CleanDb), this._config);
                 if (!result)
                 {
+                    // log
                     return this.BadRequest();
                 }
 
