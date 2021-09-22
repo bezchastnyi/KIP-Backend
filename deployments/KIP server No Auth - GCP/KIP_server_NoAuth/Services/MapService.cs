@@ -21,66 +21,6 @@ namespace KIP_server_NoAuth.Services
         private const string NullObjectWarningLog = "[method: {0}] [operation: {1}] {2} is null ({3} - ({4}) {5})";
 
         /// <summary>
-        /// Gets or sets the list of faculties.
-        /// </summary>
-        public static HashSet<Faculty> FacultyList { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of groups.
-        /// </summary>
-        public static HashSet<Group> GroupList { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of departments.
-        /// </summary>
-        public static HashSet<Cathedra> CathedraList { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of buildings.
-        /// </summary>
-        public static HashSet<Building> BuildingList { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of audiences.
-        /// </summary>
-        public static HashSet<Audience> AudienceList { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of teachers.
-        /// </summary>
-        public static HashSet<Prof> ProfList { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of schedule of groups for an unpaired week.
-        /// </summary>
-        public static HashSet<StudentSchedule> GroupScheduleList { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of schedule of groups for a paired week.
-        /// </summary>
-        public static HashSet<StudentSchedule> GroupSchedule2List { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of schedule of teachers for an unpaired week.
-        /// </summary>
-        public static HashSet<ProfSchedule> ProfScheduleList { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of schedule of teachers for a paired week.
-        /// </summary>
-        public static HashSet<ProfSchedule> ProfSchedule2List { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of schedule of audience for a unpaired week.
-        /// </summary>
-        public static HashSet<AudienceSchedule> AudienceScheduleList { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the list of schedule of audience for a paired week.
-        /// </summary>
-        public static HashSet<AudienceSchedule> AudienceSchedule2List { get; set; } = null;
-
-        /// <summary>
         /// Getting list of faculty to KIP.
         /// </summary>
         /// <returns>List of faculty.</returns>
@@ -102,8 +42,7 @@ namespace KIP_server_NoAuth.Services
                 return null;
             }
 
-            FacultyList = new HashSet<Faculty>(list);
-            return FacultyList;
+            return new HashSet<Faculty>(list);
         }
 
         /// <summary>
@@ -120,7 +59,7 @@ namespace KIP_server_NoAuth.Services
                 return null;
             }
 
-            GroupList = new HashSet<Group>();
+            var groups = new HashSet<Group>();
             var stringBuilder = new StringBuilder();
 
             foreach (var f in facultyList)
@@ -138,7 +77,7 @@ namespace KIP_server_NoAuth.Services
                     foreach (var g in kipGroupList.Where(g => g != null))
                     {
                         g.FacultyId = f.FacultyId;
-                        GroupList.Add(g);
+                        groups.Add(g);
                     }
 
                     continue;
@@ -152,7 +91,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return GroupList;
+            return groups;
         }
 
         /// <summary>
@@ -169,7 +108,7 @@ namespace KIP_server_NoAuth.Services
                 return null;
             }
 
-            CathedraList = new HashSet<Cathedra>();
+            var cathedras = new HashSet<Cathedra>();
             var stringBuilder = new StringBuilder();
 
             foreach (var f in facultyList)
@@ -187,7 +126,7 @@ namespace KIP_server_NoAuth.Services
                     foreach (var c in kipCathedraList.Where(c => c != null))
                     {
                         c.FacultyId = f.FacultyId;
-                        CathedraList.Add(c);
+                        cathedras.Add(c);
                     }
 
                     continue;
@@ -201,7 +140,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return CathedraList;
+            return cathedras;
         }
 
         /// <summary>
@@ -226,8 +165,7 @@ namespace KIP_server_NoAuth.Services
                 return null;
             }
 
-            BuildingList = new HashSet<Building>(list);
-            return BuildingList;
+            return new HashSet<Building>(list);
         }
 
         /// <summary>
@@ -244,7 +182,7 @@ namespace KIP_server_NoAuth.Services
                 return null;
             }
 
-            AudienceList = new HashSet<Audience>();
+            var audiences = new HashSet<Audience>();
             var stringBuilder = new StringBuilder();
 
             foreach (var b in buildingList)
@@ -262,7 +200,7 @@ namespace KIP_server_NoAuth.Services
                     foreach (var a in kipAudienceList.Where(a => a != null))
                     {
                         a.BuildingId = b.BuildingId;
-                        AudienceList.Add(a);
+                        audiences.Add(a);
                     }
 
                     continue;
@@ -276,7 +214,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return AudienceList;
+            return audiences;
         }
 
         /// <summary>
@@ -294,7 +232,7 @@ namespace KIP_server_NoAuth.Services
                 return null;
             }
 
-            ProfList = new HashSet<Prof>();
+            var profs = new HashSet<Prof>();
             var stringBuilder = new StringBuilder();
 
             foreach (var c in cathedraList)
@@ -312,7 +250,7 @@ namespace KIP_server_NoAuth.Services
                     foreach (var p in kipProfList.Where(p => p != null))
                     {
                         p.CathedraId = c.CathedraId;
-                        ProfList.Add(p);
+                        profs.Add(p);
                     }
 
                     continue;
@@ -326,7 +264,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return ProfList;
+            return profs;
         }
 
         /// <summary>
@@ -344,8 +282,8 @@ namespace KIP_server_NoAuth.Services
                 return (null, null);
             }
 
-            GroupScheduleList = new HashSet<StudentSchedule>();
-            GroupSchedule2List = new HashSet<StudentSchedule>();
+            var groupSchedule = new HashSet<StudentSchedule>();
+            var groupSchedule2 = new HashSet<StudentSchedule>();
             var stringBuilder = new StringBuilder();
 
             foreach (var g in groupList)
@@ -366,7 +304,7 @@ namespace KIP_server_NoAuth.Services
                         l.GroupId = g.GroupId;
                         g.ScheduleIsPresent[(int)l.Day] = true;
 
-                        GroupScheduleList.Add(l);
+                        groupSchedule.Add(l);
                     }
                 }
 
@@ -388,7 +326,7 @@ namespace KIP_server_NoAuth.Services
                         l.GroupId = g.GroupId;
                         g.ScheduleIsPresent[(int)l.Day] = true;
 
-                        GroupSchedule2List.Add(l);
+                        groupSchedule2.Add(l);
                     }
 
                     continue;
@@ -402,7 +340,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return (GroupScheduleList, GroupSchedule2List);
+            return (groupSchedule, groupSchedule2);
         }
 
         /// <summary>
@@ -420,8 +358,8 @@ namespace KIP_server_NoAuth.Services
                 return (null, null);
             }
 
-            ProfScheduleList = new HashSet<ProfSchedule>();
-            ProfSchedule2List = new HashSet<ProfSchedule>();
+            var profSchedule = new HashSet<ProfSchedule>();
+            var profSchedule2 = new HashSet<ProfSchedule>();
             var stringBuilder = new StringBuilder();
 
             foreach (var p in profList)
@@ -442,7 +380,7 @@ namespace KIP_server_NoAuth.Services
                         l.ProfId = p.ProfId;
                         p.ScheduleIsPresent[(int)l.Day] = true;
 
-                        ProfScheduleList.Add(l);
+                        profSchedule.Add(l);
                     }
 
                     continue;
@@ -467,7 +405,7 @@ namespace KIP_server_NoAuth.Services
                         l.ProfId = p.ProfId;
                         p.ScheduleIsPresent[(int)l.Day] = true;
 
-                        ProfSchedule2List.Add(l);
+                        profSchedule2.Add(l);
                     }
 
                     continue;
@@ -481,7 +419,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return (ProfScheduleList, ProfSchedule2List);
+            return (profSchedule, profSchedule2);
         }
 
         /// <summary>
@@ -499,8 +437,8 @@ namespace KIP_server_NoAuth.Services
                 return (null, null);
             }
 
-            AudienceScheduleList = new HashSet<AudienceSchedule>();
-            AudienceSchedule2List = new HashSet<AudienceSchedule>();
+            var audienceSchedule = new HashSet<AudienceSchedule>();
+            var audienceSchedule2 = new HashSet<AudienceSchedule>();
             var stringBuilder = new StringBuilder();
 
             foreach (var a in audienceList)
@@ -522,7 +460,7 @@ namespace KIP_server_NoAuth.Services
                         l.AudienceId = a.AudienceId;
                         a.ScheduleIsPresent[(int)l.Day] = true;
 
-                        AudienceScheduleList.Add(l);
+                        audienceSchedule.Add(l);
                     }
 
                     continue;
@@ -547,7 +485,7 @@ namespace KIP_server_NoAuth.Services
                         l.AudienceId = a.AudienceId;
                         a.ScheduleIsPresent[(int)l.Day] = true;
 
-                        AudienceSchedule2List.Add(l);
+                        audienceSchedule2.Add(l);
                     }
 
                     continue;
@@ -561,7 +499,7 @@ namespace KIP_server_NoAuth.Services
                 // logger.LogWarning(stringBuilder.ToString());
             }
 
-            return (AudienceScheduleList, AudienceSchedule2List);
+            return (audienceSchedule, audienceSchedule2);
         }
     }
 }

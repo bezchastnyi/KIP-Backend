@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Models.KhPI;
 using KIP_server_NoAuth.Services;
 
@@ -310,7 +311,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
         /// <param name="audienceList">Model of schedule by group KhPI.</param>
         /// <param name="buildingListDestination">Model of schedule by group KhPI.</param>
         /// <param name="audienceListDestination">Model of schedule by group KhPI.</param>
-        public static void AudienceIdentification(List<string> audienceList, ref List<int?> buildingListDestination, ref List<(int? id, string name)> audienceListDestination)
+        /// <param name="context">The context.</param>
+        public static void AudienceIdentification(
+            List<string> audienceList, ref List<int?> buildingListDestination, ref List<(int? id, string name)> audienceListDestination, NoAuthDbContext context)
         {
             for (var i = 0; i < audienceList.Count; i++)
             {
@@ -319,13 +322,13 @@ namespace KIP_server_NoAuth.Mapping.Converters
                     continue;
                 }
 
-                if (MapService.BuildingList == null || MapService.AudienceList == null)
+                if (context.Building == null || context.Audience == null)
                 {
                     audienceListDestination[i] = (null, audienceList[i]);
                     continue;
                 }
 
-                var building = MapService.BuildingList.FirstOrDefault(b => audienceList[i].Contains(b.BuildingShortName));
+                var building = context.Building.FirstOrDefault(b => audienceList[i].Contains(b.BuildingShortName));
                 if (building == null)
                 {
                     audienceListDestination[i] = (null, audienceList[i]);
@@ -334,7 +337,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
                 buildingListDestination[i] = building.BuildingId;
 
-                var audience = MapService.AudienceList.FirstOrDefault(a => a.AudienceName.Contains(audienceList[i]));
+                var audience = context.Audience.FirstOrDefault(a => a.AudienceName.Contains(audienceList[i]));
                 if (audience != null)
                 {
                     audienceListDestination[i] = (audience.AudienceId, audience.AudienceName);
@@ -348,7 +351,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
         /// <param name="groupList">Model of schedule by group KhPI.</param>
         /// <param name="groupListDestination">Model of schedule by group KhPI.</param>
         /// <param name="groupListNamesDestination">Model of schedule by group KhPI.</param>
-        public static void GroupsIdentification(List<string> groupList, ref List<List<int?>> groupListDestination, ref List<string> groupListNamesDestination)
+        /// <param name="context">The context.</param>
+        public static void GroupsIdentification(List<string> groupList, ref List<List<int?>> groupListDestination, ref List<string> groupListNamesDestination, NoAuthDbContext context)
         {
             for (var i = 0; i < groupList.Count; i++)
             {
@@ -357,13 +361,13 @@ namespace KIP_server_NoAuth.Mapping.Converters
                     continue;
                 }
 
-                if (MapService.GroupList == null)
+                if (context.Group == null)
                 {
                     groupListNamesDestination[i] += groupList[i];
                     continue;
                 }
 
-                var groups = MapService.GroupList.Where(g => groupList[i].Contains(g.GroupName));
+                var groups = context.Group.Where(g => groupList[i].Contains(g.GroupName));
                 foreach (var g in groups)
                 {
                     groupListDestination[i].Add(g.GroupId);

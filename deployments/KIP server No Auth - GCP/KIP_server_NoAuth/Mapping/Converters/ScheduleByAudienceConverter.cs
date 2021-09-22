@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using KIP_Backend.Models.Helpers;
 using KIP_Backend.Models.NoAuth;
+using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Models.KhPI;
 using KIP_server_NoAuth.Services;
 using KIP_server_NoAuth.V1.Controllers;
@@ -15,6 +16,17 @@ namespace KIP_server_NoAuth.Mapping.Converters
     /// </summary>
     public class ScheduleByAudienceConverter : ITypeConverter<ScheduleKhPI, List<AudienceSchedule>> // TODO check how it works
     {
+        private readonly NoAuthDbContext _context;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduleByAudienceConverter"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        public ScheduleByAudienceConverter(NoAuthDbContext context)
+        {
+            this._context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
         /// <summary>
         /// Convert model of schedule by group from KhPI to KIP.
         /// </summary>
@@ -43,8 +55,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var groupListDestination = ScheduleStuff.GroupListDestination();
                 var groupListNamesDestination = ScheduleStuff.GroupListNamesDestination();
 
-                ScheduleStuff.GroupsIdentification(groupListMonday, ref groupListDestination, ref groupListNamesDestination);
-                ProfIdentification(profListMonday, ref profListDestination);
+                ScheduleStuff.GroupsIdentification(groupListMonday, ref groupListDestination, ref groupListNamesDestination, this._context);
+                this.ProfIdentification(profListMonday, ref profListDestination);
                 RegisterAudienceScheduleLessons(ref obj, Day.Monday, week, subjectListMonday, typeListMonday, groupListDestination, groupListNamesDestination, profListDestination);
             }
 
@@ -54,8 +66,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var groupListDestination = ScheduleStuff.GroupListDestination();
                 var groupListNamesDestination = ScheduleStuff.GroupListNamesDestination();
 
-                ScheduleStuff.GroupsIdentification(groupListTuesday, ref groupListDestination, ref groupListNamesDestination);
-                ProfIdentification(profListTuesday, ref profListDestination);
+                ScheduleStuff.GroupsIdentification(groupListTuesday, ref groupListDestination, ref groupListNamesDestination, this._context);
+                this.ProfIdentification(profListTuesday, ref profListDestination);
                 RegisterAudienceScheduleLessons(ref obj, Day.Tuesday, week, subjectListTuesday, typeListTuesday, groupListDestination, groupListNamesDestination, profListDestination);
             }
 
@@ -65,8 +77,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var groupListDestination = ScheduleStuff.GroupListDestination();
                 var groupListNamesDestination = ScheduleStuff.GroupListNamesDestination();
 
-                ScheduleStuff.GroupsIdentification(groupListWednesday, ref groupListDestination, ref groupListNamesDestination);
-                ProfIdentification(profListWednesday, ref profListDestination);
+                ScheduleStuff.GroupsIdentification(groupListWednesday, ref groupListDestination, ref groupListNamesDestination, this._context);
+                this.ProfIdentification(profListWednesday, ref profListDestination);
                 RegisterAudienceScheduleLessons(ref obj, Day.Wednesday, week, subjectListWednesday, typeListWednesday, groupListDestination, groupListNamesDestination, profListDestination);
             }
 
@@ -76,8 +88,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var groupListDestination = ScheduleStuff.GroupListDestination();
                 var groupListNamesDestination = ScheduleStuff.GroupListNamesDestination();
 
-                ScheduleStuff.GroupsIdentification(groupListThursday, ref groupListDestination, ref groupListNamesDestination);
-                ProfIdentification(profListThursday, ref profListDestination);
+                ScheduleStuff.GroupsIdentification(groupListThursday, ref groupListDestination, ref groupListNamesDestination, this._context);
+                this.ProfIdentification(profListThursday, ref profListDestination);
                 RegisterAudienceScheduleLessons(ref obj, Day.Thursday, week, subjectListThursday, typeListThursday, groupListDestination, groupListNamesDestination, profListDestination);
             }
 
@@ -87,8 +99,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var groupListDestination = ScheduleStuff.GroupListDestination();
                 var groupListNamesDestination = ScheduleStuff.GroupListNamesDestination();
 
-                ScheduleStuff.GroupsIdentification(groupListFriday, ref groupListDestination, ref groupListNamesDestination);
-                ProfIdentification(profListFriday, ref profListDestination);
+                ScheduleStuff.GroupsIdentification(groupListFriday, ref groupListDestination, ref groupListNamesDestination, this._context);
+                this.ProfIdentification(profListFriday, ref profListDestination);
                 RegisterAudienceScheduleLessons(ref obj, Day.Friday, week, subjectListFriday, typeListFriday, groupListDestination, groupListNamesDestination, profListDestination);
             }
 
@@ -125,7 +137,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
             }
         }
 
-        private static void ProfIdentification(List<string> profList, ref List<(int? id, string name)> profListDestination)
+        private void ProfIdentification(List<string> profList, ref List<(int? id, string name)> profListDestination)
         {
             for (var i = 0; i < profList.Count; i++)
             {
@@ -134,13 +146,13 @@ namespace KIP_server_NoAuth.Mapping.Converters
                     continue;
                 }
 
-                if (MapService.ProfList == null)
+                if (this._context.Prof == null)
                 {
                     profListDestination[i] = (null, profList[i]);
                     continue;
                 }
 
-                var prof = MapService.ProfList.FirstOrDefault(p => profList[i].Contains(p.ProfSurname));
+                var prof = this._context.Prof.FirstOrDefault(p => profList[i].Contains(p.ProfSurname));
                 if (prof != null)
                 {
                     profListDestination[i] = (prof.ProfId, prof.ProfSurname);
