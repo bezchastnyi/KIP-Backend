@@ -1,0 +1,2 @@
+gcloud builds submit --tag gcr.io/ext-khpi-in-phone/kip-server-auth-v1.0 --project=ext-khpi-in-phone
+gcloud run deploy --image gcr.io/ext-khpi-in-phone/kip-server-auth-v1.0 --project=ext-khpi-in-phone
