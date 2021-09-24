@@ -14,6 +14,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
     /// </summary>
     public class BuildingConverter : ITypeConverter<BuildingKhPI, Building>
     {
+        private static readonly Regex RegexPattern = new Regex(@"[\d[0-9]{0,4}]");
+
         /// <summary>
         /// Convert model of building from KhPI to KIP.
         /// </summary>
@@ -34,7 +36,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 return null;
             }
 
-            var (_, shortName) = BuildingShortNames.ShortNames.FirstOrDefault(b => source.title.Contains(b.Key));
+            var shortName = BuildingShortNames.ShortNames
+                .FirstOrDefault(b => source.title.Contains(b.Key)).Value;
 
             return new Building
             {
@@ -47,27 +50,13 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
         private static int? SearchNumberOfAudiences(string title)
         {
-            var regex = new Regex(@"[\d[0-9]{0,4}]");
-            var matches = regex.Matches(title);
+            var matches = RegexPattern.Matches(title);
             if (matches.Count == 0)
             {
                 return null;
             }
 
-            foreach (Match match in matches)
-            {
-                regex = new Regex(@"\d[0-9]{0,4}");
-                var matches2 = regex.Matches(match.Value);
-                foreach (Match match2 in matches2)
-                {
-                    if (matches2.Count > 0)
-                    {
-                        return int.Parse(match2.Value);
-                    }
-                }
-            }
-
-            return null;
+            return int.Parse(matches.First().Value.Trim('[', ']'));
         }
     }
 }

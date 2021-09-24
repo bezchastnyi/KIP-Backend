@@ -33,7 +33,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 return null;
             }
 
-            var (_, shortName) = FacultiesShortNames.ShortNames.FirstOrDefault(f => source.title.Contains(f.Key));
+            var shortName = FacultiesShortNames.ShortNames
+                .FirstOrDefault(f => source.title.Contains(f.Key)).Value;
 
             return new Faculty
             {

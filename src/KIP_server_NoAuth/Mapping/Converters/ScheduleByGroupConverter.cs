@@ -4,8 +4,8 @@ using System.Linq;
 using AutoMapper;
 using KIP_Backend.Models.Helpers;
 using KIP_Backend.Models.NoAuth;
+using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Models.KhPI;
-using KIP_server_NoAuth.Services;
 using KIP_server_NoAuth.V1.Controllers;
 
 namespace KIP_server_NoAuth.Mapping.Converters
@@ -15,6 +15,17 @@ namespace KIP_server_NoAuth.Mapping.Converters
     /// </summary>
     public class ScheduleByGroupConverter : ITypeConverter<ScheduleKhPI, List<StudentSchedule>> // TODO check how it works
     {
+        private readonly NoAuthDbContext _context;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduleByGroupConverter"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        public ScheduleByGroupConverter(NoAuthDbContext context)
+        {
+            this._context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
         /// <summary>
         /// Convert model of schedule by group from KhPI to KIP.
         /// </summary>
@@ -30,9 +41,18 @@ namespace KIP_server_NoAuth.Mapping.Converters
             }
 
             var obj = new List<StudentSchedule>();
-            var week = DbUpdateController.Week;
+            var week = context.GetWeekValue(nameof(StudentSchedule));
 
             var (subjectListMonday, subjectListTuesday, subjectListWednesday, subjectListThursday, subjectListFriday) = ScheduleStuff.GetSubjectLists(source);
+            if (subjectListMonday == null &&
+                subjectListTuesday == null &&
+                subjectListWednesday == null &&
+                subjectListThursday == null &&
+                subjectListFriday == null)
+            {
+                return null;
+            }
+
             var (audienceListMonday, audienceListTuesday, audienceListWednesday, audienceListThursday, audienceListFriday) = ScheduleStuff.GetAudienceLists(source);
             var (typeListMonday, typeListTuesday, typeListWednesday, typeListThursday, typeListFriday) = ScheduleStuff.GetTypeLists(source);
             var (profListMonday, profListTuesday, profListWednesday, profListThursday, profListFriday) = ScheduleStuff.GetProfLists(source);
@@ -43,8 +63,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var audienceListDestination = ScheduleStuff.IdAndNameListDestination();
                 var buildingListDestination = new List<int?> { null, null, null, null, null, null };
 
-                ProfIdentificationAndScheduleImprovement(Day.Monday, week, profListMonday, ref subjectListMonday, ref profListDestination);
-                ScheduleStuff.AudienceIdentification(audienceListMonday, ref buildingListDestination, ref audienceListDestination);
+                this.ProfIdentificationAndScheduleImprovement(Day.Monday, week, profListMonday, ref subjectListMonday, ref profListDestination);
+                ScheduleStuff.AudienceIdentification(audienceListMonday, ref buildingListDestination, ref audienceListDestination, this._context);
                 RegisterGroupScheduleLessons(ref obj, Day.Monday, week, subjectListMonday, typeListMonday, profListDestination, buildingListDestination, audienceListDestination);
             }
 
@@ -54,9 +74,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var audienceListDestination = ScheduleStuff.IdAndNameListDestination();
                 var buildingListDestination = new List<int?> { null, null, null, null, null, null };
 
-                ProfIdentificationAndScheduleImprovement(Day.Tuesday, week, profListTuesday, ref subjectListMonday, ref profListDestination);
-                ScheduleStuff.AudienceIdentification(audienceListTuesday, ref buildingListDestination, ref audienceListDestination);
-                RegisterGroupScheduleLessons(ref obj, Day.Tuesday, week, subjectListMonday, typeListTuesday, profListDestination, buildingListDestination, audienceListDestination);
+                this.ProfIdentificationAndScheduleImprovement(Day.Tuesday, week, profListTuesday, ref subjectListTuesday, ref profListDestination);
+                ScheduleStuff.AudienceIdentification(audienceListTuesday, ref buildingListDestination, ref audienceListDestination, this._context);
+                RegisterGroupScheduleLessons(ref obj, Day.Tuesday, week, subjectListTuesday, typeListTuesday, profListDestination, buildingListDestination, audienceListDestination);
             }
 
             if (subjectListWednesday != null)
@@ -65,9 +85,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var audienceListDestination = ScheduleStuff.IdAndNameListDestination();
                 var buildingListDestination = new List<int?> { null, null, null, null, null, null };
 
-                ProfIdentificationAndScheduleImprovement(Day.Wednesday, week, profListWednesday, ref subjectListMonday, ref profListDestination);
-                ScheduleStuff.AudienceIdentification(audienceListWednesday, ref buildingListDestination, ref audienceListDestination);
-                RegisterGroupScheduleLessons(ref obj, Day.Wednesday, week, subjectListMonday, typeListWednesday, profListDestination, buildingListDestination, audienceListDestination);
+                this.ProfIdentificationAndScheduleImprovement(Day.Wednesday, week, profListWednesday, ref subjectListWednesday, ref profListDestination);
+                ScheduleStuff.AudienceIdentification(audienceListWednesday, ref buildingListDestination, ref audienceListDestination, this._context);
+                RegisterGroupScheduleLessons(ref obj, Day.Wednesday, week, subjectListWednesday, typeListWednesday, profListDestination, buildingListDestination, audienceListDestination);
             }
 
             if (subjectListThursday != null)
@@ -76,9 +96,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var audienceListDestination = ScheduleStuff.IdAndNameListDestination();
                 var buildingListDestination = new List<int?> { null, null, null, null, null, null };
 
-                ProfIdentificationAndScheduleImprovement(Day.Thursday, week, profListThursday, ref subjectListMonday, ref profListDestination);
-                ScheduleStuff.AudienceIdentification(audienceListThursday, ref buildingListDestination, ref audienceListDestination);
-                RegisterGroupScheduleLessons(ref obj, Day.Thursday, week, subjectListMonday, typeListThursday, profListDestination, buildingListDestination, audienceListDestination);
+                this.ProfIdentificationAndScheduleImprovement(Day.Thursday, week, profListThursday, ref subjectListThursday, ref profListDestination);
+                ScheduleStuff.AudienceIdentification(audienceListThursday, ref buildingListDestination, ref audienceListDestination, this._context);
+                RegisterGroupScheduleLessons(ref obj, Day.Thursday, week, subjectListThursday, typeListThursday, profListDestination, buildingListDestination, audienceListDestination);
             }
 
             if (subjectListFriday != null)
@@ -87,9 +107,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
                 var audienceListDestination = ScheduleStuff.IdAndNameListDestination();
                 var buildingListDestination = new List<int?> { null, null, null, null, null, null };
 
-                ProfIdentificationAndScheduleImprovement(Day.Friday, week, profListFriday, ref subjectListMonday, ref profListDestination);
-                ScheduleStuff.AudienceIdentification(audienceListFriday, ref buildingListDestination, ref audienceListDestination);
-                RegisterGroupScheduleLessons(ref obj, Day.Friday, week, subjectListMonday, typeListFriday, profListDestination, buildingListDestination, audienceListDestination);
+                this.ProfIdentificationAndScheduleImprovement(Day.Friday, week, profListFriday, ref subjectListFriday, ref profListDestination);
+                ScheduleStuff.AudienceIdentification(audienceListFriday, ref buildingListDestination, ref audienceListDestination, this._context);
+                RegisterGroupScheduleLessons(ref obj, Day.Friday, week, subjectListFriday, typeListFriday, profListDestination, buildingListDestination, audienceListDestination);
             }
 
             return obj.Count == 0 ? null : obj;
@@ -126,7 +146,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
             }
         }
 
-        private static void ProfIdentificationAndScheduleImprovement(Day day, Week week, List<string> profList, ref List<string> subjectList, ref List<(int? id, string name)> profListDestination)
+        private void ProfIdentificationAndScheduleImprovement(Day day, Week week, List<string> profList, ref List<string> subjectList, ref List<(int? id, string name)> profListDestination)
         {
             for (var i = 0; i < profList.Count; i++)
             {
@@ -135,13 +155,13 @@ namespace KIP_server_NoAuth.Mapping.Converters
                     continue;
                 }
 
-                if (MapService.ProfList == null)
+                if (this._context.Prof == null)
                 {
                     profListDestination[i] = (null, profList[i]);
                     continue;
                 }
 
-                var prof = MapService.ProfList.FirstOrDefault(p => profList[i].Contains(p.ProfSurname));
+                var prof = this._context.Prof.FirstOrDefault(p => profList[i].Contains(p.ProfSurname));
                 if (prof == null)
                 {
                     continue;
@@ -149,11 +169,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
                 profListDestination[i] = (prof.ProfId, prof.ProfSurname);
 
-                var list = week == Week.Paired ?
-                    MapService.ProfScheduleList.Where(l => l.ProfId == prof.ProfId).ToHashSet() :
-                    MapService.ProfSchedule2List.Where(l => l.ProfId == prof.ProfId).ToHashSet();
+                var lesson = this._context.ProfSchedule.Where(l => l.ProfId == prof.ProfId && l.Week == week)
+                    .FirstOrDefault(l => l.Number == i && l.Day == day);
 
-                var lesson = list.FirstOrDefault(l => l.Number == i && l.Day == day);
                 if (lesson != null)
                 {
                     subjectList[i] = lesson.SubjectName;

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Models.NoAuth;
+using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.V1.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -14,6 +16,71 @@ namespace KIP_server_NoAuth.Services
     /// </summary>
     public static class PrepareService
     {
+        /// <summary>
+        /// Db service.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="mapper">The logger.</param>
+        /// <returns>Task.</returns>
+        public static async Task<(
+            HashSet<Faculty> facultyList,
+            HashSet<Group> groupList,
+            HashSet<Cathedra> cathedraList,
+            HashSet<Building> buildingList,
+            HashSet<Audience> audienceList,
+            HashSet<Prof> profList)>
+            PrepareMainStuffAsync(ILogger logger, IMapper mapper)
+        {
+            var kipFacultyList = await MapService.GetFacultiesAsync(logger, mapper);
+            var kipGroupListByFaculty = await MapService.GetGroupsAsync(kipFacultyList, logger, mapper);
+            var kipCathedraListByFaculty = await MapService.GetCathedrasAsync(kipFacultyList, logger, mapper);
+            var kipBuildingList = await MapService.GetBuildingsAsync(logger, mapper);
+            var kipAudienceListByBuilding = await MapService.GetAudiencesAsync(kipBuildingList, logger, mapper);
+            var kipProfListByCathedra = await MapService.GetProfsAsync(kipCathedraListByFaculty, logger, mapper);
+
+            return (kipFacultyList, kipGroupListByFaculty, kipCathedraListByFaculty, kipBuildingList, kipAudienceListByBuilding, kipProfListByCathedra);
+        }
+
+        /// <summary>
+        /// Db service.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="mapper">The logger.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>Task.</returns>
+        public static async Task<(HashSet<StudentSchedule> studentScheduleList, HashSet<StudentSchedule> studentSchedule2List)>
+            PrepareStudentScheduleAsync(ILogger logger, IMapper mapper, NoAuthDbContext context)
+        {
+            return await MapService.GetScheduleByGroupAsync(context.Group.ToHashSet(), logger, mapper);
+        }
+
+        /// <summary>
+        /// Db service.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="mapper">The logger.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>Task.</returns>
+        public static async Task<(HashSet<ProfSchedule> profScheduleList, HashSet<ProfSchedule> profSchedule2List)>
+            PrepareProfScheduleAsync(ILogger logger, IMapper mapper, NoAuthDbContext context)
+        {
+            return await MapService.GetScheduleByProfAsync(context.Prof.ToHashSet(), logger, mapper);
+        }
+
+        /// <summary>
+        /// Db service.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="mapper">The logger.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>Task.</returns>
+        public static async Task<(HashSet<AudienceSchedule> audienceScheduleList, HashSet<AudienceSchedule> audienceSchedule2List)>
+            PrepareAudienceScheduleAsync(ILogger logger, IMapper mapper, NoAuthDbContext context)
+        {
+            return await MapService.GetScheduleByAudienceAsync(context.Audience.ToHashSet(), logger, mapper);
+        }
+
+        /*
         /// <summary>
         /// Db service.
         /// </summary>
@@ -48,7 +115,7 @@ namespace KIP_server_NoAuth.Services
 
             return (kipFacultyList, kipGroupListByFaculty, kipCathedraListByFaculty, kipBuildingList, kipAudienceListByBuilding, kipProfListByCathedra,
                     kipScheduleByGroup, kipSchedule2ByGroup, kipScheduleByProf, kipSchedule2ByProf, kipScheduleByAudience, kipSchedule2ByAudience);
-        }
+        }*/
 
         /// <summary>
         /// Db service.

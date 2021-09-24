@@ -19,8 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <typeparam name="T">The db context.</typeparam>
         /// <exception cref="ArgumentNullException">Services.</exception>
         /// <exception cref="ArgumentException">Connection string must be not null or empty - connectionString.</exception>
-        public static IServiceCollection AddDbServices<T>(
-            this IServiceCollection services, string connectionString, string pgVersionString)
+        public static IServiceCollection AddDbServices<T>(this IServiceCollection services, string connectionString, string pgVersionString)
             where T : DbContext
         {
             if (services == null)
