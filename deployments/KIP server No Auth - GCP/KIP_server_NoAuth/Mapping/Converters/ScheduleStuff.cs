@@ -2,7 +2,6 @@
 using System.Linq;
 using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Models.KhPI;
-using KIP_server_NoAuth.Services;
 
 namespace KIP_server_NoAuth.Mapping.Converters
 {
@@ -322,7 +321,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
                     continue;
                 }
 
-                if (context.Building == null || context.Audience == null)
+                if (context.Building == null || !context.Building.Any() ||
+                    context.Audience == null || !context.Audience.Any())
                 {
                     audienceListDestination[i] = (null, audienceList[i]);
                     continue;
@@ -352,7 +352,8 @@ namespace KIP_server_NoAuth.Mapping.Converters
         /// <param name="groupListDestination">Model of schedule by group KhPI.</param>
         /// <param name="groupListNamesDestination">Model of schedule by group KhPI.</param>
         /// <param name="context">The context.</param>
-        public static void GroupsIdentification(List<string> groupList, ref List<List<int?>> groupListDestination, ref List<string> groupListNamesDestination, NoAuthDbContext context)
+        public static void GroupsIdentification(
+            List<string> groupList, ref List<List<int?>> groupListDestination, ref List<string> groupListNamesDestination, NoAuthDbContext context)
         {
             for (var i = 0; i < groupList.Count; i++)
             {
@@ -361,7 +362,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
                     continue;
                 }
 
-                if (context.Group == null)
+                if (context.Group == null || !context.Group.Any())
                 {
                     groupListNamesDestination[i] += groupList[i];
                     continue;

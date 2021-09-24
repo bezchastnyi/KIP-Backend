@@ -40,7 +40,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
             }
 
             var obj = new List<ProfSchedule>();
-            var week = DbUpdateController.Week;
+            var week = context.GetWeekValue(nameof(ProfSchedule));
 
             var (subjectListMonday, subjectListTuesday, subjectListWednesday, subjectListThursday, subjectListFriday) = ScheduleStuff.GetSubjectLists(source);
             if (subjectListMonday == null &&

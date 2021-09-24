@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using KIP_Backend.Attributes;
-using KIP_Backend.Models.Helpers;
 using KIP_server_NoAuth.DB;
 using KIP_server_NoAuth.Services;
 using Microsoft.AspNetCore.Http;
@@ -40,12 +39,6 @@ namespace KIP_server_NoAuth.V1.Controllers
             this._config = config ?? throw new ArgumentNullException(nameof(config));
             this._mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-
-        /// <summary>
-        /// Gets or sets the week.
-        /// </summary>
-        /// <value>Week.</value>
-        public static Week Week { get; set; } = Week.UnPaired;
 
         /// <summary>
         /// Update KIP Db.

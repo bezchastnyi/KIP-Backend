@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using KIP_Backend.Extensions;
@@ -12,6 +13,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
     /// </summary>
     public class AudienceConverter : ITypeConverter<AudienceKhPI, Audience>
     {
+        private static readonly Regex Regex1Pattern = new Regex(@"[\d[0-9]{0,4} місць]");
+        private static readonly Regex Regex2Pattern = new Regex(@"\d[0-9]{0,4}");
+
         /// <summary>
         /// Convert model of audience from KhPI to KIP.
         /// </summary>
@@ -41,8 +45,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
         private static int? SearchNumberOfSeats(string title)
         {
-            var regex = new Regex(@"[\d[0-9]{0,4} місць]");
-            var matches = regex.Matches(title);
+            var matches = Regex1Pattern.Matches(title);
             if (matches.Count == 0)
             {
                 return null;
@@ -50,8 +53,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
             foreach (Match match in matches)
             {
-                regex = new Regex(@"\d[0-9]{0,4}");
-                var matches2 = regex.Matches(match.Value);
+                var matches2 = Regex2Pattern.Matches(match.Value);
                 foreach (Match match2 in matches2)
                 {
                     if (matches2.Count > 0)

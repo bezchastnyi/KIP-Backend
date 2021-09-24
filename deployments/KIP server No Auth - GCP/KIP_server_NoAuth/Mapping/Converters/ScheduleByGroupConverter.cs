@@ -41,7 +41,7 @@ namespace KIP_server_NoAuth.Mapping.Converters
             }
 
             var obj = new List<StudentSchedule>();
-            var week = DbUpdateController.Week;
+            var week = context.GetWeekValue(nameof(StudentSchedule));
 
             var (subjectListMonday, subjectListTuesday, subjectListWednesday, subjectListThursday, subjectListFriday) = ScheduleStuff.GetSubjectLists(source);
             if (subjectListMonday == null &&
@@ -169,11 +169,9 @@ namespace KIP_server_NoAuth.Mapping.Converters
 
                 profListDestination[i] = (prof.ProfId, prof.ProfSurname);
 
-                var list = week == Week.Paired ?
-                    this._context.ProfSchedule.Where(l => l.ProfId == prof.ProfId).ToHashSet() :
-                    this._context.ProfSchedule.Where(l => l.ProfId == prof.ProfId).ToHashSet();
+                var lesson = this._context.ProfSchedule.Where(l => l.ProfId == prof.ProfId && l.Week == week)
+                    .FirstOrDefault(l => l.Number == i && l.Day == day);
 
-                var lesson = list.FirstOrDefault(l => l.Number == i && l.Day == day);
                 if (lesson != null)
                 {
                     subjectList[i] = lesson.SubjectName;
