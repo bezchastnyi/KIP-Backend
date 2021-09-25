@@ -1,2 +1,3 @@
-gcloud builds submit --tag gcr.io/ext-khpi-in-phone/kip-server-auth-v1.0 --project=ext-khpi-in-phone
-gcloud run deploy --image gcr.io/ext-khpi-in-phone/kip-server-auth-v1.0 --project=ext-khpi-in-phone
+gcloud builds submit --tag gcr.io/ext-khpi-in-phone/v1.0/kip-server-auth-v1.0 --project=ext-khpi-in-phone
+
+gcloud run deploy --image gcr.io/ext-khpi-in-phone/v1.0/kip-server-auth-v1.0 --max-instances=100 --timeout=2000 --region="europe-central2" --allow-unauthenticated --project=ext-khpi-in-phone
