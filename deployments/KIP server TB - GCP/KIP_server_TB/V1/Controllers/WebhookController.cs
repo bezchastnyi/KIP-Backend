@@ -48,7 +48,8 @@ namespace KIP_server_TB.V1.Controllers
         /// <param name="dbContext">The db context.</param>
         /// <param name="telegramBotClient">The telegramBotClient.</param>
         /// <param name="configuration">The configuration.</param>
-        public WebhookController(ILogger<WebhookController> logger, TelegramApiDbContext dbContext, ITelegramBotClient telegramBotClient, IConfiguration configuration)
+        public WebhookController(
+            ILogger<WebhookController> logger, TelegramApiDbContext dbContext, ITelegramBotClient telegramBotClient, IConfiguration configuration)
         {
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
@@ -348,6 +349,7 @@ namespace KIP_server_TB.V1.Controllers
 
                         var outputSb = new StringBuilder();
 
+                        outputSb.AppendLine(KIPTelegramConstants.DayUkrConstants[day]);
                         outputSb.AppendLine($"{user.GroupName}\n");
                         outputSb.AppendLine("Непарный тиждень:\n");
                         foreach (var l in week0List)
@@ -553,6 +555,7 @@ namespace KIP_server_TB.V1.Controllers
                         var week0List = schedule?.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
                         var week1List = schedule?.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
 
+                        outputSb.AppendLine(KIPTelegramConstants.DayUkrConstants[day]);
                         outputSb.AppendLine($"{prof?.ProfSurname} {prof?.ProfName} {prof?.ProfPatronymic}\n");
                         outputSb.AppendLine("Непарный тиждень:\n");
                         foreach (var l in week0List)
@@ -759,6 +762,7 @@ namespace KIP_server_TB.V1.Controllers
                         var week0List = schedule?.Where(i => i.Week == Week.UnPaired).OrderBy(i => i.Number);
                         var week1List = schedule?.Where(i => i.Week == Week.Paired).OrderBy(i => i.Number);
 
+                        outputSb.AppendLine(KIPTelegramConstants.DayUkrConstants[day]);
                         outputSb.AppendLine($"{audience?.AudienceName}\n");
                         outputSb.AppendLine("Непарный тиждень:\n");
                         foreach (var l in week0List)
