@@ -1,0 +1,1 @@
+gcloud scheduler jobs create http Update-Prof-Schedule-v1.0 --schedule="3 3 * * 6" --time-zone="Europe/Kiev" --uri="https://kip-server-no-auth-v1-0-b5ntqidyva-lm.a.run.app/v1/UpdateProfSchedule" --http-method=POST --project=ext-khpi-in-phone
