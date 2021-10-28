@@ -58,21 +58,21 @@
         /// <summary>
         /// Gets or sets TempProfValue.
         /// </summary>
-        public int? TempProfValue { get; set; }
+        public int? TempProfValue { get; set; } // TODO MUST BE IN REDIS
 
         /// <summary>
         /// Gets or sets TempBuildingValue.
         /// </summary>
-        public int? TempBuildingValue { get; set; }
+        public int? TempBuildingValue { get; set; } // TODO MUST BE IN REDIS
 
         /// <summary>
         /// Gets or sets TempAudienceValue.
         /// </summary>
-        public int? TempAudienceValue { get; set; }
+        public int? TempAudienceValue { get; set; } // TODO MUST BE IN REDIS
 
         /// <summary>
         /// Gets or sets TempDayValue.
         /// </summary>
-        public int? TempDayValue { get; set; }
+        public int? TempDayValue { get; set; } // TODO MUST BE IN REDIS
     }
 }

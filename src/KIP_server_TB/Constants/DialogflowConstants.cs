@@ -110,7 +110,37 @@ namespace KIP_server_TB.Constants
         /// <summary>
         /// NoAuthModeIntent.
         /// </summary>
-        public const string EmailModeIntent = "Email Mode Intent";
+        public const string EmailIntent = "Email Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string PasswordIntent = "Password Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string StudentInformationIntent = "Student Information Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string StudentDebtsIntent = "Student Debts Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string CurrentRankIntent = "Current Rank Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string StudyingPlanIntent = "Studying Plan Intent - Semester";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string SemesterMarksIntent = "Semester Marks Intent - Semester";
 
         #endregion
     }

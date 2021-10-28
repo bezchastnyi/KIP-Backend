@@ -104,6 +104,45 @@ namespace KIP_server_TB.Constants
         public const string AudienceScheduleIntentDay = "Audience Schedule Intent - Day";
 
         #endregion
+
+        #region Auth mode
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string EmailIntent = "Email Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string PasswordIntent = "Password Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string StudentInformationIntent = "Student Information Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string StudentDebtsIntent = "Student Debts Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string CurrentRankIntent = "Current Rank Intent";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string StudyingPlanIntent = "Studying Plan Intent - Semester";
+
+        /// <summary>
+        /// NoAuthModeIntent.
+        /// </summary>
+        public const string SemesterMarksIntent = "Semester Marks Intent - Semester";
+
+        #endregion
     }
 #pragma warning restore SA1124 // Do not use regions
 }

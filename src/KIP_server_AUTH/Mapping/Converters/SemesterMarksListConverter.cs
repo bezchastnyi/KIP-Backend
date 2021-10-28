@@ -38,7 +38,7 @@ namespace KIP_server_Auth.Mapping.Converters
                 ECTSMark = source.oc_ects,
                 Credits = ConvertExtensions.StringToNullableFloat(source.credit),
                 Control = source.control,
-                IsDebt = ConvertExtensions.StringToBool(source.if_hvost),
+                IsDebt = ConvertExtensions.StringToBool(source.if_hvost), // TODO make valid
                 Date = source.data,
             };
         }

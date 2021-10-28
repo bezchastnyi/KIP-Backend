@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KIP_server_NoAuth.Constants
+namespace KIP_Backend.Constants
 {
     /// <summary>
     /// Short names for faculties constants.
