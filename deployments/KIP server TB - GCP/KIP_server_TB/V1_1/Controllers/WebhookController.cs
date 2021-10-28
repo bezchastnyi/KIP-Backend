@@ -353,7 +353,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         var outputSb = new StringBuilder();
 
                         outputSb.AppendLine($"{user.GroupName}\n");
-                        outputSb.AppendLine("Непарный тиждень:\n");
+                        outputSb.AppendLine("Непарний тиждень:\n");
                         foreach (var l in week0List)
                         {
                             outputSb.AppendLine(
@@ -362,7 +362,7 @@ namespace KIP_server_TB.V1_1.Controllers
                             outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                         }
 
-                        outputSb.AppendLine("\nПарный тиждень:\n");
+                        outputSb.AppendLine("\nПарний тиждень:\n");
                         foreach (var l in week1List)
                         {
                             outputSb.AppendLine(

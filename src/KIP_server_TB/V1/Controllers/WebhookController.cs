@@ -764,7 +764,7 @@ namespace KIP_server_TB.V1.Controllers
 
                         outputSb.AppendLine(KIPTelegramConstants.DayUkrConstants[day]);
                         outputSb.AppendLine($"{audience?.AudienceName}\n");
-                        outputSb.AppendLine("Непарный тиждень:\n");
+                        outputSb.AppendLine("Непарний тиждень:\n");
                         foreach (var l in week0List)
                         {
                             outputSb.AppendLine(
@@ -773,7 +773,7 @@ namespace KIP_server_TB.V1.Controllers
                             outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
                         }
 
-                        outputSb.AppendLine("\nПарный тиждень:\n");
+                        outputSb.AppendLine("\nПарний тиждень:\n");
                         foreach (var l in week1List)
                         {
                             outputSb.AppendLine(
