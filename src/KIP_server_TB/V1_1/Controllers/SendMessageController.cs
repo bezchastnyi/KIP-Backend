@@ -58,6 +58,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     return this.Ok();
                 }
 
+                // var users = this._dbContext.Users.Where(x => x.UserId == 414372921).AsNoTracking().ToList();
                 var users = this._dbContext.Users.AsNoTracking().ToList();
                 foreach (var user in users)
                 {
@@ -67,10 +68,11 @@ namespace KIP_server_TB.V1_1.Controllers
                     }
                     catch (Exception ex)
                     {
+                        // TODO properly work
                         if (ex.Message.Contains("bot was blocked by the user"))
                         {
-                            this._dbContext.Users.Remove(user);
-                            await this._dbContext.SaveChangesAsync();
+                            // this._dbContext.Users.Remove(user);
+                            // await this._dbContext.SaveChangesAsync();
                         }
 
                         // TODO log
