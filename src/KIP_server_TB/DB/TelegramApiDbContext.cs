@@ -18,7 +18,7 @@ namespace KIP_server_TB.DB
         }
 
         /// <summary>
-        /// Gets or sets the audience.
+        /// Gets or sets the telegram users.
         /// </summary>
         public virtual DbSet<TelegramUser> Users { get; set; }
 

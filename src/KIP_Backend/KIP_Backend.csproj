@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <PackageVersion>1.0</PackageVersion>
     <Company>KIP</Company>
-    <Product>KIP_Backend_Library</Product>
+    <Product>Backend Library</Product>
     <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
 

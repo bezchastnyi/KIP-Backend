@@ -7,7 +7,7 @@ using Serilog;
 namespace KIP_server_TB
 {
     /// <summary>
-    /// The server GET.
+    /// The Telegram API.
     /// </summary>
     [ExcludeFromCodeCoverage]
     public static class Program

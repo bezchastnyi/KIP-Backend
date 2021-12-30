@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,9 +15,10 @@ using KIP_Backend.Models.Helpers;
 using KIP_Backend.Models.NoAuth;
 using KIP_server_TB.Constants;
 using KIP_server_TB.DB;
+using KIP_server_TB.Extensions;
 using KIP_server_TB.Models;
 using KIP_server_TB.Services;
-using KIP_server_TB.V1_1.NoAuth;
+using KIP_server_TB.V1_1.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -62,13 +64,17 @@ namespace KIP_server_TB.V1_1.Controllers
         }
 
         /// <summary>
-        /// Current rank of student's group.
+        /// Receive request from telegram.
         /// </summary>
-        /// <returns>Start message.</returns>
+        /// <returns>OkResult.</returns>
+        /// <remarks>
+        /// Controller returns OkResult result always. It is needed to perform operations and log error by logger.
+        /// Don't break Dialogflow.
+        /// </remarks>
         [HttpPost]
         [Route("receive")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1123:Do not place regions within elements", Justification = "Webhook receive")]
+        [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1123:Do not place regions within elements", Justification = "Webhook receive")]
         public async Task<OkResult> ReceiveAsync()
         {
             try
@@ -92,12 +98,14 @@ namespace KIP_server_TB.V1_1.Controllers
                     return this.Ok();
                 }
 
-                var userId = TelegramRequestProcessing.GetUserId(request);
-                if (userId == null)
+                var userIdValue = TelegramRequestProcessing.GetUserId(request);
+                if (userIdValue == null)
                 {
                     // TODO log
                     return this.Ok();
                 }
+
+                var userId = userIdValue.Value;
 
                 var chatId = TelegramRequestProcessing.GetChatId(request);
                 if (chatId == null)
@@ -116,7 +124,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     case DialogflowConstants.NoAuthModeIntent:
                     {
                         var faculties = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Faculty>(
-                            $"{this._noAuthServerUrl}/{RoutConstants.AllFaculties}", this._logger);
+                            $"{this._noAuthServerUrl}/{NoAuthRoutConstants.AllFaculties}", this._logger);
 
                         if (faculties == null || !faculties.Any())
                         {
@@ -143,7 +151,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     {
                         var facultyId = ConvertExtensions.StringToInt(message.Split(':')[1]);
                         var faculties = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Faculty>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.FacultyById, facultyId)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.FacultyById, facultyId)}",
                             this._logger);
 
                         if (faculties == null || !faculties.Any())
@@ -155,12 +163,12 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var faculty = faculties.FirstOrDefault();
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             user = new TelegramUser
                             {
-                                UserId = (int)userId,
+                                UserId = userId,
                                 UserName = TelegramRequestProcessing.GetUserName(request),
                                 FacultyId = faculty?.FacultyId,
                                 FacultyName = faculty?.FacultyName,
@@ -199,7 +207,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     {
                         var course = ConvertExtensions.StringToInt(message.Split(':')[1]);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -210,7 +218,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         await this._dbContext.SaveChangesAsync();
 
                         var groups = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Group>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.GroupsByFacultyId, user.FacultyId)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.GroupsByFacultyId, user.FacultyId)}",
                             this._logger);
 
                         if (groups == null || !groups.Any())
@@ -241,7 +249,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         var groupId = ConvertExtensions.StringToInt(data[1]);
                         var groupName = data[2];
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -278,7 +286,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     // Day output
                     case DialogflowConstants.GroupScheduleIntent:
                     {
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -287,7 +295,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<StudentSchedule>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.StudentScheduleByGroupId, user.GroupId)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.StudentScheduleByGroupId, user.GroupId)}",
                             this._logger);
 
                         if (schedules == null)
@@ -318,7 +326,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         message = message.Split(':')[1];
                         var day = Enum.Parse<Day>(message);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -326,7 +334,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<StudentSchedule>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.StudentScheduleByGroupIdAndDay, user.GroupId, (int)day)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.StudentScheduleByGroupIdAndDay, user.GroupId, (int)day)}",
                             this._logger);
 
                         if (schedules == null)
@@ -357,7 +365,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         foreach (var l in week0List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Викладач: {l.ProfName}");
                             outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                         }
@@ -366,7 +374,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         foreach (var l in week1List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Викладач: {l.ProfName}");
                             outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                         }
@@ -379,7 +387,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     // Cathedras output
                     case DialogflowConstants.ProfScheduleIntent:
                     {
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -388,7 +396,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var cathedras = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Cathedra>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.CathedrasByFacultyId, user.FacultyId)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.CathedrasByFacultyId, user.FacultyId)}",
                             this._logger);
 
                         if (cathedras == null || !cathedras.Any())
@@ -416,7 +424,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     {
                         var cathedraId = ConvertExtensions.StringToInt(message.Split(':')[1]);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -424,7 +432,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var profs = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Prof>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfsByCathedraId, cathedraId)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.ProfsByCathedraId, cathedraId)}",
                             this._logger);
 
                         if (profs == null || !profs.Any())
@@ -453,7 +461,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     {
                         var profId = ConvertExtensions.StringToInt(message.Split(':')[1]);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -464,7 +472,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         await this._dbContext.SaveChangesAsync();
 
                         var profs = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Prof>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfById, user.TempProfValue)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.ProfById, user.TempProfValue)}",
                             this._logger);
 
                         if (profs == null || !profs.Any())
@@ -478,7 +486,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         var prof = profs?.First();
 
                         var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<ProfSchedule>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfScheduleByProfId, user.TempProfValue)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.ProfScheduleByProfId, user.TempProfValue)}",
                             this._logger);
 
                         if (schedules == null)
@@ -509,7 +517,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         message = message.Split(':')[1];
                         var day = Enum.Parse<Day>(message);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -517,7 +525,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var profs = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Prof>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfById, user.TempProfValue)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.ProfById, user.TempProfValue)}",
                             this._logger);
 
                         if (profs == null || !profs.Any())
@@ -531,7 +539,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         var prof = profs?.First();
 
                         var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<ProfSchedule>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.ProfScheduleByProfIdAndDay, user.TempProfValue, (int)day)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.ProfScheduleByProfIdAndDay, user.TempProfValue, (int)day)}",
                             this._logger);
 
                         if (schedules == null)
@@ -562,7 +570,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         foreach (var l in week0List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
                             outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                         }
@@ -571,7 +579,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         foreach (var l in week1List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
                             outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                         }
@@ -584,7 +592,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     // Buildings output
                     case DialogflowConstants.AudienceScheduleIntent:
                     {
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -593,7 +601,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var buildings = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Building>(
-                            $"{this._noAuthServerUrl}/{RoutConstants.AllBuildings}", this._logger);
+                            $"{this._noAuthServerUrl}/{NoAuthRoutConstants.AllBuildings}", this._logger);
 
                         if (buildings == null || !buildings.Any())
                         {
@@ -620,7 +628,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     {
                         var buildingId = ConvertExtensions.StringToInt(message.Split(':')[1]);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -631,7 +639,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         await this._dbContext.SaveChangesAsync();
 
                         var audiences = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Audience>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudiencesByBuildingId, buildingId)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.AudiencesByBuildingId, buildingId)}",
                             this._logger);
 
                         if (audiences == null || !audiences.Any())
@@ -659,7 +667,7 @@ namespace KIP_server_TB.V1_1.Controllers
                     {
                         var audienceId = ConvertExtensions.StringToInt(message.Split(':')[1]);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -670,7 +678,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         await this._dbContext.SaveChangesAsync();
 
                         var audiences = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Audience>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceById, user.TempAudienceValue)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.AudienceById, user.TempAudienceValue)}",
                             this._logger);
 
                         if (audiences == null || !audiences.Any())
@@ -684,7 +692,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         var audience = audiences?.First();
 
                         var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<AudienceSchedule>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceScheduleByAudienceId, user.TempAudienceValue)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.AudienceScheduleByAudienceId, user.TempAudienceValue)}",
                             this._logger);
 
                         if (schedules == null)
@@ -715,7 +723,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         message = message.Split(':')[1];
                         var day = Enum.Parse<Day>(message);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -723,7 +731,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var audiences = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<Audience>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceById, user.TempAudienceValue)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.AudienceById, user.TempAudienceValue)}",
                             this._logger);
 
                         if (audiences == null || !audiences.Any())
@@ -737,7 +745,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         var audience = audiences?.First();
 
                         var schedules = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<AudienceSchedule>(
-                            $"{this._noAuthServerUrl}/{string.Format(RoutConstants.AudienceScheduleByAudienceIdAndDay, user.TempAudienceValue, (int)day)}",
+                            $"{this._noAuthServerUrl}/{string.Format(NoAuthRoutConstants.AudienceScheduleByAudienceIdAndDay, user.TempAudienceValue, (int)day)}",
                             this._logger);
 
                         if (schedules == null)
@@ -768,7 +776,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         foreach (var l in week0List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
                             outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
                         }
@@ -777,7 +785,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         foreach (var l in week1List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
                             outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
                         }
@@ -792,12 +800,12 @@ namespace KIP_server_TB.V1_1.Controllers
 
                     case DialogflowConstants.EmailIntent:
                     {
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             user = new TelegramUser
                             {
-                                UserId = (int)userId,
+                                UserId = userId,
                                 UserName = TelegramRequestProcessing.GetUserName(request),
                                 UserEmail = message,
                             };
@@ -815,7 +823,7 @@ namespace KIP_server_TB.V1_1.Controllers
 
                     case DialogflowConstants.PasswordIntent:
                     {
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -826,7 +834,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         await this._dbContext.SaveChangesAsync();
 
                         var personalInformation = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<PersonalInformation>(
-                            $"{this._authServerUrl}/{string.Format(Auth.RoutConstants.PersonalInformation, user.UserEmail, user.UserPassword)}",
+                            $"{this._authServerUrl}/{string.Format(AuthRoutConstants.PersonalInformation, user.UserEmail, user.UserPassword)}",
                             this._logger);
 
                         if (personalInformation == null || !personalInformation.Any())
@@ -881,13 +889,13 @@ namespace KIP_server_TB.V1_1.Controllers
                             },
                         };
 
-                        await this._telegramBotClient.SendTextMessageAsync(chatId, GetStudentPersonalInformation(user, studentInfo), replyMarkup: keyboard);
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, TelegramRequestAuthProcessing.GetStudentPersonalInformation(studentInfo), replyMarkup: keyboard);
                         return this.Ok();
                     }
 
                     case DialogflowConstants.StudentInformationIntent:
                     {
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -895,7 +903,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var personalInformation = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<PersonalInformation>(
-                            $"{this._authServerUrl}/{string.Format(Auth.RoutConstants.PersonalInformation, user.UserEmail, user.UserPassword)}",
+                            $"{this._authServerUrl}/{string.Format(AuthRoutConstants.PersonalInformation, user.UserEmail, user.UserPassword)}",
                             this._logger);
 
                         if (personalInformation == null || !personalInformation.Any())
@@ -908,13 +916,13 @@ namespace KIP_server_TB.V1_1.Controllers
 
                         var studentInfo = personalInformation.ToList()[0];
 
-                        await this._telegramBotClient.SendTextMessageAsync(chatId, GetStudentPersonalInformation(user, studentInfo));
+                        await this._telegramBotClient.SendTextMessageAsync(chatId, TelegramRequestAuthProcessing.GetStudentPersonalInformation(studentInfo));
                         return this.Ok();
                     }
 
                     case DialogflowConstants.StudentDebtsIntent:
                     {
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -922,7 +930,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var debts = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<DebtList>(
-                            $"{this._authServerUrl}/{string.Format(Auth.RoutConstants.DebtList, user.UserEmail, user.UserPassword)}",
+                            $"{this._authServerUrl}/{string.Format(AuthRoutConstants.DebtList, user.UserEmail, user.UserPassword)}",
                             this._logger);
 
                         if (debts == null || !debts.Any())
@@ -952,9 +960,9 @@ namespace KIP_server_TB.V1_1.Controllers
                         return this.Ok();
                     }
 
-                    case DialogflowConstants.CurrentRankIntent: // TODO check how it works when it appears
+                    case DialogflowConstants.CurrentRankIntent:
                     {
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -962,7 +970,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var rank = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<CurrentRank>(
-                            $"{this._authServerUrl}/{string.Format(Auth.RoutConstants.CurrentRank, user.UserEmail, user.UserPassword)}",
+                            $"{this._authServerUrl}/{string.Format(AuthRoutConstants.CurrentRank, user.UserEmail, user.UserPassword)}",
                             this._logger);
 
                         if (rank == null || !rank.Any())
@@ -979,7 +987,7 @@ namespace KIP_server_TB.V1_1.Controllers
 
                         foreach (var student in currentRank)
                         {
-                            outputSb.AppendLine($"{student.Rank}. {student.FIO} {student.FullRankMark} ({student.ShortRankMark}) {student.RankFormula}\n");
+                            outputSb.AppendLine($"{student.Rank}. {student.FIO} {student.FullRankMark} ({student.ShortRankMark})");
                         }
 
                         await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
@@ -991,7 +999,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         message = message.Split(':')[1];
                         var semester = ConvertExtensions.StringToInt(message);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -999,7 +1007,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var marks = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<SemesterMarksList>(
-                            $"{this._authServerUrl}/{string.Format(Auth.RoutConstants.SemesterMarksList, user.UserEmail, user.UserPassword, semester)}",
+                            $"{this._authServerUrl}/{string.Format(AuthRoutConstants.SemesterMarksList, user.UserEmail, user.UserPassword, semester)}",
                             this._logger);
 
                         if (marks == null || !marks.Any())
@@ -1032,7 +1040,7 @@ namespace KIP_server_TB.V1_1.Controllers
                             outputSb.AppendLine($"     Е\\З: {marksList[i].Control}");
                             outputSb.AppendLine($"     Національний бал: {marksList[i].NationalMark}");
                             outputSb.AppendLine($"     Загальний бал: {marksList[i].ShortMark}");
-                            outputSb.AppendLine($"     ECTS: {marksList[i].ECTSMark}\n");
+                            outputSb.AppendLine($"     ECTS: {marksList[i].ECTSMark} ({marksList[i].FullMark})\n");
                         }
 
                         await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
@@ -1044,7 +1052,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         message = message.Split(':')[1];
                         var semester = ConvertExtensions.StringToInt(message);
 
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
                             // TODO log
@@ -1052,7 +1060,7 @@ namespace KIP_server_TB.V1_1.Controllers
                         }
 
                         var studyingPlan = await ConvertExtensions.ConvertJsonDataToListOfModelsAsync<SemesterStudyingPlan>(
-                            $"{this._authServerUrl}/{string.Format(Auth.RoutConstants.SemesterStudyingPlan, user.UserEmail, user.UserPassword, semester)}",
+                            $"{this._authServerUrl}/{string.Format(AuthRoutConstants.SemesterStudyingPlan, user.UserEmail, user.UserPassword, semester)}",
                             this._logger);
 
                         if (studyingPlan == null || !studyingPlan.Any())
@@ -1085,10 +1093,10 @@ namespace KIP_server_TB.V1_1.Controllers
                     // Exit command
                     case DialogflowConstants.ExitIntent:
                     {
-                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == (int)userId);
+                        var user = this._dbContext.Users.FirstOrDefault(u => u.UserId == userId);
                         if (user == null)
                         {
-                            // TODO log
+                            this._logger.LogUserNotFound(ActionNames.ReceiveTelegramWebhook, message, userId);
                             return this.Ok();
                         }
 
@@ -1106,36 +1114,9 @@ namespace KIP_server_TB.V1_1.Controllers
             }
             catch (Exception ex)
             {
-                // TODO log
-                Console.WriteLine(ex.Message);
+                this._logger.LogReceiveWebhookUnexpectedError(ActionNames.ReceiveTelegramWebhook, this.Request.Body.ToString(), ex);
                 return this.Ok();
             }
-        }
-
-        private static string GetStudentPersonalInformation(TelegramUser user, PersonalInformation studentInfo)
-        {
-            var facultyShortName = FacultiesShortNames.ShortNames.FirstOrDefault(f => studentInfo.Faculty.Contains(f.Key)).Value;
-            var outputSb = new StringBuilder();
-
-            outputSb.AppendLine("Особистий кабінет студента\n");
-
-            outputSb.AppendLine($"Прізвище: {studentInfo.LastName}");
-            outputSb.AppendLine($"Ім'я: {studentInfo.FirstName}");
-            outputSb.AppendLine($"По-батькові: {studentInfo.Patronymic}\n");
-
-            outputSb.AppendLine($"Курс: {studentInfo.Course}");
-            outputSb.AppendLine($"Група: {studentInfo.Group}");
-            outputSb.AppendLine($"Факультет/інститут: {studentInfo.Faculty} ({facultyShortName ?? string.Empty})");
-            outputSb.AppendLine($"Кафедра: {studentInfo.Cathedra}\n");
-
-            outputSb.AppendLine($"Спеціалізація/пропозиція/блок: {studentInfo.Specialization}");
-            outputSb.AppendLine($"Спеціальність: {studentInfo.Specialty}");
-            outputSb.AppendLine($"Освітня програма: {studentInfo.StudyingProgram}");
-            outputSb.AppendLine($"Рівень навчання: {studentInfo.StudyingLevel}");
-            outputSb.AppendLine($"Форма навчання: {studentInfo.StudyingForm}");
-            outputSb.AppendLine($"Оплата: {studentInfo.BudgetForm}");
-
-            return outputSb.ToString();
         }
     }
 }

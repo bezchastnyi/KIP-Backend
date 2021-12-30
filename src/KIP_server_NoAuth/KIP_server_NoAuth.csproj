@@ -5,7 +5,7 @@
     <Version>1.0</Version>
     <NoWarn>NU1701</NoWarn>
     <Company>KIP</Company>
-    <Product>KIP_server_NoAuth</Product>
+    <Product>NoAuth server</Product>
     <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
 

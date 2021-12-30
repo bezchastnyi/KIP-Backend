@@ -1,9 +1,9 @@
-﻿namespace KIP_server_TB.V1_1.Auth
+﻿namespace KIP_server_TB.V1_1.Constants
 {
     /// <summary>
-    /// Rout Constants.
+    /// Auth Rout Constants.
     /// </summary>
-    public static class RoutConstants
+    public static class AuthRoutConstants
     {
         /// <summary>
         /// PersonalInformation.
@@ -21,12 +21,12 @@
         public const string CurrentRank = "v1/CurrentRank/{0}/{1}";
 
         /// <summary>
-        /// CurrentRank.
+        /// SemesterStudyingPlan.
         /// </summary>
         public const string SemesterStudyingPlan = "v1/SemesterStudyingPlan/{0}/{1}/{2}";
 
         /// <summary>
-        /// CurrentRank.
+        /// SemesterMarksList.
         /// </summary>
         public const string SemesterMarksList = "v1/SemesterMarksList/{0}/{1}/{2}";
     }

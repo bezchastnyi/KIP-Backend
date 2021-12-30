@@ -12,15 +12,13 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Adds the database services.
         /// </summary>
-        /// <returns>Services.</returns>
         /// <param name="services">The services.</param>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="pgVersionString">The postgres version string. Must contain 2-4 numerics separated by '.'.</param>
         /// <typeparam name="T">The db context.</typeparam>
         /// <exception cref="ArgumentNullException">Services.</exception>
-        /// <exception cref="ArgumentException">Connection string must be not null or empty - connectionString.</exception>
-        public static IServiceCollection AddDbServices<T>(
-            this IServiceCollection services, string connectionString, string pgVersionString)
+        /// <exception cref="ArgumentException">Connection string and PG version must be not null or empty.</exception>
+        public static void AddDbServices<T>(this IServiceCollection services, string connectionString, string pgVersionString)
             where T : DbContext
         {
             if (services == null)
@@ -48,8 +46,6 @@ namespace Microsoft.Extensions.DependencyInjection
                         .EnableRetryOnFailure();
                 });
             });
-
-            return services;
         }
     }
 }

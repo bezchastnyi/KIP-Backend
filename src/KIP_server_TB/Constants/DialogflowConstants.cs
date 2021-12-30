@@ -5,34 +5,38 @@ namespace KIP_server_TB.Constants
     /// <summary>
     /// DialogflowConstants.
     /// </summary>
-#pragma warning disable SA1124 // Do not use regions
     [ExcludeFromCodeCoverage]
+    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Dialogflow constants")]
     public static class DialogflowConstants
     {
+        #region Basic
+
         /// <summary>
-        /// ExitIntent.
+        /// Exit intent.
         /// </summary>
         public const string ExitIntent = "Exit Intent";
+
+        #endregion
 
         #region No auth mode
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// No auth mode intent.
         /// </summary>
         public const string NoAuthModeIntent = "No Auth Mode Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Faculty intent.
         /// </summary>
         public const string FacultyIntent = "Faculty Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Course intent.
         /// </summary>
         public const string CourseIntent = "Course Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Course intent - fallback.
         /// </summary>
         public const string CourseIntentFallback = "Course Intent - fallback";
 
@@ -41,65 +45,57 @@ namespace KIP_server_TB.Constants
         #region Schedule
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// ScheduleIntent.
         /// </summary>
         public const string ScheduleIntent = "ScheduleIntent";
 
         /// <summary>
-        /// GroupScheduleIntent.
+        /// Group Schedule Intent.
         /// </summary>
         public const string GroupScheduleIntent = "Group Schedule Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Group Schedule Intent - Day.
         /// </summary>
         public const string GroupScheduleIntentDay = "Group Schedule Intent - Day";
 
-        #endregion
-
-        #region Prof schedule
-
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Prof Schedule Intent.
         /// </summary>
         public const string ProfScheduleIntent = "Prof Schedule Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Prof Schedule Intent - Cathedra.
         /// </summary>
         public const string ProfScheduleIntentCathedra = "Prof Schedule Intent - Cathedra";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Prof Schedule Intent - Prof.
         /// </summary>
         public const string ProfScheduleIntentProf = "Prof Schedule Intent - Prof";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Prof Schedule Intent - Day.
         /// </summary>
         public const string ProfScheduleIntentDay = "Prof Schedule Intent - Day";
 
-        #endregion
-
-        #region Audience schedule
-
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Audience Schedule Intent.
         /// </summary>
         public const string AudienceScheduleIntent = "Audience Schedule Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Audience Schedule Intent - Building.
         /// </summary>
         public const string AudienceScheduleIntentBuilding = "Audience Schedule Intent - Building";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Audience Schedule Intent - Audience.
         /// </summary>
         public const string AudienceScheduleIntentAudience = "Audience Schedule Intent - Audience";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Audience Schedule Intent - Day.
         /// </summary>
         public const string AudienceScheduleIntentDay = "Audience Schedule Intent - Day";
 
@@ -108,41 +104,40 @@ namespace KIP_server_TB.Constants
         #region Auth mode
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Email Intent.
         /// </summary>
         public const string EmailIntent = "Email Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Password Intent.
         /// </summary>
         public const string PasswordIntent = "Password Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Student Information Intent.
         /// </summary>
         public const string StudentInformationIntent = "Student Information Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Student Debts Intent.
         /// </summary>
         public const string StudentDebtsIntent = "Student Debts Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Current Rank Intent.
         /// </summary>
         public const string CurrentRankIntent = "Current Rank Intent";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Studying Plan Intent - Semester.
         /// </summary>
         public const string StudyingPlanIntent = "Studying Plan Intent - Semester";
 
         /// <summary>
-        /// NoAuthModeIntent.
+        /// Semester Marks Intent - Semester.
         /// </summary>
         public const string SemesterMarksIntent = "Semester Marks Intent - Semester";
 
         #endregion
     }
-#pragma warning restore SA1124 // Do not use regions
 }

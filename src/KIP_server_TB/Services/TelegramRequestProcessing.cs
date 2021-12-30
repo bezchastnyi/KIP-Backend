@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Google.Cloud.Dialogflow.V2;
 using KIP_server_TB.Constants;
@@ -10,7 +11,7 @@ namespace KIP_server_TB.Services
     /// <summary>
     /// TelegramRequestProcessing.
     /// </summary>
-#pragma warning disable SA1124 // Do not use regions
+    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "Telegram request processing")]
     public static class TelegramRequestProcessing
     {
         /// <summary>
@@ -23,11 +24,11 @@ namespace KIP_server_TB.Services
         public static async Task OutputDaysButtons(ITelegramBotClient bot, string chatId, string intentFlag)
         {
             var inlineButtons = new List<List<InlineKeyboardButton>>();
-            foreach (var d in KIPTelegramConstants.DayUkrConstants)
+            foreach (var (key, value) in KIPTelegramConstants.DayUkrConstants)
             {
                 inlineButtons.Add(new List<InlineKeyboardButton>
                 {
-                    InlineKeyboardButton.WithCallbackData(d.Value, $"{intentFlag}:{(int)d.Key}"),
+                    InlineKeyboardButton.WithCallbackData(value, $"{intentFlag}:{(int)key}"),
                 });
             }
 
@@ -43,9 +44,9 @@ namespace KIP_server_TB.Services
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>ChatId.</returns>
-        public static double? GetUserId(WebhookRequest request)
+        public static int? GetUserId(WebhookRequest request)
         {
-            double? userId = null;
+            int? userId;
             try
             {
                 userId = GetUserIdFromInlineButton(request);
@@ -65,7 +66,7 @@ namespace KIP_server_TB.Services
         /// <returns>ChatId.</returns>
         public static string GetChatId(WebhookRequest request)
         {
-            string chatId = null;
+            string chatId;
             try
             {
                 chatId = GetChatIdFromInlineButton(request);
@@ -85,7 +86,7 @@ namespace KIP_server_TB.Services
         /// <returns>ChatId.</returns>
         public static string GetUserName(WebhookRequest request)
         {
-            string userName = null;
+            string userName;
             try
             {
                 userName = GetUserNameFromInlineButton(request);
@@ -125,18 +126,18 @@ namespace KIP_server_TB.Services
                 .Fields["id"].StringValue;
         }
 
-        private static double GetUserIdFromInlineButton(WebhookRequest request)
+        private static int GetUserIdFromInlineButton(WebhookRequest request)
         {
-            return request.OriginalDetectIntentRequest.Payload
+            return (int)request.OriginalDetectIntentRequest.Payload
                 .Fields["data"].StructValue
                 .Fields["callback_query"].StructValue
                 .Fields["from"].StructValue
                 .Fields["id"].NumberValue;
         }
 
-        private static double GetUserIdFromMessage(WebhookRequest request)
+        private static int GetUserIdFromMessage(WebhookRequest request)
         {
-            return request.OriginalDetectIntentRequest.Payload
+            return (int)request.OriginalDetectIntentRequest.Payload
                 .Fields["data"].StructValue
                 .Fields["from"].StructValue
                 .Fields["id"].NumberValue;
@@ -144,5 +145,4 @@ namespace KIP_server_TB.Services
 
         #endregion
     }
-#pragma warning restore SA1124 // Do not use regions
 }

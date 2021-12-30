@@ -1,9 +1,9 @@
-﻿namespace KIP_server_TB.V1_1.NoAuth
+﻿namespace KIP_server_TB.V1_1.Constants
 {
     /// <summary>
-    /// Rout Constants.
+    /// NoAuth Rout Constants.
     /// </summary>
-    public static class RoutConstants
+    public static class NoAuthRoutConstants
     {
         /// <summary>
         /// AllBuildings.

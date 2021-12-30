@@ -14,8 +14,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS runtime
 WORKDIR /app
 COPY --from=build /app/out ./
 
-ENV Telegram:ApiToken=1763897357:AAH_duVCuzMEMLq1FCrVsmN4fcPEAeW4b2I
-ENV Telegram:WebHookReceiverUrl=111
+#ENV Telegram:ApiToken=1763897357:AAH_duVCuzMEMLq1FCrVsmN4fcPEAeW4b2I
 
 LABEL maintainer="Alexei Bezchastnyi(alekseybezchastnyy9@gmail.com)"
 

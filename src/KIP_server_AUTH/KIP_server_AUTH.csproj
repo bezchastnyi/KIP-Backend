@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Version>1.0</Version>
     <Company>KIP</Company>
-    <Product>KIP_server_Auth</Product>
+    <Product>Auth server</Product>
     <AssemblyVersion>1.0</AssemblyVersion>
   </PropertyGroup>
 

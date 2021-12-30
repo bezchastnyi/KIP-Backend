@@ -355,7 +355,7 @@ namespace KIP_server_TB.V1.Controllers
                         foreach (var l in week0List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Викладач: {l.ProfName}");
                             outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                         }
@@ -364,7 +364,7 @@ namespace KIP_server_TB.V1.Controllers
                         foreach (var l in week1List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Викладач: {l.ProfName}");
                             outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                         }
@@ -561,7 +561,7 @@ namespace KIP_server_TB.V1.Controllers
                         foreach (var l in week0List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
                             outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                         }
@@ -570,7 +570,7 @@ namespace KIP_server_TB.V1.Controllers
                         foreach (var l in week1List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
                             outputSb.AppendLine($"  Аудиторія: {l.AudienceName}\n");
                         }
@@ -768,7 +768,7 @@ namespace KIP_server_TB.V1.Controllers
                         foreach (var l in week0List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
                             outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
                         }
@@ -777,7 +777,7 @@ namespace KIP_server_TB.V1.Controllers
                         foreach (var l in week1List)
                         {
                             outputSb.AppendLine(
-                                $"{KIPTelegramConstants.TimeOfLessonConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
+                                $"{KIPTelegramConstants.TimeOfLessonsConstants.GetValueOrDefault(l.Number)} {l.SubjectName}");
                             outputSb.AppendLine($"  Група: {string.Join(",", l.GroupNames)}");
                             outputSb.AppendLine($"  Викладач: {l.ProfName}\n");
                         }

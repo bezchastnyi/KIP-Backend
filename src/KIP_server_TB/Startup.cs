@@ -15,7 +15,7 @@ using Telegram.Bot;
 namespace KIP_server_TB
 {
     /// <summary>
-    /// KIP_server_TB startup.
+    /// KIP Telegram API startup.
     /// </summary>
     [ExcludeFromCodeCoverage]
     public class Startup
@@ -26,7 +26,7 @@ namespace KIP_server_TB
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
-        /// <param name="configuration">Configuration.</param>
+        /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

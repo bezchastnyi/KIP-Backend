@@ -1,7 +1,7 @@
 ﻿namespace KIP_server_TB.Models
 {
     /// <summary>
-    /// TelegramUser.
+    /// Telegram user model.
     /// </summary>
     public class TelegramUser
     {
@@ -16,7 +16,7 @@
         public string UserEmail { get; set; }
 
         /// <summary>
-        /// Gets or sets UserName.
+        /// Gets or sets UserPassword.
         /// </summary>
         public string UserPassword { get; set; }
 
@@ -51,7 +51,7 @@
         public int? GroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets GroupId.
+        /// Gets or sets GroupName.
         /// </summary>
         public string GroupName { get; set; }
 

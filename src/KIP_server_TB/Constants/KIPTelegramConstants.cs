@@ -5,10 +5,10 @@ using KIP_Backend.Models.Helpers;
 namespace KIP_server_TB.Constants
 {
     /// <summary>
-    /// Time of lesson constants.
+    /// KIP Telegram constants.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class KIPTelegramConstants
+    public static class KIPTelegramConstants
     {
         /// <summary>
         /// MaxCourse.
@@ -16,9 +16,9 @@ namespace KIP_server_TB.Constants
         public const int MaxCourse = 6;
 
         /// <summary>
-        /// Gets short names of building.
+        /// Gets times of lessons.
         /// </summary>
-        public static Dictionary<int, string> TimeOfLessonConstants { get; } = new Dictionary<int, string>
+        public static Dictionary<int, string> TimeOfLessonsConstants { get; } = new Dictionary<int, string>
         {
             { 0, "8:30" },
             { 1, "10:25" },
@@ -29,7 +29,7 @@ namespace KIP_server_TB.Constants
         };
 
         /// <summary>
-        /// Gets short names of building.
+        /// Gets days on ukrainian.
         /// </summary>
         public static Dictionary<Day, string> DayUkrConstants { get; } = new Dictionary<Day, string>
         {

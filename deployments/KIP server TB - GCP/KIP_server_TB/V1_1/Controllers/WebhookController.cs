@@ -979,7 +979,7 @@ namespace KIP_server_TB.V1_1.Controllers
 
                         foreach (var student in currentRank)
                         {
-                            outputSb.AppendLine($"{student.Rank}. {student.FIO} {student.FullRankMark} ({student.ShortRankMark}) {student.RankFormula}\n");
+                            outputSb.AppendLine($"{student.Rank}. {student.FIO} {student.FullRankMark} ({student.ShortRankMark})\n");
                         }
 
                         await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
@@ -1032,7 +1032,7 @@ namespace KIP_server_TB.V1_1.Controllers
                             outputSb.AppendLine($"     Е\\З: {marksList[i].Control}");
                             outputSb.AppendLine($"     Національний бал: {marksList[i].NationalMark}");
                             outputSb.AppendLine($"     Загальний бал: {marksList[i].ShortMark}");
-                            outputSb.AppendLine($"     ECTS: {marksList[i].ECTSMark}\n");
+                            outputSb.AppendLine($"     ECTS: {marksList[i].ECTSMark} ({marksList[i].FullMark})\n");
                         }
 
                         await this._telegramBotClient.SendTextMessageAsync(chatId, outputSb.ToString());
